@@ -1,38 +1,24 @@
-import Link from "next/link";
-import { LayoutDashboard } from "lucide-react";
-import { ThemeToggle } from "../components/theme-toggle";
+import { ChartAreaInteractive } from "@/components/chart-area-interactive"
+import { DataTable } from "@/components/data-table"
+import { SectionCards } from "@/components/section-cards"
+import { ActivityTimeline } from "@/app/components/activity-timeline"
+import data from "../dashboard/data.json"
 
-export default function AppPage() {
+export default function AppDashboardPage() {
   return (
-    <div className="bg-lux-paper min-h-screen">
-      <header className="border-b border-border bg-background">
-        <div className="layout-container layout-cluster py-4">
-          <Link
-            href="/"
-            className="text-lg font-semibold text-foreground hover:text-lux-gold transition-colors duration-lux-base"
-          >
-            AXIS-AFENDA
-          </Link>
-          <div className="layout-cluster ml-auto">
-            <ThemeToggle />
+    <div className="flex flex-1 flex-col">
+      <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          <SectionCards />
+          <div className="px-4 lg:px-6">
+            <ChartAreaInteractive />
+          </div>
+          <div className="grid gap-4 px-4 lg:grid-cols-2 lg:px-6">
+            <DataTable data={data} />
+            <ActivityTimeline />
           </div>
         </div>
-      </header>
-      <main className="layout-container layout-section">
-        <div className="layout-stack layout-container-narrow text-center">
-          <div className="bg-lux-gold-soft mx-auto flex h-14 w-14 items-center justify-center rounded-xl">
-            <LayoutDashboard className="h-7 w-7 text-lux-gold" />
-          </div>
-          <h1 className="text-2xl font-semibold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Shell app, sidebar, and module registry coming next. Head back to the{" "}
-            <Link href="/" className="font-medium text-primary hover:underline">
-              landing page
-            </Link>
-            .
-          </p>
-        </div>
-      </main>
+      </div>
     </div>
-  );
+  )
 }

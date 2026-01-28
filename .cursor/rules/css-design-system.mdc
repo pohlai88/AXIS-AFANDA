@@ -9,5 +9,9 @@ alwaysApply: false
 - **Tokens**: Use `app/globals.css` variables. Semantic tokens: `--approve-*`, `--reject-*`, `--kpi-*`, `--ch-*`, `--status-*`, etc. Map via `@theme` to Tailwind utilities.
 - **Luxury**: `app/styles/luxury.utilities.css` — `lux-` only. Additive; don't replace shadcn semantics. Includes: surfaces, shadows, rings, gold accents, badges, table, sheen, `duration-lux-*`, `opacity-disabled`, `bg-lux-skeleton`, `focus-lux-outline`. Respects `prefers-reduced-motion`.
 - **Hero typography**: `text-hero-lux` (gradient fade, semibold 600, -0.05em tracking, 0.9 leading, drop-shadow), `text-hero-sub-lux`, `tracking-hero`, `leading-hero`.
+- **Consistent hover effects**: 
+  - **Cards**: All `Card` components automatically have `card-glow-lux` (gold top-edge glow + lift on hover). Applied globally via `components/ui/card.tsx`.
+  - **Buttons**: All `Button` components automatically have `btn-hover-lux` (subtle lift + shadow on hover). Applied globally via `components/ui/button.tsx`.
+  - **Gold buttons**: Use `btn-gold-lux` class for primary CTAs (shimmer effect).
 - **No new globals**: Prefer utilities and tokens. If you need a new token, add to `:root`/`.dark` and `@theme`, then use utilities.
 - **Dark mode**: All tokens have `.dark` variants. Use semantic colors so UI adapts automatically.

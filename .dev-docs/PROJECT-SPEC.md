@@ -102,10 +102,11 @@ Orchestrator and packages may live in same repo or separate repos; API contract 
 
 1. **CSS** — Done. Tokens + luxury utilities locked.
 2. **Shell** — Layout, sidebar, tenant switcher, `/app` routes, module registry, embedding.
-3. **Orchestrator** — `v1` APIs (approvals, activity, webhooks), DB schema, SSE/WS for notifications.
-4. **Keycloak** — Auth, tenant context, sync.
-5. **Chatwoot** — Webhooks, escalation flow, MVP feature.
-6. **Later** — Matrix, Jitsi, tldraw, analytics, settings.
+3. **Team Management** — Create teams, invite members, team settings (self-managed; orgs remain Keycloak-admin only).
+4. **Orchestrator** — `v1` APIs (approvals, activity, webhooks, teams), DB schema, SSE/WS for notifications.
+5. **Keycloak** — Auth, tenant context, sync (orgs only; teams self-managed).
+6. **Chatwoot** — Webhooks, escalation flow, MVP feature.
+7. **Later** — Matrix, Jitsi, tldraw, analytics, settings.
 
 ---
 

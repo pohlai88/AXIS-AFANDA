@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import {
   IconCreditCard,
   IconDotsVertical,
@@ -84,23 +85,31 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+              <DropdownMenuItem asChild>
+                <Link href="/app/settings/account">
+                  <IconUserCircle />
+                  Account
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
+              <DropdownMenuItem asChild>
+                <Link href="/app/settings/billing">
+                  <IconCreditCard />
+                  Billing
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                Notifications
+              <DropdownMenuItem asChild>
+                <Link href="/app/settings/notifications">
+                  <IconNotification />
+                  Notifications
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <IconLogout />
-              Log out
+            <DropdownMenuItem asChild>
+              <Link href="/api/auth/logout">
+                <IconLogout />
+                Log out
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

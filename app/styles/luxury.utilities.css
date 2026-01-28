@@ -54,6 +54,12 @@
     overflow: hidden;
     transition: transform var(--ax-motion-fast) ease;
   }
+  /* Only add cursor pointer if card is interactive */
+  .card-glow-lux[data-interactive="true"],
+  a.card-glow-lux,
+  button.card-glow-lux {
+    cursor: pointer;
+  }
   .card-glow-lux::before {
     content: "";
     position: absolute;
@@ -113,6 +119,30 @@
       transition: none;
     }
     .card-glow-lux:hover {
+      transform: none;
+    }
+  }
+
+  /* Consistent button hover — applies to all buttons */
+  .btn-hover-lux {
+    transition:
+      transform var(--ax-motion-fast) ease,
+      box-shadow var(--ax-motion-base) ease,
+      background-color var(--ax-motion-fast) ease,
+      border-color var(--ax-motion-fast) ease;
+  }
+  .btn-hover-lux:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px hsl(var(--foreground) / 0.1);
+  }
+  .btn-hover-lux:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-hover-lux {
+      transition: none;
+    }
+    .btn-hover-lux:hover:not(:disabled) {
       transform: none;
     }
   }
