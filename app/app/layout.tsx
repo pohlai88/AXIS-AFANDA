@@ -9,7 +9,7 @@ import { CommandPalette } from "@/app/components/command-palette";
 import { ErrorBoundary } from "@/app/components/error-boundary";
 import { useCommandPalette } from "@/app/hooks/use-command-palette";
 
-// Mock tenants - will be replaced with Keycloak integration
+// Mock tenants for development (will be replaced with Keycloak later)
 const mockTenants = [
   { id: "1", name: "Acme Corp", type: "org" as const },
   { id: "2", name: "Engineering Team", type: "team" as const },
