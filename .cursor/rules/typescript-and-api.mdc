@@ -1,0 +1,18 @@
+---
+description: TypeScript and API conventions
+globs: "**/*.ts"
+alwaysApply: false
+---
+
+# TypeScript & API
+
+- Use **Zod** for request/response validation. Infer types from schemas; avoid manual `interface` duplication.
+- **API routes**: Version as `/api/v1/...`. Return consistent success/error shapes.
+- **Errors**: Log with context; never swallow. Use structured error bodies and appropriate HTTP status codes.
+- **Tenant isolation**: All orchestrator reads/writes scoped by `tenantId`. Never expose cross-tenant data.
+
+```ts
+// Prefer Zod-inferred types
+const ApprovalSchema = z.object({ ... });
+type Approval = z.infer<typeof ApprovalSchema>;
+```

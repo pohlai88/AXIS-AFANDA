@@ -1,0 +1,13 @@
+---
+description: AXIS-AFENDA project context and spec pointers
+alwaysApply: true
+---
+
+# AXIS-AFENDA Context
+
+- **Spec**: `.dev-docs/PROJECT-SPEC.md` — architecture, stack, roadmap. Prefer it over legacy `.dev-docs/*` docs.
+- **Agent guidelines**: `AGENTS.md` — DRY, design system, API, state.
+- **Shell + Orchestrator + Keycloak SSOT.** Use shadcn blocks; don't rebuild UI. Server = source of truth; Zod for validation.
+- **Block reuse**: Copy and migrate blocks from `lib/ui/Blocks-shadcn` to `app/components/` when needed. Don't import directly.
+
+When adding features or making architectural choices, align with PROJECT-SPEC and AGENTS.md.

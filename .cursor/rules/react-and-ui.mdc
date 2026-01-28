@@ -1,0 +1,12 @@
+---
+description: React, UI, and shadcn usage
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# React & UI
+
+- **Use shadcn blocks first** (dashboard, sidebar, forms, tables, command). Integrate then extend; don’t rebuild.
+- **State**: Server = source of truth. Fetch → Zustand. Validate API responses with Zod.
+- **Design system**: Use `app/globals.css` tokens (e.g. `bg-approve-bg`, `text-kpi-up-fg`) and `lux-` utilities where appropriate. No one-off colors or shadows.
+- Prefer **functional components** and **custom hooks** for reusable logic. Use **error boundaries** for route/module-level failures.

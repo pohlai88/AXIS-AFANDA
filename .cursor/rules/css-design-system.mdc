@@ -1,0 +1,13 @@
+---
+description: CSS and design system usage
+globs: "**/*.css"
+alwaysApply: false
+---
+
+# CSS & Design System
+
+- **Tokens**: Use `app/globals.css` variables. Semantic tokens: `--approve-*`, `--reject-*`, `--kpi-*`, `--ch-*`, `--status-*`, etc. Map via `@theme` to Tailwind utilities.
+- **Luxury**: `app/styles/luxury.utilities.css` — `lux-` only. Additive; don't replace shadcn semantics. Includes: surfaces, shadows, rings, gold accents, badges, table, sheen, `duration-lux-*`, `opacity-disabled`, `bg-lux-skeleton`, `focus-lux-outline`. Respects `prefers-reduced-motion`.
+- **Hero typography**: `text-hero-lux` (gradient fade, semibold 600, -0.05em tracking, 0.9 leading, drop-shadow), `text-hero-sub-lux`, `tracking-hero`, `leading-hero`.
+- **No new globals**: Prefer utilities and tokens. If you need a new token, add to `:root`/`.dark` and `@theme`, then use utilities.
+- **Dark mode**: All tokens have `.dark` variants. Use semantic colors so UI adapts automatically.

@@ -1,0 +1,443 @@
+@import "tailwindcss";
+@import "./styles/luxury.utilities.css";
+@import "./styles/layout.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Design system locked. Use tokens + luxury utilities + layout; extend only when necessary. */
+
+/* --- 1. PLUGINS --- */
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/container-queries";
+
+/* --- 2. THEME (The "Brush") --- */
+@theme {
+  /* Fonts */
+  --font-sans: var(--font-geist-sans, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif), ui-sans-serif, system-ui;
+  --font-mono: var(--font-geist-mono, "JetBrains Mono", ui-monospace, SFMono-Regular, monospace), ui-monospace, SFMono-Regular;
+
+  /* Radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Core */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  /* Sidebar */
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+
+  /* Semantic status (raw) */
+  --color-info: hsl(var(--info));
+  --color-success: hsl(var(--success));
+  --color-warn: hsl(var(--warn));
+  --color-danger: hsl(var(--danger));
+
+  /* Dividers */
+  --color-divider-soft: hsl(var(--divider-soft));
+  --color-divider-strong: hsl(var(--divider-strong));
+
+  /* Workflow: Approval / Rejection / Changes / Pending */
+  --color-approve-bg: hsl(var(--approve-bg));
+  --color-approve-fg: hsl(var(--approve-fg));
+  --color-approve-bd: hsl(var(--approve-bd));
+  --color-reject-bg: hsl(var(--reject-bg));
+  --color-reject-fg: hsl(var(--reject-fg));
+  --color-reject-bd: hsl(var(--reject-bd));
+  --color-changes-bg: hsl(var(--changes-bg));
+  --color-changes-fg: hsl(var(--changes-fg));
+  --color-changes-bd: hsl(var(--changes-bd));
+  --color-pending-bg: hsl(var(--pending-bg));
+  --color-pending-fg: hsl(var(--pending-fg));
+  --color-pending-bd: hsl(var(--pending-bd));
+
+  /* KPIs */
+  --color-kpi-up-bg: hsl(var(--kpi-up-bg));
+  --color-kpi-up-fg: hsl(var(--kpi-up-fg));
+  --color-kpi-up-bd: hsl(var(--kpi-up-bd));
+  --color-kpi-down-bg: hsl(var(--kpi-down-bg));
+  --color-kpi-down-fg: hsl(var(--kpi-down-fg));
+  --color-kpi-down-bd: hsl(var(--kpi-down-bd));
+  --color-kpi-flat-bg: hsl(var(--kpi-flat-bg));
+  --color-kpi-flat-fg: hsl(var(--kpi-flat-fg));
+  --color-kpi-flat-bd: hsl(var(--kpi-flat-bd));
+
+  /* Charts */
+  --color-ch-primary: hsl(var(--ch-primary));
+  --color-ch-secondary: hsl(var(--ch-secondary));
+  --color-ch-muted: hsl(var(--ch-muted));
+  --color-ch-success: hsl(var(--ch-success));
+  --color-ch-warn: hsl(var(--ch-warn));
+  --color-ch-danger: hsl(var(--ch-danger));
+  --color-ch-grid: hsl(var(--ch-grid));
+  --color-ch-baseline: hsl(var(--ch-baseline));
+  --color-ch-axis: hsl(var(--ch-axis));
+  --color-ch-tooltip-bg: hsl(var(--ch-tooltip-bg));
+  --color-ch-tooltip-fg: hsl(var(--ch-tooltip-fg));
+  --color-ch-tooltip-bd: hsl(var(--ch-tooltip-bd));
+
+  /* Legend */
+  --color-legend-dot: hsl(var(--legend-dot));
+
+  /* Badges */
+  --color-badge-soft: hsl(var(--badge-soft));
+  --color-badge-soft-foreground: hsl(var(--badge-soft-foreground));
+  --color-badge-solid: hsl(var(--badge-solid));
+  --color-badge-solid-foreground: hsl(var(--badge-solid-foreground));
+
+  /* Status tags */
+  --color-status-draft-bg: hsl(var(--status-draft-bg));
+  --color-status-draft-fg: hsl(var(--status-draft-fg));
+  --color-status-draft-bd: hsl(var(--status-draft-bd));
+  --color-status-posted-bg: hsl(var(--status-posted-bg));
+  --color-status-posted-fg: hsl(var(--status-posted-fg));
+  --color-status-posted-bd: hsl(var(--status-posted-bd));
+  --color-status-void-bg: hsl(var(--status-void-bg));
+  --color-status-void-fg: hsl(var(--status-void-fg));
+  --color-status-void-bd: hsl(var(--status-void-bd));
+  --color-status-warn-bg: hsl(var(--status-warn-bg));
+  --color-status-warn-fg: hsl(var(--status-warn-fg));
+  --color-status-warn-bd: hsl(var(--status-warn-bd));
+
+  /* Interactions */
+  --color-select-bg: hsl(var(--select-bg));
+  --color-edit-bg: hsl(var(--edit-bg));
+  --color-danger-bg: hsl(var(--danger-bg));
+}
+
+/* --- 3. VARIABLES (The "Paint") --- */
+@layer base {
+  :root {
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    --radius: 0.5rem;
+    --density: comfortable;
+
+    /* Layout (enterprise rhythm) */
+    --layout-container-max: 80rem;
+    --layout-container-narrow: 48rem;
+    --layout-section-py: clamp(3rem, 6vw, 5rem);
+    --layout-gap: 1.5rem;
+
+    /* Surfaces (Light: Alabaster & Stone) */
+    --surface-0: 40 20% 98.5%;
+    --surface-1: 40 15% 95%;
+    --surface-2: 0 0% 100%;
+
+    /* Typography */
+    --foreground: 25 10% 10%;
+    --muted-foreground: 25 5% 45%;
+
+    /* Brand & focus (Burnished Gold) */
+    --primary: 42 35% 45%;
+    --primary-foreground: 40 20% 98%;
+    --ring: 42 35% 45%;
+    --ax-focus-ring: 42 35% 45%;
+    --ax-focus-offset: 2px;
+
+    /* Dividers */
+    --divider-soft: 40 10% 90%;
+    --divider-strong: 40 10% 82%;
+
+    /* Sidebar */
+    --sidebar: 40 20% 97.5%;
+    --sidebar-foreground: 25 10% 10%;
+    --sidebar-accent: 42 20% 92%;
+    --sidebar-accent-foreground: 42 35% 30%;
+
+    /* Semantic status */
+    --danger: 0 75% 55%;
+    --info: 210 50% 50%;
+    --success: 140 35% 35%;
+    --warn: 35 70% 50%;
+
+    /* Workflow: Approval */
+    --approve-bg: 140 25% 95%;
+    --approve-fg: 140 45% 25%;
+    --approve-bd: 140 20% 82%;
+
+    /* Workflow: Rejection */
+    --reject-bg: 0 30% 96%;
+    --reject-fg: 0 65% 35%;
+    --reject-bd: 0 25% 85%;
+
+    /* Workflow: Changes */
+    --changes-bg: 40 40% 94%;
+    --changes-fg: 35 60% 25%;
+    --changes-bd: 40 30% 82%;
+
+    /* Workflow: Pending */
+    --pending-bg: 240 5% 96%;
+    --pending-fg: 240 10% 40%;
+    --pending-bd: 240 5% 88%;
+
+    /* KPIs */
+    --kpi-up-bg: 140 25% 95%;
+    --kpi-up-fg: 140 45% 25%;
+    --kpi-up-bd: 140 20% 82%;
+    --kpi-down-bg: 0 30% 96%;
+    --kpi-down-fg: 0 65% 35%;
+    --kpi-down-bd: 0 25% 85%;
+    --kpi-flat-bg: 240 5% 96%;
+    --kpi-flat-fg: 240 10% 40%;
+    --kpi-flat-bd: 240 5% 88%;
+
+    /* Charting */
+    --ch-primary: 42 35% 45%;
+    --ch-secondary: 25 10% 25%;
+    --ch-muted: 40 10% 80%;
+    --ch-success: 140 35% 45%;
+    --ch-warn: 35 70% 60%;
+    --ch-danger: 0 75% 60%;
+    --ch-baseline: 25 10% 85%;
+    --ch-grid: 40 10% 92%;
+    --ch-axis: 25 5% 60%;
+    --ch-tooltip-bg: 25 10% 15%;
+    --ch-tooltip-fg: 40 20% 98%;
+    --ch-tooltip-bd: 25 10% 20%;
+
+    /* Component tokens */
+    --legend-dot: 25 10% 20%;
+    --ax-disabled-opacity: 0.45;
+    --ax-motion-fast: 150ms;
+    --ax-motion-base: 250ms;
+    --ax-motion-slow: 350ms;
+
+    /* Badges */
+    --badge-soft: 40 15% 92%;
+    --badge-soft-foreground: 25 10% 20%;
+    --badge-solid: 25 10% 10%;
+    --badge-solid-foreground: 40 20% 98%;
+
+    /* Status tags */
+    --status-draft-bg: 40 20% 94%;
+    --status-draft-fg: 25 10% 40%;
+    --status-draft-bd: 40 10% 85%;
+    --status-posted-bg: 140 25% 95%;
+    --status-posted-fg: 140 45% 25%;
+    --status-posted-bd: 140 20% 82%;
+    --status-void-bg: 0 0% 94%;
+    --status-void-fg: 0 0% 40%;
+    --status-void-bd: 0 0% 85%;
+    --status-warn-bg: 35 40% 94%;
+    --status-warn-fg: 35 60% 30%;
+    --status-warn-bd: 35 30% 85%;
+
+    /* Interactions */
+    --select-bg: 42 40% 94%;
+    --edit-bg: 40 30% 95%;
+    --danger-bg: 0 40% 96%;
+
+    /* Mappings */
+    --background: var(--surface-0);
+    --card: var(--surface-2);
+    --border: var(--divider-soft);
+    --muted: var(--surface-1);
+    --accent: var(--sidebar-accent);
+    --accent-foreground: var(--sidebar-accent-foreground);
+    --card-foreground: var(--foreground);
+    --popover: var(--surface-2);
+    --popover-foreground: var(--foreground);
+    --secondary: var(--surface-1);
+    --secondary-foreground: var(--foreground);
+    --destructive: var(--danger);
+    --destructive-foreground: 40 20% 98%;
+    --input: var(--divider-soft);
+  }
+
+  .dark {
+    /* Surfaces (Dark: Deep Onyx) */
+    --surface-0: 240 5% 7%;
+    --surface-1: 240 5% 10%;
+    --surface-2: 240 5% 12%;
+
+    /* Typography */
+    --foreground: 40 10% 95%;
+    --muted-foreground: 240 5% 60%;
+
+    /* Brand */
+    --primary: 42 45% 55%;
+    --primary-foreground: 40 10% 10%;
+    --ring: 42 45% 55%;
+    --ax-focus-ring: 42 45% 55%;
+    --ax-focus-offset: 2px;
+
+    /* Dividers */
+    --divider-soft: 240 5% 18%;
+    --divider-strong: 240 5% 25%;
+
+    /* Layout */
+    --layout-container-max: 80rem;
+    --layout-container-narrow: 48rem;
+    --layout-section-py: clamp(3rem, 6vw, 5rem);
+    --layout-gap: 1.5rem;
+
+    /* Sidebar */
+    --sidebar: 240 5% 8%;
+    --sidebar-foreground: 40 10% 95%;
+    --sidebar-accent: 240 5% 15%;
+    --sidebar-accent-foreground: 42 45% 60%;
+
+    /* Status */
+    --danger: 0 65% 60%;
+    --info: 210 60% 65%;
+    --success: 140 40% 55%;
+    --warn: 35 70% 60%;
+
+    /* Workflow (dark) */
+    --approve-bg: 140 30% 12%;
+    --approve-fg: 140 40% 80%;
+    --approve-bd: 140 20% 20%;
+    --reject-bg: 0 30% 15%;
+    --reject-fg: 0 60% 85%;
+    --reject-bd: 0 20% 25%;
+    --changes-bg: 40 25% 12%;
+    --changes-fg: 40 50% 80%;
+    --changes-bd: 40 20% 20%;
+    --pending-bg: 240 5% 14%;
+    --pending-fg: 240 5% 80%;
+    --pending-bd: 240 5% 22%;
+
+    /* KPIs (dark) */
+    --kpi-up-bg: 140 30% 12%;
+    --kpi-up-fg: 140 40% 80%;
+    --kpi-up-bd: 140 20% 20%;
+    --kpi-down-bg: 0 30% 15%;
+    --kpi-down-fg: 0 60% 85%;
+    --kpi-down-bd: 0 20% 25%;
+    --kpi-flat-bg: 240 5% 14%;
+    --kpi-flat-fg: 240 5% 80%;
+    --kpi-flat-bd: 240 5% 22%;
+
+    /* Charting (dark) */
+    --ch-primary: 42 45% 55%;
+    --ch-secondary: 240 5% 40%;
+    --ch-muted: 240 5% 25%;
+    --ch-success: 140 40% 55%;
+    --ch-warn: 35 70% 60%;
+    --ch-danger: 0 65% 60%;
+    --ch-baseline: 240 5% 25%;
+    --ch-grid: 240 5% 16%;
+    --ch-axis: 240 5% 40%;
+    --ch-tooltip-bg: 240 5% 18%;
+    --ch-tooltip-fg: 40 10% 95%;
+    --ch-tooltip-bd: 240 5% 25%;
+
+    /* Component tokens */
+    --legend-dot: 40 10% 90%;
+    --badge-soft: 240 5% 16%;
+    --badge-soft-foreground: 42 45% 65%;
+    --badge-solid: 40 10% 95%;
+    --badge-solid-foreground: 240 5% 10%;
+
+    /* Status tags */
+    --status-draft-bg: 240 5% 14%;
+    --status-draft-fg: 240 5% 70%;
+    --status-draft-bd: 240 5% 20%;
+    --status-posted-bg: 140 30% 12%;
+    --status-posted-fg: 140 40% 80%;
+    --status-posted-bd: 140 20% 20%;
+    --status-void-bg: 0 0% 14%;
+    --status-void-fg: 0 0% 70%;
+    --status-void-bd: 0 0% 20%;
+    --status-warn-bg: 35 30% 14%;
+    --status-warn-fg: 35 50% 80%;
+    --status-warn-bd: 35 20% 22%;
+
+    /* Interactions */
+    --select-bg: 42 25% 15%;
+    --edit-bg: 40 20% 14%;
+    --danger-bg: 0 25% 16%;
+
+    /* Mappings */
+    --background: var(--surface-0);
+    --card: var(--surface-2);
+    --border: var(--divider-soft);
+    --muted: var(--surface-1);
+    --accent: var(--sidebar-accent);
+    --accent-foreground: var(--sidebar-accent-foreground);
+    --card-foreground: var(--foreground);
+    --popover: var(--surface-2);
+    --popover-foreground: var(--foreground);
+    --secondary: var(--surface-1);
+    --secondary-foreground: var(--foreground);
+    --destructive: var(--danger);
+    --destructive-foreground: 40 10% 10%;
+    --input: var(--divider-soft);
+  }
+}
+
+/* --- 4. POLISH --- */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.2);
+    color: hsl(var(--foreground));
+  }
+
+  /* Refined scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border/50 rounded-full hover:bg-border;
+  }
+
+  /* Reduced motion: respect user preference for animations */
+  @media (prefers-reduced-motion: reduce) {
+    :root,
+    .dark {
+      --ax-motion-fast: 0ms;
+      --ax-motion-base: 0ms;
+      --ax-motion-slow: 0ms;
+    }
+  }
+
+  /* View Transition API for animated theme toggle */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+}

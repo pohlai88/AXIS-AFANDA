@@ -1,0 +1,395 @@
+/**
+ * Luxury utilities — purely additive.
+ * Safe: does NOT replace shadcn semantics; only provides luxury shortcuts.
+ * Use: @import from app/globals.css (after tailwindcss).
+ */
+
+@layer utilities {
+  /* -----------------------------
+     Surfaces / elevation (executive calm)
+  ------------------------------ */
+
+  /* Slight "sheen" card surface (panels, dialogs, premium cards) */
+  .bg-lux-surface {
+    background:
+      linear-gradient(
+        to bottom,
+        color-mix(in hsl, hsl(var(--card)) 92%, white),
+        hsl(var(--card))
+      );
+  }
+
+  /* "Paper" surface for reading-heavy pages (reports, ledger, board packs) */
+  .bg-lux-paper {
+    background:
+      radial-gradient(
+        1200px 600px at 20% 0%,
+        color-mix(in hsl, hsl(var(--background)) 88%, hsl(var(--primary)) 12%),
+        hsl(var(--background))
+      );
+  }
+
+  /* Premium border (less flat than border-border). Use with border or border-t etc. */
+  .border-lux {
+    border-color: color-mix(in hsl, hsl(var(--border)) 78%, hsl(var(--primary)) 22%);
+  }
+
+  /* Soft shadow — adapts to light/dark (foreground-based) */
+  .shadow-lux {
+    box-shadow:
+      0 1px 0 hsl(var(--border) / 0.8),
+      0 12px 30px hsl(var(--foreground) / 0.08);
+  }
+
+  /* Stronger elevation (modals, command palette) */
+  .shadow-lux-strong {
+    box-shadow:
+      0 1px 0 hsl(var(--border) / 0.85),
+      0 22px 55px hsl(var(--foreground) / 0.16);
+  }
+
+  /* Card with gold top-edge glow on hover (lightning effect) */
+  .card-glow-lux {
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--ax-motion-fast) ease;
+  }
+  .card-glow-lux::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--primary) / 0.3) 15%,
+      hsl(var(--primary) / 0.8) 35%,
+      hsl(var(--primary)) 50%,
+      hsl(var(--primary) / 0.8) 65%,
+      hsl(var(--primary) / 0.3) 85%,
+      transparent 100%
+    );
+    opacity: 0;
+    transform: scaleX(0.3);
+    transition:
+      opacity var(--ax-motion-base) ease,
+      transform var(--ax-motion-base) ease;
+    pointer-events: none;
+  }
+  .card-glow-lux::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 40px;
+    background: radial-gradient(
+      ellipse 80% 100% at 50% 0%,
+      hsl(var(--primary) / 0.2) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity var(--ax-motion-base) ease;
+    pointer-events: none;
+  }
+  .card-glow-lux:hover {
+    transform: translateY(-2px);
+  }
+  .card-glow-lux:hover::before {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  .card-glow-lux:hover::after {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card-glow-lux {
+      transition: none;
+    }
+    .card-glow-lux::before,
+    .card-glow-lux::after {
+      transition: none;
+    }
+    .card-glow-lux:hover {
+      transform: none;
+    }
+  }
+
+  /* -----------------------------
+     Rings / focus (gold refinement)
+  ------------------------------ */
+
+  /* Luxury ring color. Use with ring-2 focus:ring-2 focus:ring-lux */
+  .ring-lux {
+    --tw-ring-color: hsl(var(--primary) / 0.45);
+  }
+  .ring-lux-strong {
+    --tw-ring-color: hsl(var(--primary) / 0.65);
+  }
+
+  /* Gentle glow (hero controls only). Standalone — don’t combine with ring-2. */
+  .ring-lux-glow {
+    box-shadow:
+      0 0 0 4px hsl(var(--primary) / 0.14),
+      0 0 0 1px hsl(var(--border) / 0.9);
+  }
+
+  /* Focus-visible outline for custom focusables (e.g. div[tabIndex]) */
+  .focus-lux-outline:focus-visible {
+    outline: 2px solid hsl(var(--ax-focus-ring));
+    outline-offset: var(--ax-focus-offset);
+  }
+
+  /* -----------------------------
+     Hero typography (crystalline / monolithic)
+  ------------------------------ */
+
+  /* Hero headline — tight, compact, gradient fade into void */
+  .text-hero-lux {
+    font-weight: 600;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--foreground)) 0%,
+      hsl(var(--foreground)) 60%,
+      hsl(var(--foreground) / 0.3) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px hsl(var(--foreground) / 0.15));
+  }
+
+  /* Dark mode: white crystalline fade */
+  .dark .text-hero-lux {
+    background: linear-gradient(
+      to bottom,
+      white 0%,
+      white 60%,
+      hsl(0 0% 100% / 0.3) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(0 2px 8px hsl(0 0% 0% / 0.5));
+  }
+
+  /* Hero subheadline — same weight, looser leading */
+  .text-hero-sub-lux {
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Tighter tracking for hero use */
+  .tracking-hero {
+    letter-spacing: -0.05em;
+  }
+
+  /* Compact leading for hero stacking */
+  .leading-hero {
+    line-height: 0.9;
+  }
+
+  /* -----------------------------
+     Gold accents (use sparingly)
+  ------------------------------ */
+
+  .text-lux-gold {
+    color: hsl(var(--primary));
+  }
+
+  .bg-lux-gold-soft {
+    background: hsl(var(--primary) / 0.12);
+  }
+
+  .border-lux-gold {
+    border-color: hsl(var(--primary) / 0.35);
+  }
+
+  /* Hairline "gilded rule" separator. Use with w-full (or desired width). */
+  .rule-lux {
+    height: 1px;
+    background:
+      linear-gradient(
+        to right,
+        transparent,
+        hsl(var(--primary) / 0.35),
+        transparent
+      );
+  }
+
+  /* Gold button shimmer — subtle hover shine */
+  .btn-gold-lux {
+    position: relative;
+    overflow: hidden;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    transition:
+      transform var(--ax-motion-fast) ease,
+      box-shadow var(--ax-motion-base) ease;
+  }
+  .btn-gold-lux::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      hsl(0 0% 100% / 0.25) 50%,
+      transparent 100%
+    );
+    transition: left var(--ax-motion-slow) ease;
+    pointer-events: none;
+  }
+  .btn-gold-lux:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 4px 12px hsl(var(--primary) / 0.35),
+      0 1px 3px hsl(var(--primary) / 0.2);
+  }
+  .btn-gold-lux:hover::before {
+    left: 120%;
+  }
+  .btn-gold-lux:active {
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-gold-lux {
+      transition: none;
+    }
+    .btn-gold-lux::before {
+      display: none;
+    }
+    .btn-gold-lux:hover {
+      transform: none;
+    }
+  }
+
+  /* -----------------------------
+     Badges / tags (executive labels)
+  ------------------------------ */
+
+  .badge-lux {
+    background: hsl(var(--primary) / 0.12);
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--primary) / 0.25);
+  }
+
+  .badge-lux-solid {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border: 1px solid hsl(var(--primary) / 0.65);
+  }
+
+  /* -----------------------------
+     Table polish (boardroom / finance)
+  ------------------------------ */
+
+  .table-lux {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .table-lux thead th {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .table-lux tbody tr:hover {
+    background: hsl(var(--primary) / 0.06);
+  }
+
+  /* -----------------------------
+     Interactive sheen (buttons, pills)
+  ------------------------------ */
+
+  .sheen-lux {
+    position: relative;
+    overflow: hidden;
+  }
+  .sheen-lux::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        120deg,
+        transparent 0%,
+        hsl(var(--primary) / 0.08) 22%,
+        transparent 45%
+      );
+    transform: translateX(-40%);
+    transition: transform var(--ax-motion-slow) ease;
+    pointer-events: none;
+  }
+  .sheen-lux:hover::after {
+    transform: translateX(40%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sheen-lux::after {
+      transition: none;
+    }
+    .sheen-lux:hover::after {
+      transform: translateX(-40%);
+    }
+  }
+
+  /* -----------------------------
+     Motion (use with transition, etc.)
+  ------------------------------ */
+
+  .duration-lux-fast {
+    transition-duration: var(--ax-motion-fast);
+  }
+  .duration-lux-base {
+    transition-duration: var(--ax-motion-base);
+  }
+  .duration-lux-slow {
+    transition-duration: var(--ax-motion-slow);
+  }
+
+  /* Disabled-like opacity for custom UI */
+  .opacity-disabled {
+    opacity: var(--ax-disabled-opacity);
+  }
+
+  /* -----------------------------
+     Loading skeleton (boardroom / tables)
+  ------------------------------ */
+
+  .bg-lux-skeleton {
+    background:
+      linear-gradient(
+        90deg,
+        hsl(var(--muted)) 0%,
+        color-mix(in hsl, hsl(var(--muted)) 75%, hsl(var(--background))) 50%,
+        hsl(var(--muted)) 100%
+      );
+    background-size: 200% 100%;
+    animation: lux-skeleton-shine 1.5s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bg-lux-skeleton {
+      animation: none;
+      background: hsl(var(--muted));
+      background-size: auto;
+    }
+  }
+}
+
+@keyframes lux-skeleton-shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
