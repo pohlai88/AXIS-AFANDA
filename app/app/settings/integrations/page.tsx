@@ -386,8 +386,8 @@ export default function IntegrationsSettingsPage() {
                   <p className="text-sm text-muted-foreground">
                     <strong>Note:</strong> Keycloak is the single source of truth for identity and permissions. 
                     Teams are self-managed and do not sync to Keycloak.
-                  </p>
-                </div>
+          </p>
+        </div>
 
                 <Button className="w-full">Save Keycloak Settings</Button>
                 <Button variant="outline" className="w-full">Test Connection</Button>

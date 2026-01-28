@@ -83,31 +83,39 @@ Work should be a **sanctuary of order** within life's chaos. We provide the comp
 ### Prerequisites
 
 - Node.js 18+
-- pnpm (or npm/yarn)
-- Docker & Docker Compose
+- npm (or pnpm/yarn)
+- Docker (for Keycloak)
 
-### Installation
+### Quick Start (10 minutes)
 
-1. **Install dependencies**
+See **[Keycloak Quick Start Guide](.dev-docs/KEYCLOAK-QUICK-START.md)** for step-by-step setup.
+
+**TL;DR**:
+
+1. **Start Keycloak**:
    ```bash
-   pnpm install
+   docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak start-dev
    ```
 
-2. **Start core services**
-   ```bash
-   docker-compose up -d postgres redis keycloak
-   ```
-
-3. **Configure Keycloak**
-   - Navigate to http://localhost:8080
-   - Login with admin/admin_password
+2. **Configure Keycloak** (http://localhost:8080/admin):
    - Create realm: `axis`
-   - Create client: `shell-app` (Standard flow, root URL: http://localhost:3000)
+   - Create client: `shell-app`
+   - Add groups mapper (critical!)
+   - Create test user and groups
 
-4. **Start development servers**
+3. **Set up environment**:
    ```bash
-   pnpm dev
+   cp .env.example .env.local
+   # Edit .env.local with Keycloak client secret
    ```
+
+4. **Install and run**:
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+5. **Test**: Navigate to http://localhost:3000/app
 
 ---
 
@@ -145,8 +153,19 @@ This single flow validates:
 
 ## Documentation
 
-- **[Brand Positioning](.dev-docs/BRAND-POSITIONING.md)** — Complete brand strategy and messaging
-- **[Project Spec](.dev-docs/PROJECT-SPEC.md)** — Architecture, stack, roadmap
+### Getting Started
+- **[Keycloak Quick Start](.dev-docs/KEYCLOAK-QUICK-START.md)** — 10-minute setup guide
+- **[Keycloak IAM Setup](.dev-docs/KEYCLOAK-IAM-SETUP.md)** — Complete Keycloak configuration
+- **[Keycloak IAM Implementation](.dev-docs/KEYCLOAK-IAM-IMPLEMENTATION.md)** — Implementation details
+
+### Architecture & Spec
+- **[Project Spec](.dev-docs/PROJECT-SPEC.md)** — Architecture, stack, roadmap (canonical)
+- **[Project Reference](.dev-docs/AXIS-AFENDA-PROJECT-REF.md)** — Detailed technical reference
+- **[Agent Guidelines](AGENTS.md)** — DRY principles, design system, conventions
+
+### Brand & Design
+- **[Brand Positioning](.dev-docs/BRAND-POSITIONING.md)** — Brand strategy and messaging
+- **[Design System Integration](.dev-docs/DESIGN_SYSTEM_INTEGRATION.md)** — shadcn/ui + blocks
 - **[Competitive Analysis](.dev-docs/LITTLEBIRD-COMPETITIVE-ANALYSIS.md)** — Market positioning
 - **[Agent Guidelines](AGENTS.md)** — Development guidelines
 

@@ -8,6 +8,8 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { CommandPalette } from "@/app/components/command-palette";
 import { ErrorBoundary } from "@/app/components/error-boundary";
 import { useCommandPalette } from "@/app/hooks/use-command-palette";
+import { useActivityStream } from "@/app/lib/sse-client";
+import { ChatwootWidget } from "@/app/components/chatwoot-widget";
 
 // Mock tenants for development (will be replaced with Keycloak later)
 const mockTenants = [
@@ -22,6 +24,10 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const { open, setOpen } = useCommandPalette();
+
+  // Connect to SSE for real-time updates
+  // TODO: Get actual tenant ID from auth context
+  useActivityStream('mock-tenant-id');
 
   return (
     <TenantProvider tenants={mockTenants} initialTenant={mockTenants[0]}>
@@ -44,6 +50,7 @@ export default function AppLayout({
         </SidebarInset>
       </SidebarProvider>
       <CommandPalette open={open} onOpenChange={setOpen} />
+      <ChatwootWidget />
     </TenantProvider>
   );
 }

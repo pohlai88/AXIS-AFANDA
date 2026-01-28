@@ -8,7 +8,7 @@ export const activityItemSchema = z.object({
   description: z.string().optional(),
   actor: z.string().optional(), // User name
   timestamp: z.string(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
   url: z.string().optional(),
 });
 

@@ -15,6 +15,7 @@ type TenantContextType = {
   tenant: Tenant | null;
   setTenant: (tenant: Tenant | null) => void;
   tenants: Tenant[];
+  isLoading: boolean;
 };
 
 const TenantContext = React.createContext<TenantContextType | undefined>(
@@ -33,6 +34,17 @@ export function TenantProvider({
   const [tenant, setTenantState] = React.useState<Tenant | null>(
     initialTenant ?? null
   );
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  // Set initial tenant
+  React.useEffect(() => {
+    if (!tenant && tenants.length > 0) {
+      setTenantState(tenants[0]);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("tenant", JSON.stringify(tenants[0]));
+      }
+    }
+  }, [tenant, tenants]);
 
   const setTenant = React.useCallback((newTenant: Tenant | null) => {
     setTenantState(newTenant);
@@ -48,26 +60,28 @@ export function TenantProvider({
 
   // Load from localStorage on mount
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("tenant");
-      if (stored) {
-        try {
-          const parsed = tenantSchema.parse(JSON.parse(stored));
-          setTenantState(parsed);
-        } catch {
-          // Invalid stored tenant, ignore
-        }
+    if (typeof window === "undefined" || tenants.length === 0) return;
+    const stored = localStorage.getItem("tenant");
+    if (!stored) return;
+    try {
+      const parsed = tenantSchema.parse(JSON.parse(stored));
+      const isValid = tenants.some((t) => t.id === parsed.id);
+      if (isValid) {
+        setTenantState(parsed);
       }
+    } catch {
+      // Invalid stored tenant, ignore
     }
-  }, []);
+  }, [tenants]);
 
   const value = React.useMemo(
     () => ({
       tenant,
       setTenant,
       tenants,
+      isLoading,
     }),
-    [tenant, setTenant, tenants]
+    [tenant, setTenant, tenants, isLoading]
   );
 
   return (

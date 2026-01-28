@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import {
-  Inbox,
+  Mail,
   CheckSquare,
   MessageSquare,
   Video,
@@ -11,6 +11,7 @@ import {
   HelpCircle,
   LayoutDashboard,
   Activity,
+  Users2,
 } from "lucide-react";
 import {
   Sidebar,
@@ -35,7 +36,14 @@ const navMain = [
   {
     title: "Inbox",
     url: "/app/inbox",
-    icon: Inbox,
+    icon: Mail,
+    description: "Internal team communication",
+  },
+  {
+    title: "Omnichannel",
+    url: "/app/omnichannel",
+    icon: Users2,
+    description: "Customer conversations across all channels",
   },
   {
     title: "Approvals",
@@ -46,11 +54,6 @@ const navMain = [
     title: "Activity",
     url: "/app/activity",
     icon: Activity,
-  },
-  {
-    title: "Omnichannel",
-    url: "/app/omnichannel",
-    icon: MessageSquare,
   },
   {
     title: "Consultations",

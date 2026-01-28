@@ -4,7 +4,7 @@ import * as React from "react";
 import { SettingsLayout } from "@/app/components/settings-layout";
 import {
   Video, PenTool, Monitor, FileText, Mic, Camera,
-  Globe, Smartphone, Layers, Circle, Server, Shield,
+  Globe, Smartphone, Layers, CircleDot, Server, Shield,
   Eye, RefreshCw, Zap
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -804,7 +804,7 @@ export default function CollaborationSettingsPage() {
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <Circle className="h-5 w-5" />
+                  <CircleDot className="h-5 w-5" />
                   <CardTitle>Conversation Recording</CardTitle>
                 </div>
                 <CardDescription>

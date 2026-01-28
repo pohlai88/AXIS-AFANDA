@@ -1,0 +1,38 @@
+{
+  "name": "@axis-afenda/orchestrator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:seed": "tsx seed-tenant.ts",
+    "db:check": "tsx check-data.ts",
+    "setup:inboxes": "tsx setup-inboxes.ts",
+    "type-check": "tsc --noEmit",
+    "test:webhook": "tsx test-webhook.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.0",
+    "@hono/zod-validator": "^0.7.6",
+    "@neondatabase/serverless": "^0.10.0",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.37.0",
+    "hono": "^4.7.10",
+    "ws": "^8.18.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "@types/ws": "^8.5.13",
+    "drizzle-kit": "^0.30.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

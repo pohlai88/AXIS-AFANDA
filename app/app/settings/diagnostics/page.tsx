@@ -1,8 +1,8 @@
 "use client";
 
 import { SettingsLayout } from "@/app/components/settings-layout";
-import { 
-  Activity, FileText, Database, Server, AlertTriangle, 
+import {
+  Activity, FileText, Database, Server, AlertTriangle,
   Download, RefreshCw, CheckCircle, XCircle, Clock,
   Eye, EyeOff, Filter, Search, Trash2, Archive
 } from "lucide-react";
@@ -60,14 +60,14 @@ export default function DiagnosticsSettingsPage() {
                   <AlertTriangle className="h-4 w-4" />
                   <AlertTitle>Diagnostic Package</AlertTitle>
                   <AlertDescription>
-                    Diagnostic packages contain system information, logs, and configuration data. 
+                    Diagnostic packages contain system information, logs, and configuration data.
                     Use them when contacting support or troubleshooting issues.
                   </AlertDescription>
                 </Alert>
 
                 <div className="space-y-4">
                   <Label>Include in Diagnostic Package</Label>
-                  
+
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="space-y-0.5">
@@ -328,12 +328,12 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Component-Specific Log Levels</Label>
-                  
+
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm">Orchestrator API</Label>
-                      <Select defaultValue="info" className="w-32">
-                        <SelectTrigger>
+                      <Select defaultValue="info">
+                        <SelectTrigger className="w-32">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -348,8 +348,8 @@ export default function DiagnosticsSettingsPage() {
 
                     <div className="flex items-center justify-between">
                       <Label className="text-sm">Shell (Next.js)</Label>
-                      <Select defaultValue="warn" className="w-32">
-                        <SelectTrigger>
+                      <Select defaultValue="warn">
+                        <SelectTrigger className="w-32">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -364,8 +364,8 @@ export default function DiagnosticsSettingsPage() {
 
                     <div className="flex items-center justify-between">
                       <Label className="text-sm">Keycloak Integration</Label>
-                      <Select defaultValue="warn" className="w-32">
-                        <SelectTrigger>
+                      <Select defaultValue="warn">
+                        <SelectTrigger className="w-32">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -380,8 +380,8 @@ export default function DiagnosticsSettingsPage() {
 
                     <div className="flex items-center justify-between">
                       <Label className="text-sm">Chatwoot Integration</Label>
-                      <Select defaultValue="info" className="w-32">
-                        <SelectTrigger>
+                      <Select defaultValue="info">
+                        <SelectTrigger className="w-32">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -396,8 +396,8 @@ export default function DiagnosticsSettingsPage() {
 
                     <div className="flex items-center justify-between">
                       <Label className="text-sm">Matrix Integration</Label>
-                      <Select defaultValue="warn" className="w-32">
-                        <SelectTrigger>
+                      <Select defaultValue="warn">
+                        <SelectTrigger className="w-32">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -412,8 +412,8 @@ export default function DiagnosticsSettingsPage() {
 
                     <div className="flex items-center justify-between">
                       <Label className="text-sm">Jitsi Integration</Label>
-                      <Select defaultValue="warn" className="w-32">
-                        <SelectTrigger>
+                      <Select defaultValue="warn">
+                        <SelectTrigger className="w-32">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -432,7 +432,7 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Log Destinations</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Console Output</Label>
@@ -477,7 +477,7 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Log Rotation</Label>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="max-log-size">Max Log File Size (MB)</Label>
                     <Input
@@ -539,7 +539,7 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Audit Events to Log</Label>
-                  
+
                   <div className="grid gap-3 md:grid-cols-2">
                     <div className="flex items-center justify-between p-2 border rounded">
                       <Label className="text-sm">User Authentication</Label>
@@ -588,7 +588,7 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Audit Log Storage</Label>
-                  
+
                   <div className="space-y-2">
                     <Label>Storage Type</Label>
                     <Select defaultValue="database">
@@ -627,7 +627,7 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Audit Log Access</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Require Admin Role</Label>
@@ -772,10 +772,10 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Migration Management</Label>
-                  
+
                   <div className="p-4 bg-muted rounded-lg">
                     <p className="text-sm text-muted-foreground mb-2">
-                      Database migrations are automatically applied on server startup. 
+                      Database migrations are automatically applied on server startup.
                       Use manual migration only for troubleshooting.
                     </p>
                     <div className="flex gap-2">
@@ -792,7 +792,7 @@ export default function DiagnosticsSettingsPage() {
                     <AlertTriangle className="h-4 w-4" />
                     <AlertTitle>Migration Safety</AlertTitle>
                     <AlertDescription>
-                      Always backup your database before running migrations manually. 
+                      Always backup your database before running migrations manually.
                       Automatic migrations are recommended for production.
                     </AlertDescription>
                   </Alert>
@@ -802,7 +802,7 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Database Connection</Label>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="db-host">Host</Label>
                     <Input
@@ -847,7 +847,7 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Database Health</Label>
-                  
+
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-3 border rounded-lg">
                       <div className="flex items-center justify-between mb-2">
@@ -938,7 +938,7 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Monitoring Settings</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Enable Performance Monitoring</Label>
@@ -997,7 +997,7 @@ export default function DiagnosticsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>External Monitoring</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Prometheus Metrics</Label>

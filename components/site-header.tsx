@@ -1,20 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-
-function TenantSwitcherSafe() {
-  try {
-    const { useTenant } = require("@/app/providers/tenant-provider");
-    useTenant(); // Check if provider exists
-    const { TenantSwitcher } = require("@/app/components/tenant-switcher");
-    return <TenantSwitcher />;
-  } catch {
-    return null;
-  }
-}
+import { Separator } from "@/components/ui/separator";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { TenantSwitcher } from "@/app/components/tenant-switcher";
 
 export function SiteHeader() {
   return (
@@ -27,9 +16,9 @@ export function SiteHeader() {
         />
         <h1 className="text-base font-medium">Dashboard</h1>
         <div className="ml-auto flex items-center gap-2">
-          <TenantSwitcherSafe />
+          <TenantSwitcher />
         </div>
       </div>
     </header>
-  )
+  );
 }
