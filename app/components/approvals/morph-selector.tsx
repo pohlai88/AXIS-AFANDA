@@ -68,19 +68,6 @@ export function MorphSelector({ approval, onMorph, processing = false }: MorphSe
     await onMorph(targetScope, targetId, morphReason);
   };
 
-  const getScopeIcon = (scope: string) => {
-    switch (scope) {
-      case 'org':
-        return Building2;
-      case 'team':
-        return Users;
-      case 'individual':
-        return User;
-      default:
-        return GitBranch;
-    }
-  };
-
   const getScopeLabel = (scope: string) => {
     switch (scope) {
       case 'org':
@@ -110,10 +97,10 @@ export function MorphSelector({ approval, onMorph, processing = false }: MorphSe
         <div className="rounded-lg border bg-muted/50 p-3">
           <p className="text-xs font-medium text-muted-foreground mb-1">Current Scope</p>
           <div className="flex items-center gap-2">
-            {(() => {
-              const Icon = getScopeIcon(approval.scope);
-              return <Icon className="h-4 w-4" />;
-            })()}
+            {approval.scope === 'org' && <Building2 className="h-4 w-4" />}
+            {approval.scope === 'team' && <Users className="h-4 w-4" />}
+            {approval.scope === 'individual' && <User className="h-4 w-4" />}
+            {!['org', 'team', 'individual'].includes(approval.scope) && <GitBranch className="h-4 w-4" />}
             <span className="text-sm font-medium">{getScopeLabel(approval.scope)}</span>
             <Badge variant="outline" className="text-xs">
               {approval.scopeId}

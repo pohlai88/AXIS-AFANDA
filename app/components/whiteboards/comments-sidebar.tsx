@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   DropdownMenu,
@@ -52,14 +51,13 @@ interface CommentsSidebarProps {
 }
 
 export function CommentsSidebar({
-  whiteboardId,
   comments,
   onAddComment,
   onEditComment,
   onDeleteComment,
   onPinComment,
   currentUserId,
-}: CommentsSidebarProps) {
+}: Omit<CommentsSidebarProps, 'whiteboardId'>) {
   const [newComment, setNewComment] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);

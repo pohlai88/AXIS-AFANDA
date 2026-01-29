@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 
 interface JitsiMeetingProps {
@@ -9,34 +9,26 @@ interface JitsiMeetingProps {
   onMeetingEnd?: () => void;
 }
 
+interface JitsiApi {
+  dispose: () => void;
+  addEventListener: (event: string, callback: (data?: unknown) => void) => void;
+}
+
+interface JitsiMeetExternalAPIConstructor {
+  new(domain: string, options: Record<string, unknown>): JitsiApi;
+}
+
 declare global {
   interface Window {
-    JitsiMeetExternalAPI: any;
+    JitsiMeetExternalAPI: JitsiMeetExternalAPIConstructor;
   }
 }
 
 export function JitsiMeeting({ roomName, userName = 'Guest', onMeetingEnd }: JitsiMeetingProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const apiRef = useRef<any>(null);
+  const apiRef = useRef<JitsiApi | null>(null);
 
-  useEffect(() => {
-    // Load Jitsi Meet API script
-    const script = document.createElement('script');
-    script.src = 'https://meet.jit.si/external_api.js';
-    script.async = true;
-    script.onload = () => initializeJitsi();
-    document.body.appendChild(script);
-
-    return () => {
-      // Cleanup
-      if (apiRef.current) {
-        apiRef.current.dispose();
-      }
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const initializeJitsi = () => {
+  const initializeJitsi = useCallback(() => {
     if (!containerRef.current || !window.JitsiMeetExternalAPI) return;
 
     const domain = 'meet.jit.si';
@@ -70,10 +62,27 @@ export function JitsiMeeting({ roomName, userName = 'Guest', onMeetingEnd }: Jit
       }
     });
 
-    apiRef.current.addEventListener('videoConferenceJoined', (data: any) => {
+    apiRef.current.addEventListener('videoConferenceJoined', (data) => {
       console.log('User joined:', data);
     });
-  };
+  }, [roomName, userName, onMeetingEnd]);
+
+  useEffect(() => {
+    // Load Jitsi Meet API script
+    const script = document.createElement('script');
+    script.src = 'https://meet.jit.si/external_api.js';
+    script.async = true;
+    script.onload = () => initializeJitsi();
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup
+      if (apiRef.current) {
+        apiRef.current.dispose();
+      }
+      document.body.removeChild(script);
+    };
+  }, [initializeJitsi]);
 
   return (
     <Card className="overflow-hidden">

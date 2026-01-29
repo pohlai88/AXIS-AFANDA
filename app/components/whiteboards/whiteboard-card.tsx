@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import {
   MoreVertical,
@@ -21,7 +22,6 @@ import {
   FileImage,
   MessageSquare,
 } from 'lucide-react';
-import Link from 'next/link';
 
 export interface Whiteboard {
   id: string;
@@ -50,12 +50,13 @@ export function WhiteboardCard({ whiteboard, onDuplicate, onDelete }: Whiteboard
     <Card className="group relative overflow-hidden transition-all hover:shadow-lg">
       {/* Thumbnail */}
       <Link href={`/app/whiteboards/${whiteboard.id}`}>
-        <div className="aspect-video w-full overflow-hidden bg-muted">
+        <div className="aspect-video w-full overflow-hidden bg-muted relative">
           {whiteboard.thumbnailUrl ? (
-            <img
+            <Image
               src={whiteboard.thumbnailUrl}
               alt={whiteboard.name}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              fill
+              className="object-cover transition-transform group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">

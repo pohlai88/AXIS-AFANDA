@@ -163,7 +163,8 @@ export default function OmnichannelSetupPage() {
   const [selectedChannels, setSelectedChannels] = useState<string[]>([]);
   const [configuringChannel, setConfiguringChannel] = useState<string | null>(null);
   const [configuredChannels, setConfiguredChannels] = useState<string[]>([]);
-  const [channelData, setChannelData] = useState<Record<string, any>>({});
+  // Channel configuration data storage
+  const [channelData, setChannelData] = useState<Record<string, Record<string, string>>>({});
 
   const progress = step === 'welcome' ? 0 : step === 'select' ? 25 : step === 'configure' ? 75 : 100;
 
@@ -236,7 +237,7 @@ export default function OmnichannelSetupPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Zap className="h-5 w-5 text-yellow-500" />
-                    What you'll get
+                    What you&apos;ll get
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -425,7 +426,7 @@ export default function OmnichannelSetupPage() {
                               </code>
                             </div>
                             <Button className="w-full" onClick={handleSaveChannel}>
-                              I've Added the Widget
+                              I&apos;ve Added the Widget
                             </Button>
                           </div>
                         );
@@ -556,7 +557,7 @@ export default function OmnichannelSetupPage() {
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
                   <CheckCircle2 className="h-8 w-8 text-green-500" />
                 </div>
-                <h2 className="text-3xl font-bold">You're All Set! 🎉</h2>
+                <h2 className="text-3xl font-bold">You&apos;re All Set! 🎉</h2>
                 <p className="mt-2 text-lg text-muted-foreground">
                   Your omnichannel inbox is ready to use
                 </p>
@@ -566,7 +567,7 @@ export default function OmnichannelSetupPage() {
                 <CardHeader>
                   <CardTitle>Connected Channels</CardTitle>
                   <CardDescription>
-                    You've successfully connected {configuredChannels.length} channel
+                    You&apos;ve successfully connected {configuredChannels.length} channel
                     {configuredChannels.length !== 1 && 's'}
                   </CardDescription>
                 </CardHeader>
@@ -599,7 +600,7 @@ export default function OmnichannelSetupPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-primary" />
-                    What's Next?
+                    What&apos;s Next?
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">

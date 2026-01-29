@@ -24,6 +24,20 @@ export interface Conversation {
   updatedAt: Date;
 }
 
+/**
+ * Message attachment from Chatwoot
+ */
+export interface MessageAttachment {
+  id: number;
+  messageId: number;
+  fileType: string;
+  accountId: number;
+  extension?: string;
+  dataUrl: string;
+  thumbUrl?: string;
+  fileSize?: number;
+}
+
 export interface Message {
   id: string;
   conversationId: string;
@@ -34,7 +48,7 @@ export interface Message {
   senderId: number;
   senderName?: string;
   private: boolean;
-  attachments?: any[];
+  attachments?: MessageAttachment[];
   createdAt: Date;
 }
 

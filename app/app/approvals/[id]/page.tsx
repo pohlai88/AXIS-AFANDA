@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getApproval, approveApproval, rejectApproval } from '@/app/lib/api/approvals';
 import { ApprovalDetail } from '@/app/components/approvals/approval-detail';
@@ -18,29 +18,31 @@ export default function ApprovalDetailPage() {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
 
-  const fetchApproval = async () => {
+  const fetchApproval = useCallback(async () => {
     try {
       setLoading(true);
       const result = await getApproval(approvalId);
+      const approval = result.data as Record<string, unknown>;
       setApproval({
-        ...result.data,
-        createdAt: new Date(result.data.createdAt),
-        updatedAt: new Date(result.data.updatedAt),
-        approvedAt: result.data.approvedAt ? new Date(result.data.approvedAt) : undefined,
-        rejectedAt: result.data.rejectedAt ? new Date(result.data.rejectedAt) : undefined,
-        submittedAt: result.data.submittedAt ? new Date(result.data.submittedAt) : undefined,
-      });
+        ...approval,
+        templateId: approval.templateId as string || '',
+        createdAt: new Date(approval.createdAt as string),
+        updatedAt: new Date(approval.updatedAt as string),
+        approvedAt: approval.approvedAt ? new Date(approval.approvedAt as string) : undefined,
+        rejectedAt: approval.rejectedAt ? new Date(approval.rejectedAt as string) : undefined,
+        submittedAt: approval.submittedAt ? new Date(approval.submittedAt as string) : undefined,
+      } as Approval);
     } catch (error) {
       console.error('Failed to fetch approval:', error);
       toast.error('Failed to load approval');
     } finally {
       setLoading(false);
     }
-  };
+  }, [approvalId]);
 
   useEffect(() => {
     fetchApproval();
-  }, [approvalId]);
+  }, [fetchApproval]);
 
   const handleApprove = async (decision: string) => {
     if (!approval) return;

@@ -1,12 +1,18 @@
 'use client';
 
 import * as React from 'react';
-import { Button, type ButtonProps } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import type { VariantProps } from 'class-variance-authority';
+import { buttonVariants } from '@/components/ui/button';
 
-export interface ShimmerButtonProps extends ButtonProps {
+export interface ShimmerButtonProps
+  extends React.ComponentProps<'button'>,
+  VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
   shimmerColor?: string;
   shimmerDuration?: string;
+  children?: React.ReactNode;
 }
 
 const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(

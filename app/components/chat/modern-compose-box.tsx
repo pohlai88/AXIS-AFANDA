@@ -13,7 +13,6 @@ import {
   Paperclip,
   Smile,
   Image as ImageIcon,
-  Mic,
   Plus,
   X
 } from 'lucide-react';
@@ -81,7 +80,7 @@ export function ModernComposeBox({
     }
   };
 
-  const handleEmojiClick = (emojiData: any) => {
+  const handleEmojiClick = (emojiData: { emoji: string }) => {
     const emoji = emojiData.emoji;
     const textarea = textareaRef.current;
     if (!textarea) return;

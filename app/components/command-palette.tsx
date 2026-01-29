@@ -21,11 +21,10 @@ import {
   HelpCircle,
   Users,
   Shield,
-  Bell,
   Search,
   Activity,
 } from "lucide-react";
-import { getEnabledModules, type Module } from "@/app/lib/module-registry";
+import { getEnabledModules } from "@/app/lib/module-registry";
 import { useTenant } from "@/app/providers/tenant-provider";
 
 interface CommandPaletteProps {

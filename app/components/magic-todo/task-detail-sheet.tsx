@@ -28,16 +28,11 @@ import {
 } from '@/components/ui/popover';
 import {
   Calendar as CalendarIcon,
-  Flag,
-  Tag,
   ExternalLink,
   Trash2,
   Plus,
   X,
   CheckCircle2,
-  Circle,
-  Clock,
-  MessageSquare,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -61,7 +56,6 @@ export function TaskDetailSheet({
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || '');
   const [newSubtask, setNewSubtask] = useState('');
-  const [newComment, setNewComment] = useState('');
   const [newTag, setNewTag] = useState('');
 
   const handleSave = () => {
@@ -75,7 +69,7 @@ export function TaskDetailSheet({
   const handleAddSubtask = () => {
     if (!newSubtask.trim()) return;
     const subtask: Subtask = {
-      id: `subtask-${Date.now()}`,
+      id: crypto.randomUUID(),
       title: newSubtask,
       completed: false,
       createdAt: new Date(),
@@ -157,8 +151,8 @@ export function TaskDetailSheet({
               <Label htmlFor="status">Status</Label>
               <Select
                 value={task.status}
-                onValueChange={(value: any) =>
-                  onUpdate(task.id, { status: value })
+                onValueChange={(value) =>
+                  onUpdate(task.id, { status: value as Task['status'] })
                 }
               >
                 <SelectTrigger id="status" className="col-span-2">
@@ -178,8 +172,8 @@ export function TaskDetailSheet({
               <Label htmlFor="priority">Priority</Label>
               <Select
                 value={task.priority}
-                onValueChange={(value: any) =>
-                  onUpdate(task.id, { priority: value })
+                onValueChange={(value) =>
+                  onUpdate(task.id, { priority: value as Task['priority'] })
                 }
               >
                 <SelectTrigger id="priority" className="col-span-2">

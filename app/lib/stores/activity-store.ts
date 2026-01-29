@@ -31,12 +31,14 @@ export const useActivityStore = create<ActivityStore>((set) => ({
   fetchActivities: async (limit = 50) => {
     set({ isLoading: true });
     try {
-      // TODO: Replace with actual API call
+      // TODO: Replace with actual API call using limit parameter
       // const response = await fetch(`/api/v1/activity?limit=${limit}`);
       // const data = await response.json();
       // const validated = z.array(activityItemSchema).parse(data);
+      console.log('Fetching activities with limit:', limit);
 
       // Mock data for demonstration
+      const now = Date.now();
       const mockActivities: ActivityItem[] = [
         {
           id: "1",
@@ -44,7 +46,7 @@ export const useActivityStore = create<ActivityStore>((set) => ({
           title: "New approval request created",
           description: "Customer escalation requires CEO approval",
           actor: "John Doe",
-          timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // 5 minutes ago
+          timestamp: new Date(now - 5 * 60 * 1000).toISOString(), // 5 minutes ago
           url: "/app/approvals",
         },
         {
@@ -53,7 +55,7 @@ export const useActivityStore = create<ActivityStore>((set) => ({
           title: "New message in inbox",
           description: "3 new customer messages waiting for response",
           actor: "System",
-          timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(), // 15 minutes ago
+          timestamp: new Date(now - 15 * 60 * 1000).toISOString(), // 15 minutes ago
           url: "/app/inbox",
         },
         {
@@ -62,7 +64,7 @@ export const useActivityStore = create<ActivityStore>((set) => ({
           title: "Team member added",
           description: "Jane Smith joined Engineering Team",
           actor: "Admin",
-          timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
+          timestamp: new Date(now - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
           url: "/app/settings/teams",
         },
         {
@@ -71,7 +73,7 @@ export const useActivityStore = create<ActivityStore>((set) => ({
           title: "Approval approved",
           description: "Consultation room created successfully",
           actor: "CEO",
-          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+          timestamp: new Date(now - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
           url: "/app/approvals",
         },
         {
@@ -80,7 +82,7 @@ export const useActivityStore = create<ActivityStore>((set) => ({
           title: "System update",
           description: "Module registry updated",
           actor: "System",
-          timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
+          timestamp: new Date(now - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
         },
       ];
       set({ activities: mockActivities, isLoading: false });

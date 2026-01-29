@@ -16,7 +16,8 @@ export function ModuleIframe({ module, lazy = true }: ModuleIframeProps) {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [shouldLoad, setShouldLoad] = React.useState(!lazy);
-  const retryCount = React.useRef(0);
+  const [retryKey, setRetryKey] = React.useState(0);
+  const retryCountRef = React.useRef(0);
   const maxRetries = 3;
 
   if (!module.url) {
@@ -35,28 +36,29 @@ export function ModuleIframe({ module, lazy = true }: ModuleIframeProps) {
   const handleLoad = () => {
     setLoading(false);
     setError(null);
-    retryCount.current = 0;
+    retryCountRef.current = 0;
   };
 
   const handleError = () => {
     setLoading(false);
-    if (retryCount.current < maxRetries) {
-      retryCount.current += 1;
+    if (retryCountRef.current < maxRetries) {
+      retryCountRef.current += 1;
       setTimeout(() => {
         setLoading(true);
         setError(null);
-        // Force iframe reload by updating key
-      }, 1000 * retryCount.current);
+        setRetryKey((k) => k + 1); // Force iframe reload by updating key
+      }, 1000 * retryCountRef.current);
     } else {
       setError("Failed to load module after multiple attempts");
     }
   };
 
   const handleRetry = () => {
-    retryCount.current = 0;
+    retryCountRef.current = 0;
     setError(null);
     setLoading(true);
     setShouldLoad(true);
+    setRetryKey((k) => k + 1);
   };
 
   // Lazy loading: only load when shouldLoad is true
@@ -100,7 +102,7 @@ export function ModuleIframe({ module, lazy = true }: ModuleIframeProps) {
         )}
         {shouldLoad && (
           <iframe
-            key={`${module.id}-${retryCount.current}`}
+            key={`${module.id}-${retryKey}`}
             src={module.url}
             className="h-full w-full border-0"
             onLoad={handleLoad}

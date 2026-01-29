@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { User, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 
 interface Participant {
   id: string;

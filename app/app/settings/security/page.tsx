@@ -1,7 +1,7 @@
 "use client";
 
 import { SettingsLayout } from "@/app/components/settings-layout";
-import { Shield, Lock, Key, Users, FileText, AlertTriangle } from "lucide-react";
+import { Shield, Lock, Users, FileText, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";

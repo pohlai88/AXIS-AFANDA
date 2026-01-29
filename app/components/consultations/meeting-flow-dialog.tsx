@@ -8,16 +8,24 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { TemplateForm } from '@/app/components/templates/template-form';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, ArrowRight, Sparkles } from 'lucide-react';
+import type { TemplateFormData } from '@/app/components/templates/template-form';
+
+/** Complete meeting flow data combining all steps */
+interface CompleteMeetingData {
+  agenda: TemplateFormData;
+  minutes: TemplateFormData;
+  actions: TemplateFormData;
+  caseId: string;
+}
 
 interface MeetingFlowDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onComplete: (data: any) => void;
+  onComplete: (data: CompleteMeetingData) => void;
 }
 
 // Unified template that flows through: Agenda → Minutes → Actions
@@ -171,22 +179,24 @@ const actionsTemplate = [
 
 export function MeetingFlowDialog({ open, onOpenChange, onComplete }: MeetingFlowDialogProps) {
   const [step, setStep] = useState<'agenda' | 'minutes' | 'actions'>('agenda');
-  const [agendaData, setAgendaData] = useState<any>(null);
-  const [minutesData, setMinutesData] = useState<any>(null);
+  const [agendaData, setAgendaData] = useState<TemplateFormData | null>(null);
+  const [minutesData, setMinutesData] = useState<TemplateFormData | null>(null);
 
-  const handleAgendaSubmit = (data: any) => {
+  const handleAgendaSubmit = (data: TemplateFormData) => {
     setAgendaData(data);
     setStep('minutes');
   };
 
-  const handleMinutesSubmit = (data: any) => {
+  const handleMinutesSubmit = (data: TemplateFormData) => {
     setMinutesData(data);
     setStep('actions');
   };
 
-  const handleActionsSubmit = (data: any) => {
-    // Combine all data
-    const completeData = {
+  const handleActionsSubmit = (data: TemplateFormData) => {
+    // Combine all data - agendaData and minutesData are guaranteed to be set by this step
+    if (!agendaData || !minutesData) return;
+
+    const completeData: CompleteMeetingData = {
       agenda: agendaData,
       minutes: minutesData,
       actions: data,
@@ -206,7 +216,7 @@ export function MeetingFlowDialog({ open, onOpenChange, onComplete }: MeetingFlo
       return {
         ...field,
         options: agendaData.agenda_items, // REUSE agenda!
-      };
+      } as typeof field;
     }
     return field;
   });

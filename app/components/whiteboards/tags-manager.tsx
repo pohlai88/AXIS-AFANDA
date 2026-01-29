@@ -75,7 +75,7 @@ export function TagsManager({
     if (!newTagName.trim()) return;
 
     const newTag: WhiteboardTag = {
-      id: `tag-${Date.now()}`,
+      id: crypto.randomUUID(),
       name: newTagName.trim(),
       color: newTagColor,
     };
@@ -229,11 +229,10 @@ export function TagsManager({
                         <button
                           key={color.value}
                           onClick={() => setNewTagColor(color.value)}
-                          className={`h-6 w-6 rounded-full ${color.value} ${
-                            newTagColor === color.value
+                          className={`h-6 w-6 rounded-full ${color.value} ${newTagColor === color.value
                               ? 'ring-2 ring-primary ring-offset-2'
                               : ''
-                          }`}
+                            }`}
                           title={color.name}
                         />
                       ))}

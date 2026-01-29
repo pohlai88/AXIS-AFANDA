@@ -93,7 +93,7 @@ export function ChangeMemberRoleDialog({
         <DialogHeader>
           <DialogTitle>Change Member Role</DialogTitle>
           <DialogDescription>
-            Update {memberName}'s role in this team.
+            Update {memberName}&apos;s role in this team.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>

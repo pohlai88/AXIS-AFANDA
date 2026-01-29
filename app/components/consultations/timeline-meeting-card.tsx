@@ -9,7 +9,6 @@ import {
   Clock,
   Users,
   CheckCircle2,
-  AlertCircle,
   Zap,
   FileCheck,
   Sparkles,

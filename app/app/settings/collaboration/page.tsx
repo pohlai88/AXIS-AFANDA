@@ -3,9 +3,8 @@
 import * as React from "react";
 import { SettingsLayout } from "@/app/components/settings-layout";
 import {
-  Video, PenTool, Monitor, FileText, Mic, Camera,
-  Globe, Smartphone, Layers, CircleDot, Server, Shield,
-  Eye, RefreshCw, Zap
+  Video, PenTool, Monitor, FileText,
+  Globe, Layers, CircleDot, Server, Shield
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,7 +15,6 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface CollaborationLayer {
@@ -27,7 +25,8 @@ interface CollaborationLayer {
 }
 
 export default function CollaborationSettingsPage() {
-  const [layers, setLayers] = React.useState<CollaborationLayer[]>([]);
+  const [layers] = React.useState<CollaborationLayer[]>([]);
+  // TODO: Implement setLayers when API is ready
   const [loading, setLoading] = React.useState(true);
   const [whiteboardEnabled, setWhiteboardEnabled] = React.useState(false);
   const [whiteboardTool, setWhiteboardTool] = React.useState("");
@@ -87,7 +86,8 @@ export default function CollaborationSettingsPage() {
   const [maxConcurrent, setMaxConcurrent] = React.useState("");
   const [layerActivation, setLayerActivation] = React.useState(false);
   const [multipleLayers, setMultipleLayers] = React.useState(false);
-  const [activeLayers, setActiveLayers] = React.useState<string[]>([]);
+  const [activeLayers] = React.useState<string[]>([]);
+  // TODO: Implement setActiveLayers when API is ready
 
   React.useEffect(() => {
     // TODO: Replace with actual API call
@@ -592,7 +592,7 @@ export default function CollaborationSettingsPage() {
                     <div className="space-y-0.5">
                       <Label>Allow Agent Control</Label>
                       <p className="text-xs text-muted-foreground">
-                        Agents can control visitor's browser
+                        Agents can control visitor&apos;s browser
                       </p>
                     </div>
                     <Switch checked={cobrowsingAgentControl} onCheckedChange={setCobrowsingAgentControl} />
@@ -602,7 +602,7 @@ export default function CollaborationSettingsPage() {
                     <div className="space-y-0.5">
                       <Label>Allow Visitor Control</Label>
                       <p className="text-xs text-muted-foreground">
-                        Visitors can control agent's view
+                        Visitors can control agent&apos;s view
                       </p>
                     </div>
                     <Switch checked={cobrowsingVisitorControl} onCheckedChange={setCobrowsingVisitorControl} />

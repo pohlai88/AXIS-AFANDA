@@ -16,8 +16,8 @@ export function ReplyBox({ onSend, sending }: ReplyBoxProps) {
   const [content, setContent] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
 
     if (!content.trim()) return;
 
@@ -30,7 +30,7 @@ export function ReplyBox({ onSend, sending }: ReplyBoxProps) {
     // Send on Ctrl+Enter or Cmd+Enter
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
       e.preventDefault();
-      handleSubmit(e as any);
+      void handleSubmit();
     }
   };
 

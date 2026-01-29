@@ -23,12 +23,10 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import {
   MoreVertical,
-  Pencil,
   Copy,
   Trash2,
   ExternalLink,
   MessageSquare,
-  Users,
   ArrowUpDown,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -103,7 +101,8 @@ export function WhiteboardsTable({
   const allSelected = whiteboards.length > 0 && selectedIds.length === whiteboards.length;
   const someSelected = selectedIds.length > 0 && selectedIds.length < whiteboards.length;
 
-  const SortButton = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
+  // Render sort button inline instead of as a component
+  const renderSortButton = (field: SortField, children: React.ReactNode) => (
     <Button
       variant="ghost"
       size="sm"
@@ -148,17 +147,17 @@ export function WhiteboardsTable({
                 />
               </TableHead>
               <TableHead>
-                <SortButton field="name">Name</SortButton>
+                {renderSortButton('name', 'Name')}
               </TableHead>
               <TableHead>Tags</TableHead>
               <TableHead>
-                <SortButton field="collaborators">Collaborators</SortButton>
+                {renderSortButton('collaborators', 'Collaborators')}
               </TableHead>
               <TableHead>
-                <SortButton field="comments">Comments</SortButton>
+                {renderSortButton('comments', 'Comments')}
               </TableHead>
               <TableHead>
-                <SortButton field="updatedAt">Last Updated</SortButton>
+                {renderSortButton('updatedAt', 'Last Updated')}
               </TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>

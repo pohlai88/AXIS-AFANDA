@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -26,15 +25,18 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { ApprovalTemplate, TemplateField } from '@/app/lib/stores/approvals-store';
 
+export type TemplateFormValue = string | number | string[] | Date;
+export type TemplateFormData = Record<string, TemplateFormValue>;
+
 interface TemplateFormProps {
   template: ApprovalTemplate;
-  values: Record<string, any>;
-  onChange: (values: Record<string, any>) => void;
+  values: TemplateFormData;
+  onChange: (values: TemplateFormData) => void;
   errors?: Record<string, string>;
 }
 
 export function TemplateForm({ template, values, onChange, errors = {} }: TemplateFormProps) {
-  const handleFieldChange = (key: string, value: any) => {
+  const handleFieldChange = (key: string, value: TemplateFormValue) => {
     onChange({ ...values, [key]: value });
   };
 
@@ -56,7 +58,7 @@ export function TemplateForm({ template, values, onChange, errors = {} }: Templa
             )}
             <Input
               id={fieldId}
-              value={value || ''}
+              value={typeof value === 'string' ? value : ''}
               onChange={(e) => handleFieldChange(field.key, e.target.value)}
               placeholder={field.label}
               className={cn(error && 'border-destructive')}
@@ -79,7 +81,7 @@ export function TemplateForm({ template, values, onChange, errors = {} }: Templa
             )}
             <Textarea
               id={fieldId}
-              value={value || ''}
+              value={typeof value === 'string' ? value : ''}
               onChange={(e) => handleFieldChange(field.key, e.target.value)}
               placeholder={field.label}
               rows={4}
@@ -104,8 +106,8 @@ export function TemplateForm({ template, values, onChange, errors = {} }: Templa
             <Input
               id={fieldId}
               type="number"
-              value={value || ''}
-              onChange={(e) => handleFieldChange(field.key, parseFloat(e.target.value) || '')}
+              value={typeof value === 'number' ? value : ''}
+              onChange={(e) => handleFieldChange(field.key, parseFloat(e.target.value) || 0)}
               placeholder={field.label}
               min={field.validation?.min}
               max={field.validation?.max}
@@ -139,14 +141,14 @@ export function TemplateForm({ template, values, onChange, errors = {} }: Templa
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {value ? format(new Date(value), 'PPP') : 'Pick a date'}
+                  {value && (typeof value === 'string' || value instanceof Date) ? format(new Date(value), 'PPP') : 'Pick a date'}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={value ? new Date(value) : undefined}
-                  onSelect={(date) => handleFieldChange(field.key, date?.toISOString())}
+                  selected={value && (typeof value === 'string' || value instanceof Date) ? new Date(value) : undefined}
+                  onSelect={(date) => handleFieldChange(field.key, date ? date.toISOString() : '')}
                   initialFocus
                 />
               </PopoverContent>
@@ -168,7 +170,7 @@ export function TemplateForm({ template, values, onChange, errors = {} }: Templa
               <p className="text-xs text-muted-foreground">{field.helpText}</p>
             )}
             <Select
-              value={value || ''}
+              value={typeof value === 'string' ? value : ''}
               onValueChange={(val) => handleFieldChange(field.key, val)}
             >
               <SelectTrigger id={fieldId} className={cn(error && 'border-destructive')}>
@@ -203,12 +205,12 @@ export function TemplateForm({ template, values, onChange, errors = {} }: Templa
                 <label key={option} className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    checked={(value || []).includes(option)}
+                    checked={Array.isArray(value) && value.includes(option)}
                     onChange={(e) => {
-                      const current = value || [];
+                      const current = Array.isArray(value) ? value : [];
                       const updated = e.target.checked
                         ? [...current, option]
-                        : current.filter((v: string) => v !== option);
+                        : current.filter((v) => v !== option);
                       handleFieldChange(field.key, updated);
                     }}
                     className="h-4 w-4 rounded border-gray-300"
@@ -316,7 +318,7 @@ export function TemplateForm({ template, values, onChange, errors = {} }: Templa
           <AlertTitle>Evidence Required</AlertTitle>
           <AlertDescription>
             This template requires you to attach supporting documents or evidence.
-            You'll be able to upload files in the next step.
+            You&apos;ll be able to upload files in the next step.
           </AlertDescription>
         </Alert>
       )}

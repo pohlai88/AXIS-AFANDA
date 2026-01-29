@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { useConversationsStore } from '@/app/lib/stores/conversations-store';
+import { useConversationsStore, type MessageAttachment } from '@/app/lib/stores/conversations-store';
 import { getConversation, getMessages, sendMessage } from '@/app/lib/api/conversations';
 import { ModernMessageThread } from '@/app/components/chat/modern-message-thread';
 import { ModernComposeBox } from '@/app/components/chat/modern-compose-box';
@@ -24,34 +24,64 @@ export default function ConversationDetailPage() {
 
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
+  const [isTyping] = useState(false);
 
   // Fetch conversation and messages
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
 
-        // Fetch conversation details
-        const convResult = await getConversation(conversationId);
-        selectConversation(convResult.data as any);
+      // Fetch conversation details
+      const convResult = await getConversation(conversationId);
+      const convData = convResult.data as Record<string, unknown>;
+      selectConversation({
+        id: String(convData.id),
+        tenantId: String(convData.tenantId || ''),
+        chatwootId: Number(convData.chatwootId),
+        status: String(convData.status || 'open'),
+        priority: convData.priority as string | undefined,
+        contactName: convData.contactName as string | undefined,
+        contactEmail: convData.contactEmail as string | undefined,
+        assigneeId: convData.assigneeId as number | undefined,
+        assigneeName: convData.assigneeName as string | undefined,
+        teamId: convData.teamId as number | undefined,
+        teamName: convData.teamName as string | undefined,
+        labels: convData.labels as string[] | undefined,
+        unreadCount: Number(convData.unreadCount || 0),
+        lastMessageAt: convData.lastMessageAt ? new Date(convData.lastMessageAt as string) : undefined,
+        createdAt: new Date(convData.createdAt as string),
+        updatedAt: convData.updatedAt ? new Date(convData.updatedAt as string) : new Date(),
+      });
 
-        // Fetch messages
-        const messagesResult = await getMessages(conversationId);
-        setMessages(conversationId, messagesResult.data.map((m: any) => ({
-          ...m,
-          createdAt: new Date(m.createdAt),
-        })));
-      } catch (error) {
-        console.error('Failed to fetch conversation:', error);
-        toast.error('Failed to load conversation');
-      } finally {
-        setLoading(false);
-      }
+      // Fetch messages
+      const messagesResult = await getMessages(conversationId);
+      setMessages(conversationId, messagesResult.data.map((m: unknown) => {
+        const msg = m as Record<string, unknown>;
+        return {
+          id: String(msg.id),
+          conversationId: String(msg.conversationId),
+          chatwootId: Number(msg.chatwootId),
+          content: String(msg.content || ''),
+          messageType: String(msg.messageType || 'incoming'),
+          senderType: String(msg.senderType || 'contact'),
+          senderId: Number(msg.senderId),
+          senderName: msg.senderName as string | undefined,
+          private: Boolean(msg.private),
+          attachments: msg.attachments as MessageAttachment[] | undefined,
+          createdAt: new Date(msg.createdAt as string),
+        };
+      }));
+    } catch (error) {
+      console.error('Failed to fetch conversation:', error);
+      toast.error('Failed to load conversation');
+    } finally {
+      setLoading(false);
     }
+  }, [conversationId, selectConversation, setMessages]);
 
+  useEffect(() => {
     fetchData();
-  }, [conversationId]);
+  }, [fetchData]);
 
   // Handle send message
   const handleSendMessage = async (content: string, isPrivate: boolean = false) => {
@@ -84,6 +114,7 @@ export default function ConversationDetailPage() {
   // Handle reply
   const handleReply = (messageId: string) => {
     // TODO: Implement reply functionality
+    console.log('Reply to message:', messageId);
     toast.info('Reply feature coming soon');
   };
 
@@ -164,7 +195,7 @@ export default function ConversationDetailPage() {
         <ModernComposeBox
           onSend={handleSendMessage}
           sending={sending}
-          channelType={(selectedConversation as any).channelType || 'web'}
+          channelType={(selectedConversation as unknown as Record<string, unknown> | null)?.channelType as string || 'web'}
           placeholder="Type a message..."
           showPrivateToggle={true}
           showChannelBadge={true}

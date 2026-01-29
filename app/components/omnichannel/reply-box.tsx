@@ -24,8 +24,8 @@ export function ReplyBox({ onSend, sending, channelType }: ReplyBoxProps) {
   const ChannelIcon = channelConfig.icon;
   const characterLimit = channelConfig.features.characterLimit;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
 
     if (!content.trim()) return;
 
@@ -38,7 +38,7 @@ export function ReplyBox({ onSend, sending, channelType }: ReplyBoxProps) {
     // Send on Ctrl+Enter or Cmd+Enter
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
       e.preventDefault();
-      handleSubmit(e as any);
+      void handleSubmit();
     }
   };
 

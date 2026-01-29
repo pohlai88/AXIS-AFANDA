@@ -33,61 +33,78 @@ import { DetailPageSkeleton } from '@/app/components/consultations/loading-skele
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 
 // Mock meeting data (enhanced with joined status)
-const mockMeeting = {
-  id: '1',
-  caseId: 'CASE-2024-001',
-  title: 'Q1 Budget Review',
-  type: 'video' as const,
-  status: 'in-progress' as const,
-  scheduledStart: new Date(Date.now() - 3600000), // 1 hour ago
-  scheduledEnd: new Date(Date.now() + 3600000), // 1 hour from now
-  duration: 120,
-  organizerId: 'user-1',
-  participants: [
-    { id: '1', name: 'Sarah Chen', avatar: 'SC', role: 'CFO', joined: true },
-    { id: '2', name: 'Mike Johnson', avatar: 'MJ', role: 'CEO', joined: true },
-    { id: '3', name: 'Emma Wilson', avatar: 'EW', role: 'Manager', joined: false },
-  ],
-  agendaItems: ['Budget Review', 'Timeline Discussion', 'Resource Planning'],
-  minutesCompleted: false,
-  minutesData: null,
-  todos: [],
+type MeetingStatus = 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
+
+// Generate mock data with stable timestamps
+const generateMockData = () => {
+  const now = Date.now();
+  return {
+    meeting: {
+      id: '1',
+      caseId: 'CASE-2024-001',
+      title: 'Q1 Budget Review',
+      type: 'video' as const,
+      status: 'in-progress' as MeetingStatus,
+      scheduledStart: new Date(now - 3600000), // 1 hour ago
+      scheduledEnd: new Date(now + 3600000), // 1 hour from now
+      duration: 120,
+      organizerId: 'user-1',
+      participants: [
+        { id: '1', name: 'Sarah Chen', avatar: 'SC', role: 'CFO', joined: true },
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ', role: 'CEO', joined: true },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW', role: 'Manager', joined: false },
+      ],
+      agendaItems: ['Budget Review', 'Timeline Discussion', 'Resource Planning'],
+      minutesCompleted: false,
+      minutesData: null as { attendance: string[]; decisions: string[]; outcome: string } | null,
+      todos: [] as Array<{
+        id: string;
+        title: string;
+        priority: string;
+        type: string;
+        status: string;
+        assignedTo?: string;
+        dueDate: Date;
+      }>,
+    },
+    caseTrail: {
+      id: 'CASE-2024-001',
+      events: [
+        {
+          id: 'event-1',
+          type: 'meeting' as const,
+          timestamp: new Date(now - 172800000), // 2 days ago
+          description: 'Meeting scheduled: Q1 Budget Review',
+          userName: 'System',
+        },
+        {
+          id: 'event-2',
+          type: 'approval' as const,
+          timestamp: new Date(now - 86400000), // 1 day ago
+          description: 'Budget proposal approved by CEO',
+          userName: 'Mike Johnson',
+          metadata: { amount: '$50,000', department: 'Engineering' },
+        },
+        {
+          id: 'event-3',
+          type: 'meeting' as const,
+          timestamp: new Date(now - 3600000), // 1 hour ago
+          description: 'Meeting started: Q1 Budget Review',
+          userName: 'System',
+        },
+        {
+          id: 'event-4',
+          type: 'task' as const,
+          timestamp: new Date(now + 86400000), // 1 day from now
+          description: 'Follow-up meeting scheduled',
+          userName: 'Sarah Chen',
+        },
+      ],
+    },
+  };
 };
 
-const mockCaseTrail = {
-  id: 'CASE-2024-001',
-  events: [
-    {
-      id: 'event-1',
-      type: 'meeting' as const,
-      timestamp: new Date(Date.now() - 172800000), // 2 days ago
-      description: 'Meeting scheduled: Q1 Budget Review',
-      userName: 'System',
-    },
-    {
-      id: 'event-2',
-      type: 'approval' as const,
-      timestamp: new Date(Date.now() - 86400000), // 1 day ago
-      description: 'Budget proposal approved by CEO',
-      userName: 'Mike Johnson',
-      metadata: { amount: '$50,000', department: 'Engineering' },
-    },
-    {
-      id: 'event-3',
-      type: 'meeting' as const,
-      timestamp: new Date(Date.now() - 3600000), // 1 hour ago
-      description: 'Meeting started: Q1 Budget Review',
-      userName: 'System',
-    },
-    {
-      id: 'event-4',
-      type: 'task' as const,
-      timestamp: new Date(Date.now() + 86400000), // 1 day from now
-      description: 'Follow-up meeting scheduled',
-      userName: 'Sarah Chen',
-    },
-  ],
-};
+const { meeting: mockMeeting, caseTrail: mockCaseTrail } = generateMockData();
 
 export default function MeetingDetailPage() {
   const params = useParams();
@@ -128,10 +145,16 @@ export default function MeetingDetailPage() {
           }));
           break;
         case 'status_changed':
-          setMeeting((prev) => ({
-            ...prev,
-            status: update.data.newStatus,
-          }));
+          setMeeting((prev) => {
+            const newStatus = update.data.newStatus;
+            if (newStatus === 'scheduled' || newStatus === 'in-progress' || newStatus === 'completed' || newStatus === 'cancelled') {
+              return {
+                ...prev,
+                status: newStatus,
+              };
+            }
+            return prev;
+          });
           break;
         case 'minutes_completed':
           setMeeting((prev) => ({
@@ -485,6 +508,7 @@ export default function MeetingDetailPage() {
             </div>
           </div>
           {meeting.type === 'video' &&
+            (meeting.status === 'scheduled' || meeting.status === 'in-progress' || meeting.status === 'completed' || meeting.status === 'cancelled') && 
             (meeting.status === 'scheduled' || meeting.status === 'in-progress') && (
               <ShimmerButton size="lg" className="btn-gold-lux shrink-0 hidden sm:flex">
                 <Play className="mr-2 h-5 w-5" />

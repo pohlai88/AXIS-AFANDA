@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useApprovalsStore } from '@/app/lib/stores/approvals-store';
 import { getApprovals, approveApproval, rejectApproval } from '@/app/lib/api/approvals';
 import { ApprovalFilters, type ApprovalFilters as ApprovalFiltersType } from '@/app/components/approvals/approval-filters';
@@ -36,7 +36,7 @@ export default function ApprovalsPage() {
   });
 
   // Fetch approvals
-  const fetchApprovals = async () => {
+  const fetchApprovals = useCallback(async () => {
     try {
       setLoading(true);
       const result = await getApprovals({
@@ -44,13 +44,17 @@ export default function ApprovalsPage() {
         type: filters.type,
         // Add more filter params as needed
       });
-      const mappedApprovals = result.data.map((a: any) => ({
-        ...a,
-        createdAt: new Date(a.createdAt),
-        updatedAt: new Date(a.updatedAt),
-        approvedAt: a.approvedAt ? new Date(a.approvedAt) : undefined,
-        rejectedAt: a.rejectedAt ? new Date(a.rejectedAt) : undefined,
-      }));
+      const mappedApprovals = result.data.map((a: unknown) => {
+        const approval = a as Record<string, unknown>;
+        return {
+          ...approval,
+          templateId: approval.templateId as string || '',
+          createdAt: new Date(approval.createdAt as string),
+          updatedAt: new Date(approval.updatedAt as string),
+          approvedAt: approval.approvedAt ? new Date(approval.approvedAt as string) : undefined,
+          rejectedAt: approval.rejectedAt ? new Date(approval.rejectedAt as string) : undefined,
+        } as Approval;
+      });
       setApprovals(mappedApprovals);
 
       // Calculate stats
@@ -80,11 +84,11 @@ export default function ApprovalsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters.status, filters.type, setLoading, setApprovals]);
 
   useEffect(() => {
     fetchApprovals();
-  }, [filters.status, filters.type]);
+  }, [fetchApprovals]);
 
   const handleApprove = async (approval: Approval) => {
     setSelectedApproval(approval);

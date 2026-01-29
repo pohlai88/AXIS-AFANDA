@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -12,12 +11,34 @@ import { TemplateForm } from '@/app/components/templates/template-form';
 import { Badge } from '@/components/ui/badge';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import type { TemplateFormData } from '@/app/components/templates/template-form';
+
+/** Meeting participant type */
+interface MeetingParticipant {
+  name: string;
+  email?: string;
+  role?: string;
+}
+
+/** Meeting data for minutes dialog */
+interface Meeting {
+  id: string;
+  title: string;
+  caseId: string;
+  participants?: MeetingParticipant[];
+}
+
+/** Meeting minutes submission data */
+interface MeetingMinutesSubmitData extends TemplateFormData {
+  meetingId: string;
+  caseId: string;
+}
 
 interface MeetingMinutesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  meeting: any;
-  onSubmit: (data: any) => void;
+  meeting: Meeting;
+  onSubmit: (data: MeetingMinutesSubmitData) => void;
 }
 
 const meetingMinutesTemplate = [
@@ -119,13 +140,13 @@ export function MeetingMinutesDialog({
     if (field.id === 'attendance' && meeting?.participants) {
       return {
         ...field,
-        options: meeting.participants.map((p: any) => p.name),
+        options: meeting.participants.map((p: MeetingParticipant) => p.name),
       };
     }
     return field;
   });
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = (data: TemplateFormData) => {
     onSubmit({
       ...data,
       meetingId: meeting.id,

@@ -3,11 +3,23 @@
 import { useEffect } from 'react';
 import { useTenant } from '@/app/providers/tenant-provider';
 
+interface ChatwootSettings {
+  hideMessageBubble?: boolean;
+  position?: 'left' | 'right';
+  locale?: string;
+  type?: 'standard' | 'expanded_bubble';
+  customAttributes?: Record<string, string | number | boolean>;
+}
+
+interface ChatwootSDK {
+  run: (config: { websiteToken: string; baseUrl: string }) => void;
+}
+
 declare global {
   interface Window {
-    chatwootSettings?: any;
-    chatwootSDK?: any;
-    $chatwoot?: any;
+    chatwootSettings?: ChatwootSettings;
+    chatwootSDK?: ChatwootSDK;
+    $chatwoot?: { toggle?: () => void } | undefined;
   }
 }
 

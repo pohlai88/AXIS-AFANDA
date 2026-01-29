@@ -3,6 +3,26 @@
 import { useEffect } from 'react';
 
 /**
+ * Type definition for canvas-confetti library
+ */
+interface ConfettiOptions {
+  particleCount?: number;
+  spread?: number;
+  origin?: { x?: number; y?: number };
+  colors?: string[];
+  ticks?: number;
+  gravity?: number;
+  scalar?: number;
+  drift?: number;
+}
+
+type ConfettiFunction = (options?: ConfettiOptions) => void;
+
+interface WindowWithConfetti extends Window {
+  confetti?: ConfettiFunction;
+}
+
+/**
  * Confetti celebration effect
  * Uses canvas-confetti library if available, falls back to CSS animation
  */
@@ -13,8 +33,9 @@ export function celebrateWithConfetti(options?: {
   colors?: string[];
 }) {
   // Check if canvas-confetti is available
-  if (typeof window !== 'undefined' && (window as any).confetti) {
-    const confetti = (window as any).confetti;
+  const windowWithConfetti = typeof window !== 'undefined' ? (window as WindowWithConfetti) : null;
+  if (windowWithConfetti?.confetti) {
+    const confetti = windowWithConfetti.confetti;
 
     confetti({
       particleCount: options?.particleCount || 100,

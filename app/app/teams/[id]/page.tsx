@@ -8,8 +8,26 @@ import Link from "next/link";
 import { TeamMemberRow } from "@/app/components/team-member-row";
 
 // Mock data - will be replaced with API call
-const getTeamData = (id: string) => {
-  const teams: Record<string, any> = {
+interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  role: 'owner' | 'admin' | 'member';
+  avatar: string;
+}
+
+interface TeamData {
+  id: string;
+  name: string;
+  description: string;
+  visibility: 'private' | 'public';
+  memberCount: number;
+  role: 'owner' | 'admin' | 'member';
+  members: TeamMember[];
+}
+
+const getTeamData = (id: string): TeamData | undefined => {
+  const teams: Record<string, TeamData> = {
     "1": {
       id: "1",
       name: "Engineering Team",
@@ -88,7 +106,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {team.members.map((member: any) => (
+              {team.members.map((member) => (
                 <TeamMemberRow
                   key={member.id}
                   member={member}

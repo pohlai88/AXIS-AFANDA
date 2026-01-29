@@ -26,7 +26,7 @@ interface NotificationsStore {
   fetchNotifications: () => Promise<void>;
 }
 
-export const useNotificationsStore = create<NotificationsStore>((set, get) => ({
+export const useNotificationsStore = create<NotificationsStore>((set) => ({
   notifications: [],
   unreadCount: 0,
 
@@ -81,6 +81,7 @@ export const useNotificationsStore = create<NotificationsStore>((set, get) => ({
       // const validated = z.array(notificationSchema).parse(data);
 
       // Mock data for demonstration
+      const now = Date.now();
       const mockNotifications: Notification[] = [
         {
           id: "1",
@@ -88,7 +89,7 @@ export const useNotificationsStore = create<NotificationsStore>((set, get) => ({
           description: "Customer escalation requires CEO approval",
           type: "approval",
           read: false,
-          createdAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+          createdAt: new Date(now - 2 * 60 * 1000).toISOString(),
           actionUrl: "/app/approvals",
         },
         {
@@ -97,7 +98,7 @@ export const useNotificationsStore = create<NotificationsStore>((set, get) => ({
           description: "Consultation room created successfully",
           type: "success",
           read: false,
-          createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+          createdAt: new Date(now - 15 * 60 * 1000).toISOString(),
           actionUrl: "/app/approvals",
         },
         {
@@ -106,7 +107,7 @@ export const useNotificationsStore = create<NotificationsStore>((set, get) => ({
           description: "3 new customer messages waiting",
           type: "info",
           read: true,
-          createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(now - 1 * 60 * 60 * 1000).toISOString(),
           actionUrl: "/app/inbox",
         },
       ];

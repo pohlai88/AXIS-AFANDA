@@ -41,9 +41,9 @@ interface Subscription {
 
 export default function BillingSettingsPage() {
   const [loading, setLoading] = React.useState(true);
-  const [paymentMethods, setPaymentMethods] = React.useState<PaymentMethod[]>([]);
-  const [invoices, setInvoices] = React.useState<Invoice[]>([]);
-  const [subscription, setSubscription] = React.useState<Subscription | null>(null);
+  const [paymentMethods] = React.useState<PaymentMethod[]>([]);
+  const [invoices] = React.useState<Invoice[]>([]);
+  const [subscription] = React.useState<Subscription | null>(null);
   const [addressLine1, setAddressLine1] = React.useState("");
   const [addressLine2, setAddressLine2] = React.useState("");
   const [city, setCity] = React.useState("");

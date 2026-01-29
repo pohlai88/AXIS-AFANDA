@@ -5,7 +5,12 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageSquare, User } from 'lucide-react';
 import type { Conversation } from '@/app/lib/stores/conversations-store';
-import { getChannelIcon, getChannelColor, getChannelLabel } from '@/app/lib/utils/channel-icons';
+import { getChannelIcon, getChannelColor, getChannelLabel, type ChannelType } from '@/app/lib/utils/channel-icons';
+
+/** Extended conversation with omnichannel properties */
+interface OmnichannelConversation extends Conversation {
+  channelType?: ChannelType;
+}
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -74,10 +79,11 @@ export function ConversationList({
                     {conversation.contactName || 'Unknown'}
                   </span>
                   {/* Channel Badge */}
-                  {(conversation as any).channelType && (() => {
-                    const ChannelIcon = getChannelIcon((conversation as any).channelType);
-                    const channelColor = getChannelColor((conversation as any).channelType);
-                    const channelLabel = getChannelLabel((conversation as any).channelType);
+                  {(conversation as OmnichannelConversation).channelType && (() => {
+                    const channelType = (conversation as OmnichannelConversation).channelType!;
+                    const ChannelIcon = getChannelIcon(channelType);
+                    const channelColor = getChannelColor(channelType);
+                    const channelLabel = getChannelLabel(channelType);
                     return (
                       <Badge variant="outline" className="h-5 gap-1 px-1.5 text-xs">
                         <ChannelIcon className={`h-3 w-3 ${channelColor}`} />

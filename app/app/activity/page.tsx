@@ -1,5 +1,4 @@
 import { ActivityTimeline } from "@/app/components/activity-timeline";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity } from "lucide-react";
 
 export default function ActivityPage() {

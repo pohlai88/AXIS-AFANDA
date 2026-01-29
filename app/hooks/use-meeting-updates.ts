@@ -10,10 +10,20 @@ import { useEffect } from 'react';
 import { useSSEMulti } from './use-sse';
 import { toast } from 'sonner';
 
+export interface MeetingUpdateData {
+  userName?: string;
+  userId?: string;
+  newStatus?: string;
+  taskTitle?: string;
+  meetingId?: string;
+  meetingTitle?: string;
+  scheduledStart?: string;
+}
+
 export interface MeetingUpdate {
   meetingId: string;
-  type: 'participant_joined' | 'participant_left' | 'minutes_completed' | 'status_changed' | 'task_created';
-  data: any;
+  type: 'participant_joined' | 'participant_left' | 'minutes_completed' | 'status_changed' | 'task_created' | 'meeting_created' | 'meeting_updated' | 'meeting_deleted' | 'meeting_started' | 'meeting_completed';
+  data: MeetingUpdateData;
   timestamp: Date;
 }
 
@@ -67,20 +77,21 @@ export function useMeetingUpdates(
       const update: MeetingUpdate = {
         meetingId,
         type: eventType as MeetingUpdate['type'],
-        data: event.data,
+        data: event.data as MeetingUpdateData,
         timestamp: event.timestamp,
       };
 
       // Show toast notifications
       if (showToasts) {
+        const data = event.data as MeetingUpdateData;
         switch (eventType) {
           case 'participant_joined':
-            toast.info(`${event.data.userName} joined the meeting`, {
+            toast.info(`${data.userName || 'Someone'} joined the meeting`, {
               icon: '👋',
             });
             break;
           case 'participant_left':
-            toast.info(`${event.data.userName} left the meeting`, {
+            toast.info(`${data.userName || 'Someone'} left the meeting`, {
               icon: '👋',
             });
             break;
@@ -91,14 +102,14 @@ export function useMeetingUpdates(
             });
             break;
           case 'status_changed':
-            toast.info(`Meeting status: ${event.data.newStatus}`, {
+            toast.info(`Meeting status: ${data.newStatus || 'Updated'}`, {
               icon: '📅',
             });
             break;
           case 'task_created':
             toast.success('New task created', {
               icon: '✅',
-              description: event.data.taskTitle,
+              description: data.taskTitle,
             });
             break;
         }
@@ -149,10 +160,11 @@ export function useGlobalMeetingUpdates(options: UseMeetingUpdatesOptions = {}) 
   // Handle incoming events
   useEffect(() => {
     events.forEach((event, eventType) => {
+      const data = event.data as MeetingUpdateData;
       const update: MeetingUpdate = {
-        meetingId: event.data.meetingId,
-        type: eventType as any,
-        data: event.data,
+        meetingId: data.meetingId || '',
+        type: eventType as MeetingUpdate['type'],
+        data,
         timestamp: event.timestamp,
       };
 
@@ -160,12 +172,12 @@ export function useGlobalMeetingUpdates(options: UseMeetingUpdatesOptions = {}) 
       if (showToasts) {
         switch (eventType) {
           case 'meeting_started':
-            toast.info(`Meeting "${event.data.meetingTitle}" has started`, {
+            toast.info(`Meeting "${data.meetingTitle || 'Untitled'}" has started`, {
               icon: '🎥',
               action: {
                 label: 'Join',
                 onClick: () => {
-                  window.location.href = `/app/consultations/${event.data.meetingId}`;
+                  window.location.href = `/app/consultations/${data.meetingId}`;
                 },
               },
             });
@@ -173,7 +185,7 @@ export function useGlobalMeetingUpdates(options: UseMeetingUpdatesOptions = {}) 
           case 'meeting_created':
             toast.success('New meeting scheduled', {
               icon: '📅',
-              description: event.data.meetingTitle,
+              description: data.meetingTitle,
             });
             break;
         }

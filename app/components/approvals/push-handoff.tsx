@@ -71,7 +71,7 @@ const MOCK_QUEUES = [
   { id: 'ops_general', name: 'Operations Queue', description: 'General operations', pending: 8 },
 ];
 
-export function PushHandoff({ approval, onPush, processing = false }: PushHandoffProps) {
+export function PushHandoff({ onPush, processing = false }: PushHandoffProps) {
   const [pushType, setPushType] = useState<'person' | 'role' | 'queue'>('person');
   const [targetId, setTargetId] = useState('');
   const [targetName, setTargetName] = useState('');
@@ -318,7 +318,7 @@ export function PushHandoff({ approval, onPush, processing = false }: PushHandof
         {/* Priority */}
         <div className="space-y-2">
           <Label>Priority</Label>
-          <Select value={priority} onValueChange={(value: any) => setPriority(value)}>
+          <Select value={priority} onValueChange={(value) => setPriority(value as 'low' | 'medium' | 'high' | 'urgent')}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>

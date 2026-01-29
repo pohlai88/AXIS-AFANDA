@@ -23,7 +23,7 @@ interface CaseEvent {
   timestamp: Date;
   description: string;
   userName: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface CaseTrailTimelineProps {
@@ -97,7 +97,7 @@ function groupEventsByPhase(events: CaseEvent[]) {
   return { past, present, future };
 }
 
-export function CaseTrailTimeline({ caseId, events }: CaseTrailTimelineProps) {
+export function CaseTrailTimeline({ events }: CaseTrailTimelineProps) {
   const grouped = groupEventsByPhase(events);
   const phases = [
     { id: 'present', label: '🟢 Present', events: grouped.present, badgeVariant: 'default' as const },
@@ -122,7 +122,7 @@ export function CaseTrailTimeline({ caseId, events }: CaseTrailTimelineProps) {
 
             {/* Events in Phase */}
             <div className="relative pl-8 border-l-2 border-primary/30 space-y-6">
-              {phase.events.map((event, idx) => (
+              {phase.events.map((event) => (
                 <div key={event.id} className="relative">
                   {/* Timeline Dot */}
                   <div

@@ -2,7 +2,7 @@
 
 import { SettingsLayout } from "@/app/components/settings-layout";
 import {
-  MessageSquare, Users, Eye, Clock, Mail, FileText,
+  MessageSquare, Users, Eye, Clock, FileText,
   Calendar, Edit, Bot
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

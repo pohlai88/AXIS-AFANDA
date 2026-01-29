@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Mail,
   CheckSquare,
-  MessageSquare,
   Video,
   Settings,
   HelpCircle,
@@ -83,7 +82,7 @@ const navSecondary = [
 ];
 
 export function ShellSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { tenant } = useTenant();
+  useTenant();
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>

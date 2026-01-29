@@ -9,16 +9,13 @@ import {
   CheckCircle2,
   Plus,
   Search,
-  Filter,
-  SortAsc,
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { TaskCard } from './task-card';
 import { QuickCapture } from './quick-capture';
@@ -31,77 +28,82 @@ interface MagicTodoPanelProps {
   onCountChange: (count: number) => void;
 }
 
-// Mock data - replace with actual API
-const MOCK_TASKS: Task[] = [
-  {
-    id: '1',
-    title: 'Review Q1 budget proposal',
-    description: 'Check financial projections and approve allocation',
-    status: 'todo',
-    priority: 'high',
-    dueDate: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    source: 'approval',
-    sourceId: 'apr-123',
-    assignedTo: 'user-1',
-    assignedBy: 'user-2',
-    tags: ['finance', 'urgent'],
-  },
-  {
-    id: '2',
-    title: 'Follow up on customer inquiry #456',
-    description: 'Customer asked about enterprise pricing',
-    status: 'todo',
-    priority: 'medium',
-    dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // tomorrow
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    source: 'omnichannel',
-    sourceId: 'conv-456',
-    assignedTo: 'user-1',
-    tags: ['sales', 'customer'],
-  },
-  {
-    id: '3',
-    title: 'Prepare meeting agenda for product sync',
-    description: 'Include roadmap updates and Q2 priorities',
-    status: 'todo',
-    priority: 'medium',
-    dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    source: 'consultation',
-    sourceId: 'meet-789',
-    assignedTo: 'user-1',
-    tags: ['meeting', 'product'],
-  },
-  {
-    id: '4',
-    title: 'Update team documentation',
-    description: 'Add new onboarding procedures',
-    status: 'in_progress',
-    priority: 'low',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    source: 'manual',
-    assignedTo: 'user-1',
-    tags: ['docs'],
-  },
-  {
-    id: '5',
-    title: 'Code review: Feature X PR',
-    description: 'Review pull request #234',
-    status: 'todo',
-    priority: 'high',
-    dueDate: new Date(Date.now() + 4 * 60 * 60 * 1000), // 4 hours
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    source: 'manual',
-    assignedTo: 'user-1',
-    tags: ['engineering', 'review'],
-  },
-];
+// Generate mock data with stable timestamps
+const generateMockTasks = (): Task[] => {
+  const now = Date.now();
+  return [
+    {
+      id: '1',
+      title: 'Review Q1 budget proposal',
+      description: 'Check financial projections and approve allocation',
+      status: 'todo',
+      priority: 'high',
+      dueDate: new Date(now + 2 * 60 * 60 * 1000), // 2 hours
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      source: 'approval',
+      sourceId: 'apr-123',
+      assignedTo: 'user-1',
+      assignedBy: 'user-2',
+      tags: ['finance', 'urgent'],
+    },
+    {
+      id: '2',
+      title: 'Follow up on customer inquiry #456',
+      description: 'Customer asked about enterprise pricing',
+      status: 'todo',
+      priority: 'medium',
+      dueDate: new Date(now + 24 * 60 * 60 * 1000), // tomorrow
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      source: 'omnichannel',
+      sourceId: 'conv-456',
+      assignedTo: 'user-1',
+      tags: ['sales', 'customer'],
+    },
+    {
+      id: '3',
+      title: 'Prepare meeting agenda for product sync',
+      description: 'Include roadmap updates and Q2 priorities',
+      status: 'todo',
+      priority: 'medium',
+      dueDate: new Date(now + 3 * 24 * 60 * 60 * 1000), // 3 days
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      source: 'consultation',
+      sourceId: 'meet-789',
+      assignedTo: 'user-1',
+      tags: ['meeting', 'product'],
+    },
+    {
+      id: '4',
+      title: 'Update team documentation',
+      description: 'Add new onboarding procedures',
+      status: 'in_progress',
+      priority: 'low',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      source: 'manual',
+      assignedTo: 'user-1',
+      tags: ['docs'],
+    },
+    {
+      id: '5',
+      title: 'Code review: Feature X PR',
+      description: 'Review pull request #234',
+      status: 'todo',
+      priority: 'high',
+      dueDate: new Date(now + 4 * 60 * 60 * 1000), // 4 hours
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      source: 'manual',
+      assignedTo: 'user-1',
+      tags: ['engineering', 'review'],
+    },
+  ];
+};
+
+const MOCK_TASKS = generateMockTasks();
 
 export function MagicTodoPanel({
   isOpen,
@@ -172,7 +174,7 @@ export function MagicTodoPanel({
 
   const handleQuickCreate = (title: string) => {
     const newTask: Task = {
-      id: `task-${Date.now()}`,
+      id: crypto.randomUUID(),
       title,
       status: 'todo',
       priority: 'medium',

@@ -8,16 +8,24 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TemplateForm } from '@/app/components/templates/template-form';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, FileText, Sparkles } from 'lucide-react';
+import type { TemplateFormData } from '@/app/components/templates/template-form';
+
+/** Template type options */
+type MeetingTemplateType = 'sales' | 'internal' | 'support';
+
+/** Meeting request submission data */
+interface MeetingRequestSubmitData extends TemplateFormData {
+  templateType: MeetingTemplateType;
+}
 
 interface MeetingRequestDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: MeetingRequestSubmitData) => void;
 }
 
 // Default templates
@@ -206,22 +214,9 @@ const supportMeetingTemplate = [
 ];
 
 export function MeetingRequestDialog({ open, onOpenChange, onSubmit }: MeetingRequestDialogProps) {
-  const [selectedTemplate, setSelectedTemplate] = useState<'sales' | 'internal' | 'support'>('sales');
+  const [selectedTemplate, setSelectedTemplate] = useState<MeetingTemplateType>('sales');
 
-  const getTemplate = () => {
-    switch (selectedTemplate) {
-      case 'sales':
-        return salesCallTemplate;
-      case 'internal':
-        return internalMeetingTemplate;
-      case 'support':
-        return supportMeetingTemplate;
-      default:
-        return salesCallTemplate;
-    }
-  };
-
-  const handleSubmit = (data: any) => {
+  const handleSubmit = (data: TemplateFormData) => {
     onSubmit({
       ...data,
       templateType: selectedTemplate,
@@ -239,7 +234,7 @@ export function MeetingRequestDialog({ open, onOpenChange, onSubmit }: MeetingRe
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs value={selectedTemplate} onValueChange={(v: any) => setSelectedTemplate(v)}>
+        <Tabs value={selectedTemplate} onValueChange={(v) => setSelectedTemplate(v as MeetingTemplateType)}>
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="sales" className="gap-2">
               <Sparkles className="h-4 w-4" />

@@ -18,6 +18,12 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { X } from 'lucide-react';
 
+/** Valid form field value types */
+export type TemplateFormValue = string | number | boolean | string[];
+
+/** Form data record type */
+export type TemplateFormData = Record<string, TemplateFormValue>;
+
 interface TemplateField {
   id: string;
   label: string;
@@ -25,19 +31,19 @@ interface TemplateField {
   required: boolean;
   placeholder?: string;
   options?: string[];
-  defaultValue?: any;
+  defaultValue?: TemplateFormValue;
   conditional?: {
     field: string;
-    value: any;
+    value: string | boolean | number;
   };
 }
 
 interface TemplateFormProps {
   fields: TemplateField[];
-  onSubmit: (data: Record<string, any>) => void;
+  onSubmit: (data: TemplateFormData) => void;
   onCancel?: () => void;
   submitLabel?: string;
-  initialData?: Record<string, any>;
+  initialData?: TemplateFormData;
 }
 
 export function TemplateForm({
@@ -47,7 +53,7 @@ export function TemplateForm({
   submitLabel = 'Submit',
   initialData = {},
 }: TemplateFormProps) {
-  const [formData, setFormData] = useState<Record<string, any>>(initialData);
+  const [formData, setFormData] = useState<TemplateFormData>(initialData);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,7 +84,7 @@ export function TemplateForm({
               id={field.id}
               type={field.type}
               placeholder={field.placeholder}
-              value={value || ''}
+              value={typeof value === 'string' ? value : ''}
               onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
               required={field.required}
             />
@@ -96,8 +102,8 @@ export function TemplateForm({
               id={field.id}
               type="number"
               placeholder={field.placeholder}
-              value={value || ''}
-              onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
+              value={typeof value === 'number' ? value : ''}
+              onChange={(e) => setFormData({ ...formData, [field.id]: parseFloat(e.target.value) || 0 })}
               required={field.required}
             />
           </div>
@@ -113,7 +119,7 @@ export function TemplateForm({
             <Textarea
               id={field.id}
               placeholder={field.placeholder}
-              value={value || ''}
+              value={typeof value === 'string' ? value : ''}
               onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
               required={field.required}
               rows={4}
@@ -129,7 +135,7 @@ export function TemplateForm({
               {field.required && <span className="text-destructive"> *</span>}
             </Label>
             <Select
-              value={value}
+              value={typeof value === 'string' ? value : ''}
               onValueChange={(val) => setFormData({ ...formData, [field.id]: val })}
               required={field.required}
             >
@@ -148,7 +154,7 @@ export function TemplateForm({
         );
 
       case 'multiselect':
-        const selectedValues = value || [];
+        const selectedValues = Array.isArray(value) ? value : [];
         return (
           <div key={field.id} className="space-y-2">
             <Label>
@@ -216,7 +222,7 @@ export function TemplateForm({
               {field.required && <span className="text-destructive"> *</span>}
             </Label>
             <RadioGroup
-              value={value}
+              value={typeof value === 'string' ? value : ''}
               onValueChange={(val) => setFormData({ ...formData, [field.id]: val })}
               required={field.required}
             >
@@ -233,7 +239,7 @@ export function TemplateForm({
         );
 
       case 'checkbox':
-        const checkedValues = value || [];
+        const checkedValues = Array.isArray(value) ? value : [];
         return (
           <div key={field.id} className="space-y-2">
             <Label>
@@ -279,7 +285,7 @@ export function TemplateForm({
             <Input
               id={field.id}
               type="date"
-              value={value || ''}
+              value={typeof value === 'string' ? value : ''}
               onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
               required={field.required}
             />
@@ -296,7 +302,7 @@ export function TemplateForm({
             <Input
               id={field.id}
               type="time"
-              value={value || ''}
+              value={typeof value === 'string' ? value : ''}
               onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
               required={field.required}
             />
@@ -313,7 +319,7 @@ export function TemplateForm({
             <Input
               id={field.id}
               type="datetime-local"
-              value={value || ''}
+              value={typeof value === 'string' ? value : ''}
               onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
               required={field.required}
             />

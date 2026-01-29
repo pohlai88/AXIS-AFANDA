@@ -74,15 +74,15 @@ export function MessageThread({ messages }: MessageThreadProps) {
                   {/* Attachments */}
                   {message.attachments && message.attachments.length > 0 && (
                     <div className="mt-2 space-y-1">
-                      {message.attachments.map((attachment: any, index: number) => (
+                      {message.attachments.map((attachment, index) => (
                         <a
                           key={index}
-                          href={attachment.file_url}
+                          href={attachment.dataUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-xs underline"
                         >
-                          📎 {attachment.file_name}
+                          📎 {attachment.extension || 'attachment'}
                         </a>
                       ))}
                     </div>

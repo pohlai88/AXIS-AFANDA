@@ -34,7 +34,7 @@ export function TenantProvider({
   const [tenant, setTenantState] = React.useState<Tenant | null>(
     initialTenant ?? null
   );
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading] = React.useState(false);
 
   // Set initial tenant
   React.useEffect(() => {

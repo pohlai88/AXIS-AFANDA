@@ -15,7 +15,7 @@ export interface Activity {
   type: string;
   source: string;
   userId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: Date;
 }
 

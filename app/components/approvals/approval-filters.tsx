@@ -28,8 +28,6 @@ import {
   Clock,
   AlertTriangle,
   Zap,
-  User,
-  Users,
   RotateCcw,
 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -110,7 +108,7 @@ export function ApprovalFilters({ filters, onFiltersChange, onReset }: ApprovalF
     onFiltersChange(preset.filters);
   };
 
-  const handleFilterChange = (key: keyof ApprovalFilters, value: any) => {
+  const handleFilterChange = (key: keyof ApprovalFilters, value: string | Date | undefined) => {
     onFiltersChange({ ...filters, [key]: value });
   };
 

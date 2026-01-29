@@ -12,13 +12,13 @@ export interface SSEConfig {
   withCredentials?: boolean;
 }
 
-export interface SSEEvent<T = any> {
+export interface SSEEvent<T = unknown> {
   type: string;
   data: T;
   timestamp: Date;
 }
 
-export type SSEEventHandler<T = any> = (event: SSEEvent<T>) => void;
+export type SSEEventHandler<T = unknown> = (event: SSEEvent<T>) => void;
 export type SSEErrorHandler = (error: Error) => void;
 export type SSEOpenHandler = () => void;
 
@@ -75,7 +75,7 @@ export class SSEClient {
   /**
    * Subscribe to a specific event type
    */
-  on<T = any>(eventType: string, handler: SSEEventHandler<T>): () => void {
+  on<T = unknown>(eventType: string, handler: SSEEventHandler<T>): () => void {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
 

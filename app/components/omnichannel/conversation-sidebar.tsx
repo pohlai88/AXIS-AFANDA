@@ -1,10 +1,9 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { format } from 'date-fns';
 import {
   User,
@@ -18,14 +17,31 @@ import {
   Link2,
 } from 'lucide-react';
 import type { Conversation } from '@/app/lib/stores/conversations-store';
-import { getChannelIcon, getChannelColor, getChannelLabel } from '@/app/lib/utils/channel-icons';
+import { getChannelIcon, getChannelColor, getChannelLabel, type ChannelType } from '@/app/lib/utils/channel-icons';
+
+/** Channel metadata for unified contacts */
+interface ChannelMetadata {
+  whatsapp?: string;
+  email?: string;
+  phone?: string;
+  facebook?: string;
+  instagram?: string;
+}
+
+/** Extended conversation with omnichannel properties */
+interface OmnichannelConversation extends Conversation {
+  channelType?: ChannelType;
+  channelIdentifier?: string;
+  unifiedContactId?: string;
+  channelMetadata?: ChannelMetadata;
+}
 
 interface ConversationSidebarProps {
   conversation: Conversation;
 }
 
 export function ConversationSidebar({ conversation: conv }: ConversationSidebarProps) {
-  const conversation = conv as any;
+  const conversation = conv as OmnichannelConversation;
   return (
     <div className="h-full overflow-auto p-4">
       <div className="space-y-6">
@@ -61,25 +77,25 @@ export function ConversationSidebar({ conversation: conv }: ConversationSidebarP
         </div>
 
         {/* Channel Information */}
-        {(conversation as any).channelType && (
+        {conversation.channelType && (
           <>
             <Separator />
             <div>
               <h3 className="mb-3 text-sm font-medium">Channel</h3>
               {(() => {
-                const ChannelIcon = getChannelIcon((conversation as any).channelType);
-                const channelColor = getChannelColor((conversation as any).channelType);
-                const channelLabel = getChannelLabel((conversation as any).channelType);
+                const ChannelIcon = getChannelIcon(conversation.channelType);
+                const channelColor = getChannelColor(conversation.channelType);
+                const channelLabel = getChannelLabel(conversation.channelType);
                 return (
                   <div className="space-y-2">
                     <Badge variant="outline" className="gap-1.5">
                       <ChannelIcon className={`h-3.5 w-3.5 ${channelColor}`} />
                       <span>{channelLabel}</span>
                     </Badge>
-                    {(conversation as any).channelIdentifier && (
+                    {conversation.channelIdentifier && (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Link2 className="h-3.5 w-3.5" />
-                        <span className="truncate">{(conversation as any).channelIdentifier}</span>
+                        <span className="truncate">{conversation.channelIdentifier}</span>
                       </div>
                     )}
                   </div>
@@ -90,7 +106,7 @@ export function ConversationSidebar({ conversation: conv }: ConversationSidebarP
         )}
 
         {/* Unified Contact Channels (if available) */}
-        {(conversation as any).unifiedContactId && (conversation as any).channelMetadata && (
+        {conversation.unifiedContactId && conversation.channelMetadata && (
           <>
             <Separator />
             <div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { format, isToday, isTomorrow, differenceInMinutes } from 'date-fns';
+import { format, isToday, isTomorrow } from 'date-fns';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import type { Meeting } from './types';

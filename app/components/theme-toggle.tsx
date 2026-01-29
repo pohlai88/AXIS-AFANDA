@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
 import { flushSync } from "react-dom";
 import { useTheme } from "@/app/providers/theme-provider";
@@ -11,6 +11,15 @@ interface AnimatedThemeTogglerProps
   duration?: number;
 }
 
+// Use useSyncExternalStore for hydration-safe mounting check
+function useIsMounted() {
+  return useSyncExternalStore(
+    () => () => { },
+    () => true,
+    () => false
+  );
+}
+
 export function ThemeToggle({
   className,
   duration = 400,
@@ -18,11 +27,10 @@ export function ThemeToggle({
 }: AnimatedThemeTogglerProps) {
   const { setTheme } = useTheme();
   const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setMounted(true);
     const updateTheme = () => {
       setIsDark(document.documentElement.classList.contains("dark"));
     };

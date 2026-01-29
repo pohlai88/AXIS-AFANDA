@@ -12,7 +12,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
@@ -31,28 +30,28 @@ import {
   Zap,
   Clock,
   CheckCircle2,
-  XCircle,
-  Bookmark,
   RotateCcw,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 
+interface InboxFilters {
+  status?: string;
+  priority?: string;
+  assigneeId?: number | 'me';
+  teamId?: number;
+  labels?: string[];
+  hasEscalation?: boolean;
+  unreadOnly?: boolean;
+  dateFrom?: Date;
+  dateTo?: Date;
+  sortBy?: string;
+  sortOrder?: string;
+}
+
 interface InboxFiltersProps {
-  filters: {
-    status?: string;
-    priority?: string;
-    assigneeId?: number;
-    teamId?: number;
-    labels?: string[];
-    hasEscalation?: boolean;
-    unreadOnly?: boolean;
-    dateFrom?: Date;
-    dateTo?: Date;
-    sortBy?: string;
-    sortOrder?: string;
-  };
-  onFiltersChange: (filters: any) => void;
+  filters: InboxFilters;
+  onFiltersChange: (filters: InboxFilters) => void;
 }
 
 // Predefined filter presets
@@ -124,7 +123,7 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
 
   // Apply preset
   const applyPreset = (preset: typeof FILTER_PRESETS[0]) => {
-    onFiltersChange(preset.filters);
+    onFiltersChange(preset.filters as InboxFilters);
   };
 
   // Toggle label

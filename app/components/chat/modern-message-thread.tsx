@@ -14,8 +14,20 @@ import { format, isToday, isYesterday } from 'date-fns';
 import { User, Bot, Check, CheckCheck, Smile, Reply, MoreVertical } from 'lucide-react';
 import type { Message } from '@/app/lib/stores/conversations-store';
 
+/** Reaction on a message */
+interface MessageReaction {
+  emoji: string;
+  count: number;
+}
+
+/** Extended message with delivery status and reactions */
+interface ExtendedMessage extends Message {
+  status?: 'sent' | 'delivered' | 'read';
+  reactions?: MessageReaction[];
+}
+
 interface ModernMessageThreadProps {
-  messages: Message[];
+  messages: ExtendedMessage[];
   onReaction?: (messageId: string, emoji: string) => void;
   onReply?: (messageId: string) => void;
 }
@@ -54,8 +66,8 @@ export function ModernMessageThread({
     }
   };
 
-  const groupMessagesByDate = (messages: Message[]) => {
-    const groups: { date: string; messages: Message[] }[] = [];
+  const groupMessagesByDate = (messages: ExtendedMessage[]) => {
+    const groups: { date: string; messages: ExtendedMessage[] }[] = [];
     let currentDate = '';
 
     messages.forEach((message) => {
@@ -83,7 +95,7 @@ export function ModernMessageThread({
   return (
     <ScrollArea className="h-full">
       <div className="space-y-6 p-4">
-        {messageGroups.map((group, groupIndex) => (
+        {messageGroups.map((group) => (
           <div key={group.date}>
             {/* Date Divider */}
             <div className="mb-4 flex items-center justify-center">
@@ -219,10 +231,10 @@ export function ModernMessageThread({
                         {/* Bubble */}
                         <div
                           className={`rounded-2xl px-4 py-2 shadow-sm ${isPrivate
-                              ? 'border border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/50'
-                              : isIncoming
-                                ? 'bg-muted'
-                                : 'bg-primary text-primary-foreground'
+                            ? 'border border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/50'
+                            : isIncoming
+                              ? 'bg-muted'
+                              : 'bg-primary text-primary-foreground'
                             } ${isIncoming
                               ? showAvatar ? 'rounded-tl-sm' : ''
                               : 'rounded-tr-sm'
@@ -235,15 +247,15 @@ export function ModernMessageThread({
                           {/* Attachments */}
                           {message.attachments && message.attachments.length > 0 && (
                             <div className="mt-2 space-y-1">
-                              {message.attachments.map((attachment: any, idx: number) => (
+                              {message.attachments.map((attachment, idx) => (
                                 <a
                                   key={idx}
-                                  href={attachment.file_url}
+                                  href={attachment.dataUrl}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="flex items-center gap-2 rounded-lg bg-background/50 px-2 py-1 text-xs hover:bg-background/80"
                                 >
-                                  📎 {attachment.file_name}
+                                  📎 {attachment.extension || 'attachment'}
                                 </a>
                               ))}
                             </div>
@@ -257,9 +269,9 @@ export function ModernMessageThread({
                             {!isIncoming && (
                               <span className="text-primary-foreground/70">
                                 {/* Delivery status */}
-                                {(message as any).status === 'read' ? (
+                                {message.status === 'read' ? (
                                   <CheckCheck className="h-3 w-3" />
-                                ) : (message as any).status === 'delivered' ? (
+                                ) : message.status === 'delivered' ? (
                                   <CheckCheck className="h-3 w-3 opacity-50" />
                                 ) : (
                                   <Check className="h-3 w-3 opacity-50" />
@@ -270,9 +282,9 @@ export function ModernMessageThread({
                         </div>
 
                         {/* Reactions */}
-                        {(message as any).reactions && (message as any).reactions.length > 0 && (
+                        {message.reactions && message.reactions.length > 0 && (
                           <div className={`mt-1 flex flex-wrap gap-1 ${!isIncoming && 'justify-end'}`}>
-                            {(message as any).reactions.map((reaction: any, idx: number) => (
+                            {message.reactions.map((reaction, idx) => (
                               <div
                                 key={idx}
                                 className="flex items-center gap-1 rounded-full bg-background px-2 py-0.5 text-xs shadow-sm"

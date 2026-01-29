@@ -60,8 +60,9 @@ export function AttachmentUpload({
   uploading = false,
 }: AttachmentUploadProps) {
   const [dragActive, setDragActive] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  // Upload progress tracking
+  const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrag = (e: React.DragEvent) => {

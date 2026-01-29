@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { SettingsLayout } from "@/app/components/settings-layout";
-import { User, Mail, Phone, MapPin, Calendar, Briefcase, GraduationCap } from "lucide-react";
+import { User, Mail, Phone, MapPin, Briefcase, GraduationCap } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
@@ -15,8 +15,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProfileSettingsPage() {
   const [loading, setLoading] = React.useState(true);
-  const [avatarUrl, setAvatarUrl] = React.useState("");
-  const [avatarInitials, setAvatarInitials] = React.useState("");
+  const [avatarUrl] = React.useState("");
+  const [avatarInitials] = React.useState("");
+  // TODO: Implement avatar editing when API is ready
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [displayName, setDisplayName] = React.useState("");

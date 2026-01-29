@@ -42,14 +42,23 @@ export default function WhiteboardDetailPage() {
   const router = useRouter();
   const whiteboardId = params.id as string;
 
-  const [whiteboardName, setWhiteboardName] = useState('Untitled Whiteboard');
+  // Initialize whiteboard name from mock data (avoids setState in effect)
+  const [whiteboardName, setWhiteboardName] = useState(() => {
+    const mockNames: Record<string, string> = {
+      'wb-1': 'Product Roadmap Q1 2026',
+      'wb-2': 'Customer Journey Map',
+      'wb-3': 'Architecture Diagram',
+    };
+    return mockNames[whiteboardId] || 'Untitled Whiteboard';
+  });
+
   const [isEditingName, setIsEditingName] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [backgroundType, setBackgroundType] = useState<BackgroundType>('default');
   const [showComments, setShowComments] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showMindmapTools, setShowMindmapTools] = useState(false);
-  const [editor, setEditor] = useState<any>(null);
+  const [editor, setEditor] = useState<unknown>(null);
 
   // Tags state
   const [selectedTags, setSelectedTags] = useState<WhiteboardTag[]>([
@@ -61,29 +70,32 @@ export default function WhiteboardDetailPage() {
     { id: 'tag-3', name: 'Draft', color: 'bg-gray-500' },
   ]);
 
-  // Comments state
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      id: 'comment-1',
-      whiteboardId,
-      userId: '1',
-      userName: 'John Doe',
-      userInitials: 'JD',
-      content: 'Great work on the initial design! I think we should add more detail to the user flow section.',
-      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      isPinned: true,
-    },
-    {
-      id: 'comment-2',
-      whiteboardId,
-      userId: '2',
-      userName: 'Jane Smith',
-      userInitials: 'JS',
-      content: 'Agreed! Also, can we discuss the color scheme in tomorrow\'s meeting?',
-      createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-      parentId: 'comment-1',
-    },
-  ]);
+  // Comments state - use static timestamps for mock data
+  const [comments, setComments] = useState<Comment[]>(() => {
+    const now = Date.now();
+    return [
+      {
+        id: 'comment-1',
+        whiteboardId,
+        userId: '1',
+        userName: 'John Doe',
+        userInitials: 'JD',
+        content: 'Great work on the initial design! I think we should add more detail to the user flow section.',
+        createdAt: new Date(now - 2 * 60 * 60 * 1000).toISOString(),
+        isPinned: true,
+      },
+      {
+        id: 'comment-2',
+        whiteboardId,
+        userId: '2',
+        userName: 'Jane Smith',
+        userInitials: 'JS',
+        content: 'Agreed! Also, can we discuss the color scheme in tomorrow\'s meeting?',
+        createdAt: new Date(now - 1 * 60 * 60 * 1000).toISOString(),
+        parentId: 'comment-1',
+      },
+    ];
+  });
 
   const currentUserId = '1'; // Mock current user
 
@@ -92,17 +104,6 @@ export default function WhiteboardDetailPage() {
     { id: '1', name: 'John Doe', initials: 'JD' },
     { id: '2', name: 'Jane Smith', initials: 'JS' },
   ];
-
-  // Load whiteboard name (in production, fetch from API)
-  useEffect(() => {
-    // Simulate loading
-    const mockNames: Record<string, string> = {
-      'wb-1': 'Product Roadmap Q1 2026',
-      'wb-2': 'Customer Journey Map',
-      'wb-3': 'Architecture Diagram',
-    };
-    setWhiteboardName(mockNames[whiteboardId] || 'Untitled Whiteboard');
-  }, [whiteboardId]);
 
   const handleSaveName = () => {
     setIsEditingName(false);
@@ -120,8 +121,9 @@ export default function WhiteboardDetailPage() {
     // In production, implement sharing functionality
   };
 
-  const handleEditorMount = (editor: any) => {
+  const handleEditorMount = (editor: unknown) => {
     console.log('✅ tldraw editor mounted:', editor);
+    setEditor(editor);
 
     // Auto-save indicator
     setIsSaving(true);
@@ -139,7 +141,7 @@ export default function WhiteboardDetailPage() {
 
   const handleCreateTag = (name: string, color: string) => {
     const newTag: WhiteboardTag = {
-      id: `tag-${Date.now()}`,
+      id: crypto.randomUUID(),
       name,
       color,
     };
@@ -149,7 +151,7 @@ export default function WhiteboardDetailPage() {
   // Comment handlers
   const handleAddComment = (content: string, parentId?: string) => {
     const newComment: Comment = {
-      id: `comment-${Date.now()}`,
+      id: crypto.randomUUID(),
       whiteboardId,
       userId: currentUserId,
       userName: 'John Doe',
@@ -426,7 +428,6 @@ export default function WhiteboardDetailPage() {
         {showComments && (
           <div className="w-96">
             <CommentsSidebar
-              whiteboardId={whiteboardId}
               comments={comments}
               onAddComment={handleAddComment}
               onEditComment={handleEditComment}

@@ -155,10 +155,10 @@ export interface AuditEvent {
   timestamp: Date;
 
   // Past: What was
-  previousState?: Record<string, any>;
+  previousState?: Record<string, unknown>;
 
   // Present: What is
-  currentState: Record<string, any>;
+  currentState: Record<string, unknown>;
 
   // Future: What will be (predictions, SLA, next steps)
   futureState?: {
@@ -167,7 +167,7 @@ export interface AuditEvent {
     slaStatus?: 'on_track' | 'at_risk' | 'breached';
   };
 
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -185,7 +185,7 @@ export interface Approval {
   // Content
   title: string;
   purpose: string;
-  fields: Record<string, any>; // Template-defined fields
+  fields: Record<string, unknown>; // Template-defined fields
   contentHash: string; // SHA256 for deduplication
 
   // Relationships (internal only)
@@ -240,7 +240,7 @@ export interface Approval {
   };
 
   // Metadata
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 
   // Timestamps
   createdAt: Date;

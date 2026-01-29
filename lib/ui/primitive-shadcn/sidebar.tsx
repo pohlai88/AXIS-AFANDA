@@ -624,7 +624,7 @@ const SidebarMenuAction = React.forwardRef<
         "peer-data-[size=lg]/menu-button:top-2.5",
         "group-data-[collapsible=icon]:hidden",
         showOnHover &&
-          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+        "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
         className
       )}
       {...props}
@@ -654,16 +654,20 @@ const SidebarMenuBadge = React.forwardRef<
 ))
 SidebarMenuBadge.displayName = "SidebarMenuBadge"
 
+// Predefined widths for skeleton loading to avoid impure Math.random()
+const SKELETON_WIDTHS_PRIMITIVE = ['65%', '78%', '52%', '85%', '70%', '58%', '82%', '75%'];
+
 const SidebarMenuSkeleton = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     showIcon?: boolean
   }
 >(({ className, showIcon = false, ...props }, ref) => {
-  // Random width between 50 to 90%.
-  const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`
-  }, [])
+  // Use a random predefined width from the array (only set once per component instance)
+  const [width] = React.useState(() => {
+    const randomIndex = Math.floor(Math.random() * SKELETON_WIDTHS_PRIMITIVE.length);
+    return SKELETON_WIDTHS_PRIMITIVE[randomIndex];
+  });
 
   return (
     <div

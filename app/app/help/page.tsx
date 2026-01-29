@@ -184,11 +184,11 @@ export default function HelpPage() {
                 <div className="py-4">
                   <h3 className="font-semibold">How do I connect a new channel?</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Go to Omnichannel → Click "Add Channels" → Follow the setup wizard to connect your channels.
+                    Go to Omnichannel → Click &quot;Add Channels&quot; → Follow the setup wizard to connect your channels.
                   </p>
                 </div>
                 <div className="py-4">
-                  <h3 className="font-semibold">What's the difference between Inbox and Omnichannel?</h3>
+                  <h3 className="font-semibold">What&apos;s the difference between Inbox and Omnichannel?</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
                     Inbox is for internal team communication (DMs, group chats). Omnichannel is for external customer communication across all channels (WhatsApp, email, social media, etc.).
                   </p>
@@ -196,7 +196,7 @@ export default function HelpPage() {
                 <div className="py-4">
                   <h3 className="font-semibold">How do I escalate a conversation?</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Open the conversation → Click the "Escalate" button → Fill in the reason → Submit for approval.
+                    Open the conversation → Click the &quot;Escalate&quot; button → Fill in the reason → Submit for approval.
                   </p>
                 </div>
                 <div className="py-4">

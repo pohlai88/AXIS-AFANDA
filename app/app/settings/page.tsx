@@ -20,10 +20,6 @@ import {
   Bell,
   Shield,
   Palette,
-  Globe,
-  Key,
-  Users,
-  Building,
   Save,
 } from 'lucide-react';
 import { toast } from 'sonner';

@@ -130,7 +130,7 @@ export default function NewApprovalPage() {
     'template'
   );
   const [selectedTemplate, setSelectedTemplate] = useState<ApprovalTemplate | null>(null);
-  const [formValues, setFormValues] = useState<Record<string, any>>({});
+  const [formValues, setFormValues] = useState<Record<string, string | number | Date | string[]>>({});
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -265,7 +265,7 @@ export default function NewApprovalPage() {
 
       toast.success('Approval request created successfully');
       router.push('/app/approvals');
-    } catch (error) {
+    } catch {
       toast.error('Failed to create approval');
     } finally {
       setSubmitting(false);
@@ -284,7 +284,8 @@ export default function NewApprovalPage() {
   };
 
   const handleOverride = async (reason: string) => {
-    // Submit with override reason
+    // TODO: Submit with override reason
+    console.log('Override reason:', reason);
     toast.success('Creating duplicate with override reason');
     setShowDuplicateDialog(false);
     await handleSubmit();
@@ -425,7 +426,7 @@ export default function NewApprovalPage() {
                       <div key={key}>
                         <p className="text-sm font-medium text-muted-foreground">{field.label}</p>
                         <p className="text-sm">
-                          {field.type === 'date'
+                          {field.type === 'date' && (typeof value === 'string' || value instanceof Date)
                             ? format(new Date(value), 'PPP')
                             : Array.isArray(value)
                               ? value.join(', ')

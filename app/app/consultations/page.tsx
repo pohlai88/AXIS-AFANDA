@@ -13,142 +13,152 @@ import { FloatingActionBar } from '@/app/components/consultations/floating-actio
 import { MagicTodoSheet } from '@/app/components/consultations/magic-todo-sheet';
 import { ConnectionStatusIndicator } from '@/app/components/consultations/connection-status-indicator';
 import { useGlobalMeetingUpdates } from '@/app/hooks/use-meeting-updates';
-import { TimelineSkeletonLoader, StatsBarSkeleton, HeatmapSkeleton } from '@/app/components/consultations/loading-skeleton';
+import { TimelineSkeletonLoader, StatsBarSkeleton } from '@/app/components/consultations/loading-skeleton';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import type { Meeting } from '@/app/components/consultations/types';
 
-// Mock data with more variety
-const mockMeetings: Meeting[] = [
-  {
-    id: '1',
-    caseId: 'CASE-2024-001',
-    title: 'Q1 Budget Review',
-    type: 'video',
-    status: 'scheduled',
-    scheduledStart: new Date(Date.now() + 300000), // 5 minutes from now (urgent!)
-    scheduledEnd: new Date(Date.now() + 3900000),
-    duration: 60,
-    participants: [
-      { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-      { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
-      { id: '3', name: 'Emma Wilson', avatar: 'EW' },
-    ],
-    minutesCompleted: false,
-    agendaItems: ['Budget Review', 'Timeline Discussion', 'Resource Planning'],
-  },
-  {
-    id: '2',
-    caseId: 'CASE-2024-002',
-    title: 'Product Planning',
-    type: 'physical',
-    status: 'scheduled',
-    scheduledStart: new Date(Date.now() + 18000000), // 5 hours from now
-    scheduledEnd: new Date(Date.now() + 21600000),
-    duration: 60,
-    location: 'Office 3B',
-    participants: [
-      { id: '3', name: 'Emma Wilson', avatar: 'EW' },
-      { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
-    ],
-    minutesCompleted: false,
-  },
-  {
-    id: '3',
-    caseId: 'CASE-2024-003',
-    title: 'Engineering Sync',
-    type: 'video',
-    status: 'completed',
-    scheduledStart: new Date(Date.now() - 86400000), // Yesterday
-    scheduledEnd: new Date(Date.now() - 82800000),
-    duration: 60,
-    participants: [
-      { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
-      { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
-    ],
-    minutesCompleted: false, // Needs minutes!
-  },
-  {
-    id: '4',
-    caseId: 'CASE-2024-004',
-    title: 'Client Onboarding',
-    type: 'video',
-    status: 'completed',
-    scheduledStart: new Date(Date.now() - 172800000), // 2 days ago
-    scheduledEnd: new Date(Date.now() - 169200000),
-    duration: 45,
-    participants: [
-      { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-      { id: '5', name: 'John Doe', avatar: 'JD' },
-    ],
-    minutesCompleted: false, // Needs minutes!
-  },
-  {
-    id: '5',
-    caseId: 'CASE-2024-005',
-    title: 'Team Standup',
-    type: 'video',
-    status: 'completed',
-    scheduledStart: new Date(Date.now() - 259200000), // 3 days ago
-    scheduledEnd: new Date(Date.now() - 257400000),
-    duration: 30,
-    participants: [
-      { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
-      { id: '3', name: 'Emma Wilson', avatar: 'EW' },
-      { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
-    ],
-    minutesCompleted: false, // Needs minutes!
-  },
-  {
-    id: '6',
-    caseId: 'CASE-2024-006',
-    title: 'Sprint Planning',
-    type: 'video',
-    status: 'scheduled',
-    scheduledStart: new Date(Date.now() + 86400000), // Tomorrow
-    scheduledEnd: new Date(Date.now() + 93600000),
-    duration: 120,
-    participants: [
-      { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-      { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
-      { id: '3', name: 'Emma Wilson', avatar: 'EW' },
-      { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
-    ],
-    minutesCompleted: false,
-  },
-  {
-    id: '7',
-    caseId: 'CASE-2024-007',
-    title: 'Executive Review',
-    type: 'physical',
-    status: 'completed',
-    scheduledStart: new Date(Date.now() - 604800000), // 1 week ago
-    scheduledEnd: new Date(Date.now() - 597600000),
-    duration: 90,
-    location: 'Boardroom',
-    participants: [
-      { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-      { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
-    ],
-    minutesCompleted: true,
-  },
-  {
-    id: '8',
-    caseId: 'CASE-2024-008',
-    title: 'Marketing Strategy Session',
-    type: 'video',
-    status: 'completed',
-    scheduledStart: new Date(Date.now() + 7200000), // 2 hours from now (shows in timeline)
-    scheduledEnd: new Date(Date.now() + 10800000),
-    duration: 60,
-    participants: [
-      { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-      { id: '3', name: 'Emma Wilson', avatar: 'EW' },
-      { id: '5', name: 'John Doe', avatar: 'JD' },
-    ],
-    minutesCompleted: true,
-    agendaItems: ['Q2 Campaign Planning', 'Budget Allocation', 'Team Expansion'],
-  },
-];
+// Extended Meeting type for local use
+interface ExtendedMeeting extends Meeting {
+  role?: string;
+}
+
+// Generate mock data with stable timestamps
+const generateMockMeetings = (): ExtendedMeeting[] => {
+  const now = Date.now();
+  return [
+    {
+      id: '1',
+      caseId: 'CASE-2024-001',
+      title: 'Q1 Budget Review',
+      type: 'video',
+      status: 'scheduled',
+      scheduledStart: new Date(now + 300000), // 5 minutes from now (urgent!)
+      scheduledEnd: new Date(now + 3900000),
+      duration: 60,
+      participants: [
+        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
+      ],
+      minutesCompleted: false,
+      agendaItems: ['Budget Review', 'Timeline Discussion', 'Resource Planning'],
+    },
+    {
+      id: '2',
+      caseId: 'CASE-2024-002',
+      title: 'Product Planning',
+      type: 'physical',
+      status: 'scheduled',
+      scheduledStart: new Date(now + 18000000), // 5 hours from now
+      scheduledEnd: new Date(now + 21600000),
+      duration: 60,
+      location: 'Office 3B',
+      participants: [
+        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
+        { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
+      ],
+      minutesCompleted: false,
+    },
+    {
+      id: '3',
+      caseId: 'CASE-2024-003',
+      title: 'Engineering Sync',
+      type: 'video',
+      status: 'completed',
+      scheduledStart: new Date(now - 86400000), // Yesterday
+      scheduledEnd: new Date(now - 82800000),
+      duration: 60,
+      participants: [
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
+        { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
+      ],
+      minutesCompleted: false, // Needs minutes!
+    },
+    {
+      id: '4',
+      caseId: 'CASE-2024-004',
+      title: 'Client Onboarding',
+      type: 'video',
+      status: 'completed',
+      scheduledStart: new Date(now - 172800000), // 2 days ago
+      scheduledEnd: new Date(now - 169200000),
+      duration: 45,
+      participants: [
+        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
+        { id: '5', name: 'John Doe', avatar: 'JD' },
+      ],
+      minutesCompleted: false, // Needs minutes!
+    },
+    {
+      id: '5',
+      caseId: 'CASE-2024-005',
+      title: 'Team Standup',
+      type: 'video',
+      status: 'completed',
+      scheduledStart: new Date(now - 259200000), // 3 days ago
+      scheduledEnd: new Date(now - 257400000),
+      duration: 30,
+      participants: [
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
+        { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
+      ],
+      minutesCompleted: false, // Needs minutes!
+    },
+    {
+      id: '6',
+      caseId: 'CASE-2024-006',
+      title: 'Sprint Planning',
+      type: 'video',
+      status: 'scheduled',
+      scheduledStart: new Date(now + 86400000), // Tomorrow
+      scheduledEnd: new Date(now + 93600000),
+      duration: 120,
+      participants: [
+        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
+        { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
+      ],
+      minutesCompleted: false,
+    },
+    {
+      id: '7',
+      caseId: 'CASE-2024-007',
+      title: 'Executive Review',
+      type: 'physical',
+      status: 'completed',
+      scheduledStart: new Date(now - 604800000), // 1 week ago
+      scheduledEnd: new Date(now - 597600000),
+      duration: 90,
+      location: 'Boardroom',
+      participants: [
+        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
+      ],
+      minutesCompleted: true,
+    },
+    {
+      id: '8',
+      caseId: 'CASE-2024-008',
+      title: 'Marketing Strategy Session',
+      type: 'video',
+      status: 'completed',
+      scheduledStart: new Date(now + 7200000), // 2 hours from now (shows in timeline)
+      scheduledEnd: new Date(now + 10800000),
+      duration: 60,
+      participants: [
+        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
+        { id: '5', name: 'John Doe', avatar: 'JD' },
+      ],
+      minutesCompleted: true,
+      agendaItems: ['Q2 Campaign Planning', 'Budget Allocation', 'Team Expansion'],
+    },
+  ];
+};
+
+const mockMeetings = generateMockMeetings();
 
 export default function ConsultationsPage() {
   const [search, setSearch] = useState('');
@@ -156,7 +166,7 @@ export default function ConsultationsPage() {
   const [selectedMeeting, setSelectedMeeting] = useState<string | null>(null);
   const [showMeetingFlow, setShowMeetingFlow] = useState(false);
   const [showMagicTodo, setShowMagicTodo] = useState(false);
-  const [magicTodoMeeting, setMagicTodoMeeting] = useState<Meeting | null>(null);
+  const [magicTodoMeeting, setMagicTodoMeeting] = useState<ExtendedMeeting | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Real-time updates
@@ -223,10 +233,19 @@ export default function ConsultationsPage() {
   };
 
   const selectedMeetingData = selectedMeeting
-    ? mockMeetings.find((m) => m.id === selectedMeeting)
+    ? (mockMeetings.find((m) => m.id === selectedMeeting) ?? null)
     : null;
 
-  const handleCreateTask = (taskData: any) => {
+  const handleCreateTask = (taskData: {
+    type: string;
+    title: string;
+    description: string;
+    priority: string;
+    dueDate: string;
+    assignedTo?: string;
+    department?: string;
+    watchers: string[];
+  }) => {
     console.log('Creating task:', taskData, 'for meeting:', magicTodoMeeting?.id);
     // TODO: API call to create task
   };
@@ -417,7 +436,7 @@ export default function ConsultationsPage() {
       <MagicTodoSheet
         open={showMagicTodo}
         onOpenChange={setShowMagicTodo}
-        meeting={magicTodoMeeting}
+        meeting={magicTodoMeeting || null}
         onCreateTask={handleCreateTask}
       />
     </div>

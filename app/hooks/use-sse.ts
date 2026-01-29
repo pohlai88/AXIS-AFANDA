@@ -6,7 +6,7 @@
  * Provides a simple interface to subscribe to real-time events.
  */
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { SSEClient, createSSEClient, type SSEEvent } from '@/app/lib/sse-client';
 
 export interface UseSSEOptions {
@@ -17,7 +17,7 @@ export interface UseSSEOptions {
   onError?: (error: Error) => void;
 }
 
-export interface UseSSEResult<T = any> {
+export interface UseSSEResult<T = unknown> {
   data: T | null;
   isConnected: boolean;
   error: Error | null;
@@ -27,7 +27,7 @@ export interface UseSSEResult<T = any> {
 /**
  * Hook to subscribe to a single SSE endpoint
  */
-export function useSSE<T = any>(
+export function useSSE<T = unknown>(
   url: string,
   eventType?: string,
   options: UseSSEOptions = {}
@@ -103,7 +103,7 @@ export function useSSE<T = any>(
 /**
  * Hook to subscribe to multiple event types on a single SSE endpoint
  */
-export function useSSEMulti<T = any>(
+export function useSSEMulti<T = unknown>(
   url: string,
   eventTypes: string[],
   options: UseSSEOptions = {}
@@ -125,6 +125,9 @@ export function useSSEMulti<T = any>(
   const [error, setError] = useState<Error | null>(null);
 
   const clientRef = useRef<SSEClient | null>(null);
+
+  // Memoize eventTypes to avoid spread in dependency array
+  const eventTypesKey = useMemo(() => JSON.stringify(eventTypes), [eventTypes]);
 
   useEffect(() => {
     if (!enabled || !url || eventTypes.length === 0) return;
@@ -170,7 +173,7 @@ export function useSSEMulti<T = any>(
       client.close();
       clientRef.current = null;
     };
-  }, [url, enabled, reconnectDelay, maxReconnectAttempts, onOpen, onError, ...eventTypes]);
+  }, [url, enabled, reconnectDelay, maxReconnectAttempts, onOpen, onError, eventTypesKey, eventTypes]);
 
   return {
     events,

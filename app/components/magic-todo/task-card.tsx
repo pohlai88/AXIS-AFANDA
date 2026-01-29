@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   CheckCircle2,
   Circle,
-  Clock,
   AlertCircle,
   MoreHorizontal,
   ExternalLink,
@@ -28,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { format, formatDistanceToNow, isPast, isToday } from 'date-fns';
+import { format, isPast, isToday } from 'date-fns';
 import type { Task } from './types';
 
 interface TaskCardProps {

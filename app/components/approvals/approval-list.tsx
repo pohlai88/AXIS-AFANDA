@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -74,9 +73,9 @@ const TYPE_LABELS: Record<string, string> = {
 
 // Priority config
 const PRIORITY_CONFIG = {
-  low: { label: 'Low', className: 'text-muted-foreground' },
-  medium: { label: 'Medium', className: 'text-blue-600' },
-  high: { label: 'High', className: 'text-orange-600' },
+  low: { label: 'Low', className: 'text-muted-foreground', icon: undefined },
+  medium: { label: 'Medium', className: 'text-blue-600', icon: undefined },
+  high: { label: 'High', className: 'text-orange-600', icon: undefined },
   urgent: { label: 'Urgent', className: 'text-red-600', icon: AlertTriangle },
 };
 
@@ -211,15 +210,15 @@ export function ApprovalList({
                 {/* Metadata preview */}
                 {approval.metadata && Object.keys(approval.metadata).length > 0 && (
                   <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    {approval.metadata.source && (
+                    {approval.metadata.source ? (
                       <span className="flex items-center gap-1">
                         <ExternalLink className="h-3 w-3" />
-                        Source: {approval.metadata.source}
+                        Source: {String(approval.metadata.source)}
                       </span>
-                    )}
-                    {approval.metadata.amount && (
-                      <span>Amount: ${approval.metadata.amount.toLocaleString()}</span>
-                    )}
+                    ) : null}
+                    {approval.metadata.amount ? (
+                      <span>Amount: ${typeof approval.metadata.amount === 'number' ? approval.metadata.amount.toLocaleString() : String(approval.metadata.amount)}</span>
+                    ) : null}
                   </div>
                 )}
               </div>

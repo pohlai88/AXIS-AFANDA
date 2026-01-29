@@ -91,7 +91,7 @@ export default function WhiteboardsPage() {
 
   const handleCreateNew = () => {
     // Generate a unique ID (in production, this would come from the API)
-    const newId = `wb-${Date.now()}`;
+    const newId = `wb-${crypto.randomUUID()}`;
     router.push(`/app/whiteboards/${newId}`);
   };
 
@@ -101,7 +101,7 @@ export default function WhiteboardsPage() {
 
     const duplicate: Whiteboard = {
       ...original,
-      id: `wb-${Date.now()}`,
+      id: `wb-${crypto.randomUUID()}`,
       name: `${original.name} (Copy)`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -147,7 +147,7 @@ export default function WhiteboardsPage() {
           </div>
 
           {/* Filter Dropdown */}
-          <Select value={filterBy} onValueChange={(value: any) => setFilterBy(value)}>
+          <Select value={filterBy} onValueChange={(value) => setFilterBy(value as 'all' | 'my' | 'shared' | 'templates')}>
             <SelectTrigger className="w-40">
               <SelectValue />
             </SelectTrigger>

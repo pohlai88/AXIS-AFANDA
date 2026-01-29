@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
-import type { Approval, AuditEvent } from '@/app/lib/stores/approvals-store';
+import type { Approval } from '@/app/lib/stores/approvals-store';
 
 interface ApprovalDetailProps {
   approval: Approval;
@@ -87,7 +87,7 @@ export function ApprovalDetail({
 
   const statusConfig = STATUS_CONFIG[approval.status as keyof typeof STATUS_CONFIG] || STATUS_CONFIG.submitted;
   const StatusIcon = statusConfig.icon;
-  const priority = approval.metadata?.priority;
+  const priority = approval.metadata?.priority as string | undefined;
 
   const handleApprove = async () => {
     if (onApprove) {
@@ -96,7 +96,7 @@ export function ApprovalDetail({
         await onApprove(decision);
         setDecision('');
         setActionType(null);
-      } catch (error) {
+      } catch {
         setActionType(null);
       }
     }
@@ -109,7 +109,7 @@ export function ApprovalDetail({
         await onReject(decision);
         setDecision('');
         setActionType(null);
-      } catch (error) {
+      } catch {
         setActionType(null);
       }
     }
@@ -420,7 +420,7 @@ export function ApprovalDetail({
                           <div className="rounded-lg bg-muted/50 p-2">
                             <p className="text-xs font-medium text-muted-foreground">Past</p>
                             <p className="text-xs">
-                              Status: {event.previousState.status}
+                              Status: {String(event.previousState.status || '')}
                             </p>
                           </div>
                         )}
@@ -429,10 +429,10 @@ export function ApprovalDetail({
                         <div className="rounded-lg bg-primary/10 p-2">
                           <p className="text-xs font-medium text-primary">Present</p>
                           <p className="text-xs">
-                            Status: {event.currentState.status}
-                            {event.currentState.assignedTo && (
-                              <> · Assigned to: {event.currentState.assignedTo}</>
-                            )}
+                            Status: {String(event.currentState.status || '')}
+                            {event.currentState.assignedTo ? (
+                              <> · Assigned to: {String(event.currentState.assignedTo)}</>
+                            ) : null}
                           </p>
                         </div>
 
