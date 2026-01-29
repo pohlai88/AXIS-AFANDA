@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sparkles, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +10,18 @@ import { MagicTodoPanel } from './magic-todo-panel';
 export function MagicTodoTrigger() {
   const [isOpen, setIsOpen] = useState(false);
   const [pendingCount, setPendingCount] = useState(7); // Mock count
+
+  // Listen for toggle event from sidebar
+  useEffect(() => {
+    const handleToggle = () => {
+      setIsOpen((prev) => !prev);
+    };
+
+    window.addEventListener('toggle-magic-todo', handleToggle);
+    return () => {
+      window.removeEventListener('toggle-magic-todo', handleToggle);
+    };
+  }, []);
 
   return (
     <>

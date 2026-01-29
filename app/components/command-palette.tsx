@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import { Building2 } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -9,158 +10,127 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
-import {
-  LayoutDashboard,
-  Inbox,
-  CheckSquare,
-  MessageSquare,
-  Video,
-  Settings,
-  HelpCircle,
-  Users,
-  Shield,
-  Search,
-  Activity,
-} from "lucide-react";
-import { getEnabledModules } from "@/app/lib/module-registry";
 import { useTenant } from "@/app/providers/tenant-provider";
+import { useTheme } from "@/app/providers/theme-provider";
+import {
+  allCommandGroups,
+  type CommandItem as CommandItemData,
+  type CommandGroup as CommandGroupData,
+} from "@/app/config/command-data";
 
 interface CommandPaletteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const navigationItems = [
-  { title: "Dashboard", url: "/app", icon: LayoutDashboard },
-  { title: "Inbox", url: "/app/inbox", icon: Inbox },
-  { title: "Approvals", url: "/app/approvals", icon: CheckSquare },
-  { title: "Activity", url: "/app/activity", icon: Activity },
-  { title: "Omnichannel", url: "/app/omnichannel", icon: MessageSquare },
-  { title: "Consultations", url: "/app/consultations", icon: Video },
-];
-
-const settingsItems = [
-  { title: "Settings", url: "/app/settings", icon: Settings },
-  { title: "Teams", url: "/app/settings/teams", icon: Users },
-  { title: "Modules", url: "/app/settings/modules", icon: Shield },
-  { title: "Help", url: "/app/help", icon: HelpCircle },
-];
-
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const router = useRouter();
   const { tenant } = useTenant();
-  const [search, setSearch] = React.useState("");
+  const { setTheme } = useTheme();
 
-  const modules = getEnabledModules();
+  // Execute command and close palette
+  const runCommand = React.useCallback(
+    (callback: () => void) => {
+      onOpenChange(false);
+      callback();
+    },
+    [onOpenChange]
+  );
 
-  const handleSelect = (url: string) => {
-    router.push(url);
-    onOpenChange(false);
-    setSearch("");
+  // Handle action commands
+  const handleAction = React.useCallback(
+    (action: string) => {
+      switch (action) {
+        case "toggle-magic-todo":
+          window.dispatchEvent(new CustomEvent("toggle-magic-todo"));
+          break;
+        case "theme-light":
+          setTheme("light");
+          document.documentElement.classList.remove("dark");
+          break;
+        case "theme-dark":
+          setTheme("dark");
+          document.documentElement.classList.add("dark");
+          break;
+        case "theme-system":
+          setTheme("system");
+          document.documentElement.classList.remove("dark");
+          if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            document.documentElement.classList.add("dark");
+          }
+          break;
+        case "logout":
+          router.push("/api/auth/logout");
+          break;
+        default:
+          console.warn(`Unknown action: ${action}`);
+      }
+    },
+    [router, setTheme]
+  );
+
+  // Handle item selection
+  const handleSelect = React.useCallback(
+    (item: CommandItemData) => {
+      if (item.type === "navigation") {
+        runCommand(() => router.push(item.href));
+      } else if (item.type === "action") {
+        runCommand(() => handleAction(item.action));
+      }
+    },
+    [router, runCommand, handleAction]
+  );
+
+  // Render a single command item
+  const renderCommandItem = (item: CommandItemData) => {
+    const Icon = item.icon;
+    return (
+      <CommandItem
+        key={item.id}
+        value={`${item.label} ${item.keywords?.join(" ") ?? ""}`}
+        onSelect={() => handleSelect(item)}
+        disabled={item.disabled}
+      >
+        <Icon />
+        <span>{item.label}</span>
+        {item.shortcut && <CommandShortcut>{item.shortcut}</CommandShortcut>}
+      </CommandItem>
+    );
   };
 
-  // Filter items based on search
-  const filteredNavigation = navigationItems.filter((item) =>
-    item.title.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const filteredSettings = settingsItems.filter((item) =>
-    item.title.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const filteredModules = modules.filter(
-    (module) =>
-      module.name.toLowerCase().includes(search.toLowerCase()) ||
-      module.description?.toLowerCase().includes(search.toLowerCase())
+  // Render a command group
+  const renderCommandGroup = (group: CommandGroupData, index: number) => (
+    <React.Fragment key={group.id}>
+      {index > 0 && <CommandSeparator />}
+      <CommandGroup heading={group.heading}>
+        {group.items.map(renderCommandItem)}
+      </CommandGroup>
+    </React.Fragment>
   );
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput
-        placeholder="Type a command or search..."
-        value={search}
-        onValueChange={setSearch}
-      />
+      <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
 
-        {filteredNavigation.length > 0 && (
-          <CommandGroup heading="Navigation">
-            {filteredNavigation.map((item) => {
-              const Icon = item.icon;
-              return (
-                <CommandItem
-                  key={item.url}
-                  value={item.title}
-                  onSelect={() => handleSelect(item.url)}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.title}</span>
-                  <CommandShortcut>⌘{item.title[0]}</CommandShortcut>
-                </CommandItem>
-              );
-            })}
-          </CommandGroup>
-        )}
+        {/* Render all command groups from configuration */}
+        {allCommandGroups.map((group, index) => renderCommandGroup(group, index))}
 
-        {filteredModules.length > 0 && (
-          <CommandGroup heading="Modules">
-            {filteredModules.map((module) => {
-              const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-                LayoutDashboard,
-                Inbox,
-                CheckSquare,
-                MessageSquare,
-                Video,
-                Activity,
-              };
-              const Icon = iconMap[module.icon || ""] || Search;
-              return (
-                <CommandItem
-                  key={module.id}
-                  value={module.name}
-                  onSelect={() => handleSelect(module.route)}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{module.name}</span>
-                  {module.description && (
-                    <span className="text-xs text-muted-foreground ml-2">
-                      {module.description}
-                    </span>
-                  )}
-                </CommandItem>
-              );
-            })}
-          </CommandGroup>
-        )}
-
-        {filteredSettings.length > 0 && (
-          <CommandGroup heading="Settings">
-            {filteredSettings.map((item) => {
-              const Icon = item.icon;
-              return (
-                <CommandItem
-                  key={item.url}
-                  value={item.title}
-                  onSelect={() => handleSelect(item.url)}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.title}</span>
-                </CommandItem>
-              );
-            })}
-          </CommandGroup>
-        )}
-
+        {/* Current workspace context */}
         {tenant && (
-          <CommandGroup heading="Context">
-            <CommandItem disabled>
-              <Users className="h-4 w-4" />
-              <span>Current Tenant: {tenant.name}</span>
-            </CommandItem>
-          </CommandGroup>
+          <>
+            <CommandSeparator />
+            <CommandGroup heading="Context">
+              <CommandItem disabled value="workspace">
+                <Building2 />
+                <span>Workspace: {tenant.name}</span>
+              </CommandItem>
+            </CommandGroup>
+          </>
         )}
       </CommandList>
     </CommandDialog>

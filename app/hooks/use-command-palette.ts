@@ -2,7 +2,18 @@
 
 import * as React from "react";
 
-export function useCommandPalette() {
+type CommandPaletteContextType = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+
+const CommandPaletteContext = React.createContext<CommandPaletteContextType | undefined>(undefined);
+
+export function CommandPaletteProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -30,5 +41,22 @@ export function useCommandPalette() {
     return () => document.removeEventListener("keydown", down, true);
   }, [open]);
 
-  return { open, setOpen };
+  const value = React.useMemo(
+    () => ({ open, setOpen }),
+    [open]
+  );
+
+  return React.createElement(
+    CommandPaletteContext.Provider,
+    { value },
+    children
+  );
+}
+
+export function useCommandPalette() {
+  const context = React.useContext(CommandPaletteContext);
+  if (context === undefined) {
+    throw new Error("useCommandPalette must be used within a CommandPaletteProvider");
+  }
+  return context;
 }
