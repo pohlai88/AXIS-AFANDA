@@ -1,22 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { TenantProvider } from "@/app/providers/tenant-provider";
 import { ShellSidebar } from "@/app/components/shell-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { CommandPalette } from "@/app/components/command-palette";
 import { ErrorBoundary } from "@/app/components/error-boundary";
 import { useCommandPalette } from "@/app/hooks/use-command-palette";
-import { useActivityStream } from "@/app/lib/sse-client";
+import { useActivityStream } from "@/app/hooks/use-activity-stream";
 import { ChatwootWidget } from "@/app/components/chatwoot-widget";
-
-// Mock tenants for development (will be replaced with Keycloak later)
-const mockTenants = [
-  { id: "1", name: "Acme Corp", type: "org" as const },
-  { id: "2", name: "Engineering Team", type: "team" as const },
-  { id: "3", name: "John Doe", type: "individual" as const },
-];
+import { MagicTodoTrigger } from "@/app/components/magic-todo/magic-todo-trigger";
 
 export default function AppLayout({
   children,
@@ -30,7 +23,7 @@ export default function AppLayout({
   useActivityStream('mock-tenant-id');
 
   return (
-    <TenantProvider tenants={mockTenants} initialTenant={mockTenants[0]}>
+    <>
       <SidebarProvider
         style={
           {
@@ -51,6 +44,7 @@ export default function AppLayout({
       </SidebarProvider>
       <CommandPalette open={open} onOpenChange={setOpen} />
       <ChatwootWidget />
-    </TenantProvider>
+      <MagicTodoTrigger />
+    </>
   );
 }

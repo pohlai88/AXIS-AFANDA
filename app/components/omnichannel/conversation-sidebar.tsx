@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import {
   User,
@@ -13,14 +14,18 @@ import {
   UserCheck,
   Users,
   AlertCircle,
+  Phone,
+  Link2,
 } from 'lucide-react';
 import type { Conversation } from '@/app/lib/stores/conversations-store';
+import { getChannelIcon, getChannelColor, getChannelLabel } from '@/app/lib/utils/channel-icons';
 
 interface ConversationSidebarProps {
   conversation: Conversation;
 }
 
-export function ConversationSidebar({ conversation }: ConversationSidebarProps) {
+export function ConversationSidebar({ conversation: conv }: ConversationSidebarProps) {
+  const conversation = conv as any;
   return (
     <div className="h-full overflow-auto p-4">
       <div className="space-y-6">
@@ -54,6 +59,118 @@ export function ConversationSidebar({ conversation }: ConversationSidebarProps) 
             )}
           </div>
         </div>
+
+        {/* Channel Information */}
+        {(conversation as any).channelType && (
+          <>
+            <Separator />
+            <div>
+              <h3 className="mb-3 text-sm font-medium">Channel</h3>
+              {(() => {
+                const ChannelIcon = getChannelIcon((conversation as any).channelType);
+                const channelColor = getChannelColor((conversation as any).channelType);
+                const channelLabel = getChannelLabel((conversation as any).channelType);
+                return (
+                  <div className="space-y-2">
+                    <Badge variant="outline" className="gap-1.5">
+                      <ChannelIcon className={`h-3.5 w-3.5 ${channelColor}`} />
+                      <span>{channelLabel}</span>
+                    </Badge>
+                    {(conversation as any).channelIdentifier && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Link2 className="h-3.5 w-3.5" />
+                        <span className="truncate">{(conversation as any).channelIdentifier}</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          </>
+        )}
+
+        {/* Unified Contact Channels (if available) */}
+        {(conversation as any).unifiedContactId && (conversation as any).channelMetadata && (
+          <>
+            <Separator />
+            <div>
+              <h3 className="mb-3 text-sm font-medium">Connected Channels</h3>
+              <Card>
+                <CardContent className="p-3">
+                  <div className="space-y-2 text-sm">
+                    {conversation.channelMetadata.whatsapp && (
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const WhatsAppIcon = getChannelIcon('whatsapp');
+                          const whatsappColor = getChannelColor('whatsapp');
+                          return (
+                            <>
+                              <WhatsAppIcon className={`h-3.5 w-3.5 ${whatsappColor}`} />
+                              <span className="text-muted-foreground">
+                                {conversation.channelMetadata.whatsapp}
+                              </span>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    )}
+                    {conversation.channelMetadata.email && (
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-3.5 w-3.5 text-blue-600" />
+                        <span className="text-muted-foreground">
+                          {conversation.channelMetadata.email}
+                        </span>
+                      </div>
+                    )}
+                    {conversation.channelMetadata.phone && (
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-3.5 w-3.5 text-purple-600" />
+                        <span className="text-muted-foreground">
+                          {conversation.channelMetadata.phone}
+                        </span>
+                      </div>
+                    )}
+                    {conversation.channelMetadata.facebook && (
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const FacebookIcon = getChannelIcon('facebook');
+                          const facebookColor = getChannelColor('facebook');
+                          return (
+                            <>
+                              <FacebookIcon className={`h-3.5 w-3.5 ${facebookColor}`} />
+                              <span className="text-muted-foreground">
+                                {conversation.channelMetadata.facebook}
+                              </span>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    )}
+                    {conversation.channelMetadata.instagram && (
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const InstagramIcon = getChannelIcon('instagram');
+                          const instagramColor = getChannelColor('instagram');
+                          return (
+                            <>
+                              <InstagramIcon className={`h-3.5 w-3.5 ${instagramColor}`} />
+                              <span className="text-muted-foreground">
+                                @{conversation.channelMetadata.instagram}
+                              </span>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+              <p className="mt-2 text-xs text-muted-foreground">
+                All channels linked to this contact
+              </p>
+            </div>
+          </>
+        )}
 
         <Separator />
 
@@ -130,7 +247,7 @@ export function ConversationSidebar({ conversation }: ConversationSidebarProps) 
             <div>
               <h3 className="mb-3 text-sm font-medium">Labels</h3>
               <div className="flex flex-wrap gap-2">
-                {conversation.labels.map((label) => (
+                {conversation.labels.map((label: string) => (
                   <Badge key={label} variant="outline">
                     <Tag className="mr-1 h-3 w-3" />
                     {label}

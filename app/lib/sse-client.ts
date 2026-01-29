@@ -1,153 +1,225 @@
 /**
- * SSE (Server-Sent Events) client for real-time activity updates
+ * SSE (Server-Sent Events) Client
+ * 
+ * Provides real-time updates from the orchestrator without polling.
+ * Handles connection management, reconnection, and error handling.
  */
 
-import { useEffect, useRef } from 'react';
-import { useConversationsStore } from './stores/conversations-store';
-import { useApprovalsStore } from './stores/approvals-store';
-import { toast } from 'sonner';
-
-interface Activity {
-  id: string;
-  tenantId: string;
-  type: string;
-  source: string;
-  title: string;
-  description?: string;
-  data: any;
-  createdAt: string;
+export interface SSEConfig {
+  url: string;
+  reconnectDelay?: number;
+  maxReconnectAttempts?: number;
+  withCredentials?: boolean;
 }
 
-export function useActivityStream(tenantId: string) {
-  const eventSourceRef = useRef<EventSource | null>(null);
-  const connectingRef = useRef(false);
-  const { addConversation, updateConversation, addMessage } = useConversationsStore();
-  const { addApproval, updateApproval } = useApprovalsStore();
+export interface SSEEvent<T = any> {
+  type: string;
+  data: T;
+  timestamp: Date;
+}
 
-  useEffect(() => {
-    if (!tenantId) return;
+export type SSEEventHandler<T = any> = (event: SSEEvent<T>) => void;
+export type SSEErrorHandler = (error: Error) => void;
+export type SSEOpenHandler = () => void;
 
-    // Prevent multiple connections
-    if (eventSourceRef.current?.readyState === EventSource.OPEN) {
-      return;
-    }
+export class SSEClient {
+  private eventSource: EventSource | null = null;
+  private config: Required<SSEConfig>;
+  private reconnectAttempts = 0;
+  private reconnectTimer: NodeJS.Timeout | null = null;
+  private handlers: Map<string, Set<SSEEventHandler>> = new Map();
+  private errorHandlers: Set<SSEErrorHandler> = new Set();
+  private openHandlers: Set<SSEOpenHandler> = new Set();
+  private closed = false;
 
-    // Prevent duplicate connection attempts
-    if (connectingRef.current) {
-      return;
-    }
-
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
-
-    const url = `${apiUrl}/activity?tenantId=${tenantId}`;
-
-    connectingRef.current = true;
-    console.log('🔌 SSE connecting...');
-
-    // Create EventSource
-    const eventSource = new EventSource(url, {
-      withCredentials: false,
-    });
-
-    eventSourceRef.current = eventSource;
-
-    // Handle messages
-    eventSource.addEventListener('activity', (event) => {
-      try {
-        const activity: Activity = JSON.parse(event.data);
-        console.log('📨 Activity received:', activity.type);
-
-        handleActivity(activity);
-      } catch (error) {
-        console.error('Failed to parse activity:', error);
-      }
-    });
-
-    // Handle heartbeat
-    eventSource.addEventListener('heartbeat', (event) => {
-      console.log('💓 Heartbeat received');
-    });
-
-    // Handle connection open
-    eventSource.onopen = () => {
-      connectingRef.current = false;
-      console.log('✅ SSE connected');
+  constructor(config: SSEConfig) {
+    this.config = {
+      reconnectDelay: 3000,
+      maxReconnectAttempts: 5,
+      withCredentials: true,
+      ...config,
     };
+  }
 
-    // Handle errors
-    eventSource.onerror = (error) => {
-      // EventSource error object is often empty, check readyState instead
-      const state = eventSource.readyState;
+  /**
+   * Connect to the SSE endpoint
+   */
+  connect(): void {
+    if (this.eventSource || this.closed) return;
 
-      if (state === EventSource.CLOSED) {
-        connectingRef.current = false;
-        console.log('❌ SSE connection closed');
-        // Don't reconnect automatically - cleanup will handle it
-      } else if (state === EventSource.CONNECTING) {
-        // Connecting state - don't log repeatedly
-        if (!connectingRef.current) {
-          console.log('⚠️ SSE reconnecting...');
-          connectingRef.current = true;
-        }
-      }
-    };
+    try {
+      this.eventSource = new EventSource(this.config.url, {
+        withCredentials: this.config.withCredentials,
+      });
 
-    // Cleanup
-    return () => {
-      connectingRef.current = false;
-      if (eventSource.readyState !== EventSource.CLOSED) {
-        eventSource.close();
-      }
-      eventSourceRef.current = null;
-    };
-  }, [tenantId]);
+      this.eventSource.onopen = () => {
+        this.reconnectAttempts = 0;
+        this.openHandlers.forEach(handler => handler());
+      };
 
-  function handleActivity(activity: Activity) {
-    switch (activity.type) {
-      case 'conversation_created':
-        // Refresh conversations list
-        toast.info('New conversation received');
-        break;
+      this.eventSource.onerror = (error) => {
+        console.error('[SSE] Connection error:', error);
+        this.handleError(new Error('SSE connection error'));
+        this.handleReconnect();
+      };
 
-      case 'message_created':
-        // Add message to conversation
-        if (activity.data.conversationId) {
-          // Message will be added via webhook sync
-          toast.info('New message received');
-        }
-        break;
-
-      case 'conversation_updated':
-        // Update conversation in store
-        if (activity.data.conversationId) {
-          updateConversation(activity.data.conversationId, activity.data.changes);
-        }
-        break;
-
-      case 'approval_created':
-        // Show notification for new approval
-        toast.info('New approval request', {
-          description: activity.description,
-        });
-        break;
-
-      case 'approval_approved':
-      case 'approval_rejected':
-        // Show notification for approval decision
-        toast.success(activity.title, {
-          description: activity.description,
-        });
-        break;
-
-      case 'conversation_escalated':
-        // Show notification for escalation
-        toast.info('Conversation escalated', {
-          description: activity.description,
-        });
-        break;
-
-      default:
-        console.log('Unhandled activity type:', activity.type);
+      this.eventSource.onmessage = (event) => {
+        this.handleMessage(event);
+      };
+    } catch (error) {
+      console.error('[SSE] Failed to create EventSource:', error);
+      this.handleError(error as Error);
     }
   }
+
+  /**
+   * Subscribe to a specific event type
+   */
+  on<T = any>(eventType: string, handler: SSEEventHandler<T>): () => void {
+    if (!this.handlers.has(eventType)) {
+      this.handlers.set(eventType, new Set());
+
+      // Register event listener with EventSource
+      if (this.eventSource) {
+        this.eventSource.addEventListener(eventType, (event) => {
+          this.handleMessage(event as MessageEvent, eventType);
+        });
+      }
+    }
+
+    this.handlers.get(eventType)!.add(handler as SSEEventHandler);
+
+    // Return unsubscribe function
+    return () => {
+      const handlers = this.handlers.get(eventType);
+      if (handlers) {
+        handlers.delete(handler as SSEEventHandler);
+        if (handlers.size === 0) {
+          this.handlers.delete(eventType);
+        }
+      }
+    };
+  }
+
+  /**
+   * Subscribe to error events
+   */
+  onError(handler: SSEErrorHandler): () => void {
+    this.errorHandlers.add(handler);
+    return () => {
+      this.errorHandlers.delete(handler);
+    };
+  }
+
+  /**
+   * Subscribe to connection open events
+   */
+  onOpen(handler: SSEOpenHandler): () => void {
+    this.openHandlers.add(handler);
+    return () => {
+      this.openHandlers.delete(handler);
+    };
+  }
+
+  /**
+   * Close the connection
+   */
+  close(): void {
+    this.closed = true;
+
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = null;
+    }
+
+    this.handlers.clear();
+    this.errorHandlers.clear();
+    this.openHandlers.clear();
+  }
+
+  /**
+   * Get connection state
+   */
+  get readyState(): number {
+    return this.eventSource?.readyState ?? EventSource.CLOSED;
+  }
+
+  /**
+   * Check if connected
+   */
+  get isConnected(): boolean {
+    return this.eventSource?.readyState === EventSource.OPEN;
+  }
+
+  private handleMessage(event: MessageEvent, eventType?: string): void {
+    try {
+      const data = JSON.parse(event.data);
+      const type = eventType || data.type || 'message';
+
+      const sseEvent: SSEEvent = {
+        type,
+        data: data.data || data,
+        timestamp: new Date(),
+      };
+
+      const handlers = this.handlers.get(type);
+      if (handlers) {
+        handlers.forEach(handler => {
+          try {
+            handler(sseEvent);
+          } catch (error) {
+            console.error(`[SSE] Handler error for ${type}:`, error);
+          }
+        });
+      }
+    } catch (error) {
+      console.error('[SSE] Failed to parse message:', error, event.data);
+    }
+  }
+
+  private handleError(error: Error): void {
+    this.errorHandlers.forEach(handler => {
+      try {
+        handler(error);
+      } catch (err) {
+        console.error('[SSE] Error handler failed:', err);
+      }
+    });
+  }
+
+  private handleReconnect(): void {
+    if (this.closed) return;
+
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = null;
+    }
+
+    if (this.reconnectAttempts >= this.config.maxReconnectAttempts) {
+      console.error('[SSE] Max reconnect attempts reached');
+      this.handleError(new Error('Max reconnect attempts reached'));
+      return;
+    }
+
+    this.reconnectAttempts++;
+    console.log(
+      `[SSE] Reconnecting (attempt ${this.reconnectAttempts}/${this.config.maxReconnectAttempts})...`
+    );
+
+    this.reconnectTimer = setTimeout(() => {
+      this.connect();
+    }, this.config.reconnectDelay);
+  }
+}
+
+/**
+ * Create a new SSE client
+ */
+export function createSSEClient(config: SSEConfig): SSEClient {
+  return new SSEClient(config);
 }

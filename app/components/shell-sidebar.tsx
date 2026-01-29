@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   Activity,
   Users2,
+  Pencil,
 } from "lucide-react";
 import {
   Sidebar,
@@ -59,6 +60,12 @@ const navMain = [
     title: "Consultations",
     url: "/app/consultations",
     icon: Video,
+  },
+  {
+    title: "Whiteboards",
+    url: "/app/whiteboards",
+    icon: Pencil,
+    description: "Collaborative infinite canvas",
   },
 ];
 

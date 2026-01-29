@@ -132,7 +132,7 @@ activityRouter.get(
         page,
         limit,
         total: count,
-        totalPages: Math.ceil(count / limit),
+        totalPages: Math.ceil(Number(count) / limit),
       },
     });
   }

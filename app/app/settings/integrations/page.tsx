@@ -1,7 +1,7 @@
 "use client";
 
 import { SettingsLayout } from "@/app/components/settings-layout";
-import { Plug, MessageSquare, Video, Users, Key, Webhook } from "lucide-react";
+import { Plug, MessageSquare, Video, Users, Key } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
@@ -89,7 +89,7 @@ export default function IntegrationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Webhook Configuration</Label>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="webhook-url">Webhook URL</Label>
                     <Input
@@ -193,7 +193,7 @@ export default function IntegrationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Webhook Configuration</Label>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="matrix-webhook-url">Webhook URL</Label>
                     <Input
@@ -349,7 +349,7 @@ export default function IntegrationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Sync Configuration</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Sync Users</Label>
@@ -384,10 +384,10 @@ export default function IntegrationsSettingsPage() {
 
                 <div className="p-4 bg-muted rounded-lg">
                   <p className="text-sm text-muted-foreground">
-                    <strong>Note:</strong> Keycloak is the single source of truth for identity and permissions. 
+                    <strong>Note:</strong> Keycloak is the single source of truth for identity and permissions.
                     Teams are self-managed and do not sync to Keycloak.
-          </p>
-        </div>
+                  </p>
+                </div>
 
                 <Button className="w-full">Save Keycloak Settings</Button>
                 <Button variant="outline" className="w-full">Test Connection</Button>

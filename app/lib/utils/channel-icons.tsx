@@ -207,7 +207,7 @@ export function getChannelConfig(channelType?: string | null): ChannelConfig {
   if (!channelType) {
     return CHANNEL_CONFIGS.api; // Default fallback
   }
-  
+
   const normalizedType = channelType.toLowerCase() as ChannelType;
   return CHANNEL_CONFIGS[normalizedType] || CHANNEL_CONFIGS.api;
 }

@@ -13,6 +13,7 @@ import { approvalsRouter } from './routes/approvals';
 import { conversationsRouter } from './routes/conversations';
 import { activityRouter } from './routes/activity';
 import { webhooksRouter } from './routes/webhooks';
+import meetingsRouter from './routes/meetings';
 
 // Import middleware
 import { authMiddleware } from './middleware/auth';
@@ -57,6 +58,7 @@ api.use('*', tenantMiddleware);
 api.route('/approvals', approvalsRouter);
 api.route('/conversations', conversationsRouter);
 api.route('/activity', activityRouter);
+api.route('/meetings', meetingsRouter);
 
 // Webhooks don't need auth (they have their own validation)
 app.route('/api/v1/webhooks', webhooksRouter);

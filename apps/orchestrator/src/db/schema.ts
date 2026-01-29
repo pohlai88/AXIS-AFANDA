@@ -167,3 +167,4 @@ export type NewActivity = typeof activities.$inferInsert;
 
 export type WebhookEvent = typeof webhookEvents.$inferSelect;
 export type NewWebhookEvent = typeof webhookEvents.$inferInsert;
+

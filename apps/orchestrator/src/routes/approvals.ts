@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { db, schema } from '../db/client';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, sql } from 'drizzle-orm';
 import { getTenantId } from '../middleware/tenant';
 import { getAuthUser } from '../middleware/auth';
 import { NotFoundError, ValidationError } from '../lib/errors';
@@ -48,7 +48,7 @@ approvalsRouter.get(
 
     // Count total for pagination
     const [{ count }] = await db
-      .select({ count: schema.approvals.id })
+      .select({ count: sql<number>`cast(count(*) as integer)` })
       .from(schema.approvals)
       .where(and(...conditions));
 
@@ -182,7 +182,7 @@ approvalsRouter.patch(
       if (existing.status === 'approved' || existing.status === 'rejected') {
         throw new ValidationError('Cannot modify an already processed approval');
       }
-      if (existing.status !== 'submitted' && input.status !== 'submitted') {
+      if (existing.status !== 'submitted') {
         throw new ValidationError('Can only approve/reject submitted approvals');
       }
     }

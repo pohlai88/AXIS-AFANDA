@@ -20,9 +20,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
-import { 
-  Filter, 
-  X, 
+import {
+  Filter,
+  X,
   Calendar as CalendarIcon,
   Tag,
   Users,
@@ -52,6 +52,7 @@ interface InboxFiltersProps {
     dateTo?: Date;
     sortBy?: string;
     sortOrder?: string;
+    channelType?: string; // Omnichannel filter
   };
   onFiltersChange: (filters: any) => void;
 }
@@ -133,7 +134,7 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
     const newLabels = selectedLabels.includes(label)
       ? selectedLabels.filter(l => l !== label)
       : [...selectedLabels, label];
-    
+
     setSelectedLabels(newLabels);
     onFiltersChange({
       ...filters,
@@ -176,7 +177,7 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
           {FILTER_PRESETS.map((preset) => {
             const Icon = preset.icon;
             const isActive = JSON.stringify(filters) === JSON.stringify(preset.filters);
-            
+
             return (
               <Button
                 key={preset.id}
@@ -289,6 +290,40 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
         </Select>
       </div>
 
+      {/* Channel Filter */}
+      <div className="space-y-2">
+        <Label htmlFor="channel-filter" className="text-xs">
+          Channel
+        </Label>
+        <Select
+          value={filters.channelType || 'all'}
+          onValueChange={(value) =>
+            onFiltersChange({
+              ...filters,
+              channelType: value === 'all' ? undefined : value,
+            })
+          }
+        >
+          <SelectTrigger id="channel-filter" className="h-9">
+            <SelectValue placeholder="All channels" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All channels</SelectItem>
+            {getAllChannels().map((channel) => {
+              const ChannelIcon = channel.icon;
+              return (
+                <SelectItem key={channel.value} value={channel.value}>
+                  <div className="flex items-center gap-2">
+                    <ChannelIcon className={`h-3.5 w-3.5 ${channel.color}`} />
+                    {channel.label}
+                  </div>
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Assignee Filter */}
       <div className="space-y-2">
         <Label htmlFor="assignee-filter" className="text-xs">
@@ -322,7 +357,7 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
       {/* Special Filters */}
       <div className="space-y-3">
         <Label className="text-xs">Special Filters</Label>
-        
+
         <div className="flex items-center space-x-2">
           <Checkbox
             id="escalation-filter"
@@ -541,6 +576,15 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
                   <X
                     className="ml-1 h-3 w-3 cursor-pointer"
                     onClick={() => onFiltersChange({ ...filters, priority: undefined })}
+                  />
+                </Badge>
+              )}
+              {filters.channelType && (
+                <Badge variant="secondary" className="text-xs">
+                  Channel: {filters.channelType}
+                  <X
+                    className="ml-1 h-3 w-3 cursor-pointer"
+                    onClick={() => onFiltersChange({ ...filters, channelType: undefined })}
                   />
                 </Badge>
               )}

@@ -4,7 +4,7 @@ import { SettingsLayout } from "@/app/components/settings-layout";
 import {
   Activity, FileText, Database, Server, AlertTriangle,
   Download, RefreshCw, CheckCircle, XCircle, Clock,
-  Eye, EyeOff, Filter, Search, Trash2, Archive
+  Eye, Filter, Search, Trash2, Archive
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

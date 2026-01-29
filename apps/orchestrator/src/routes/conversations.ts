@@ -23,14 +23,14 @@ conversationsRouter.get(
   zValidator('query', paginationSchema.merge(conversationFiltersSchema)),
   async (c) => {
     const tenantId = getTenantId(c);
-    const { 
-      page, 
-      limit, 
-      status, 
-      priority, 
-      assigneeId, 
-      teamId, 
-      labels, 
+    const {
+      page,
+      limit,
+      status,
+      priority,
+      assigneeId,
+      teamId,
+      labels,
       search,
       hasEscalation,
       unreadOnly,

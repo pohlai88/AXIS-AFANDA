@@ -29,7 +29,7 @@ const conversationSchema = z.object({
   channelType: z.string().optional().nullable(),
   channelIdentifier: z.string().optional().nullable(),
   unifiedContactId: z.string().optional().nullable(),
-  channelMetadata: z.record(z.any()).optional().nullable(),
+  channelMetadata: z.record(z.string(), z.any()).optional().nullable(),
 });
 
 const messageSchema = z.object({

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./styles/luxury.utilities.css";
+@import "./styles/animations.css";
 @import "./styles/layout.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -15,8 +16,26 @@
 /* --- 2. THEME (The "Brush") --- */
 @theme {
   /* Fonts */
-  --font-sans: var(--font-geist-sans, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif), ui-sans-serif, system-ui;
-  --font-mono: var(--font-geist-mono, "JetBrains Mono", ui-monospace, SFMono-Regular, monospace), ui-monospace, SFMono-Regular;
+  --font-sans:
+    var(
+      --font-geist-sans,
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      sans-serif
+    ),
+    ui-sans-serif, system-ui;
+  --font-mono:
+    var(
+      --font-geist-mono,
+      "JetBrains Mono",
+      ui-monospace,
+      SFMono-Regular,
+      monospace
+    ),
+    ui-monospace, SFMono-Regular;
 
   /* Radius */
   --radius-lg: var(--radius);
@@ -131,7 +150,8 @@
 /* --- 3. VARIABLES (The "Paint") --- */
 @layer base {
   :root {
-    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-sans:
+      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
     --radius: 0.5rem;
     --density: comfortable;
@@ -404,7 +424,9 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 
   ::selection {

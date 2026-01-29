@@ -4,7 +4,7 @@ import { SettingsLayout } from "@/app/components/settings-layout";
 import { CreateTeamDialog } from "@/app/components/create-team-dialog";
 import {
   Users, Plus, Lock, Globe, ArrowRight, User, UserPlus,
-  Settings, Tag, RefreshCw, Key, Image as ImageIcon, Eye, EyeOff
+  Settings, Tag, RefreshCw, Key, Image as ImageIcon, Eye
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

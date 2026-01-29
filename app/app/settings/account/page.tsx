@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { SettingsLayout } from "@/app/components/settings-layout";
-import { CreditCard, Receipt, Download, Plus, Calendar } from "lucide-react";
+import { CreditCard, Download, Plus, Calendar } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";

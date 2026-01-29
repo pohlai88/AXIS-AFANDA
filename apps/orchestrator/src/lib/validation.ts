@@ -19,13 +19,13 @@ export const createApprovalSchema = z.object({
   conversationId: z.string().optional(),
   type: z.enum(['ceo_approval', 'escalation', 'consultation_room']),
   reason: z.string().optional(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 export const updateApprovalSchema = z.object({
   status: z.enum(['approved', 'rejected']).optional(),
   decision: z.string().optional(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 export const approvalFiltersSchema = z.object({

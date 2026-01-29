@@ -1,7 +1,7 @@
 "use client";
 
 import { SettingsLayout } from "@/app/components/settings-layout";
-import { Bell, Smartphone, Mail, Globe, Pause, Volume2, Clock, Settings as SettingsIcon } from "lucide-react";
+import { Bell, Smartphone, Globe, Pause, Clock, Settings as SettingsIcon } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
@@ -64,7 +64,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Notification Types</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label className="text-sm">New Messages</Label>
@@ -209,7 +209,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Notification Channels</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label className="text-sm">High Priority</Label>
@@ -360,7 +360,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Permission Request Settings</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Auto-request Permission</Label>
@@ -399,7 +399,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Permission Handling</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Show Permission Denied Message</Label>
@@ -453,7 +453,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Pause Mobile Push Notifications</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label className="text-sm">Enable Pause</Label>
@@ -496,7 +496,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Pause Web Notifications</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label className="text-sm">Enable Pause</Label>
@@ -529,7 +529,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Quiet Hours</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Enable Quiet Hours</Label>
@@ -652,7 +652,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Desktop Notifications</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label className="text-sm">Enable Desktop Notifications</Label>
@@ -678,7 +678,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Sound & Visual</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label className="text-sm">Sound Alerts</Label>
@@ -719,7 +719,7 @@ export default function NotificationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Notification Delivery</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label className="text-sm">Require Interaction</Label>

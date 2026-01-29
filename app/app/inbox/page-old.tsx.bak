@@ -1,0 +1,246 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Search, Plus, Mail, MailOpen, Users2, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+// Mock data for internal team conversations
+const mockConversations = [
+  {
+    id: '1',
+    type: 'direct' as const,
+    participant: {
+      name: 'Sarah Chen',
+      email: 'sarah@company.com',
+      avatar: 'SC',
+      status: 'online' as const,
+    },
+    lastMessage: {
+      content: 'Can you review the Q1 budget proposal?',
+      timestamp: '2m ago',
+      unread: true,
+    },
+  },
+  {
+    id: '2',
+    type: 'direct' as const,
+    participant: {
+      name: 'Mike Johnson',
+      email: 'mike@company.com',
+      avatar: 'MJ',
+      status: 'away' as const,
+    },
+    lastMessage: {
+      content: 'Thanks for the update!',
+      timestamp: '15m ago',
+      unread: false,
+    },
+  },
+  {
+    id: '3',
+    type: 'group' as const,
+    participant: {
+      name: 'Engineering Team',
+      email: 'engineering@company.com',
+      avatar: 'ET',
+      memberCount: 12,
+    },
+    lastMessage: {
+      content: 'Alex: The deployment is complete',
+      timestamp: '1h ago',
+      unread: true,
+    },
+  },
+  {
+    id: '4',
+    type: 'group' as const,
+    participant: {
+      name: 'Product Team',
+      email: 'product@company.com',
+      avatar: 'PT',
+      memberCount: 8,
+    },
+    lastMessage: {
+      content: 'Emma: New feature specs are ready',
+      timestamp: '2h ago',
+      unread: false,
+    },
+  },
+];
+
+export default function InboxPage() {
+  const router = useRouter();
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState<'all' | 'unread' | 'direct' | 'groups'>('all');
+
+  const filteredConversations = mockConversations.filter((conv) => {
+    if (filter === 'unread' && !conv.lastMessage.unread) return false;
+    if (filter === 'direct' && conv.type !== 'direct') return false;
+    if (filter === 'groups' && conv.type !== 'group') return false;
+    if (search && !conv.participant.name.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  return (
+    <div className="flex h-full flex-col">
+      {/* Header */}
+      <div className="border-b bg-background px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">Inbox</h1>
+            <p className="text-sm text-muted-foreground">
+              Internal team communication
+            </p>
+          </div>
+          <Button size="sm">
+            <Plus className="mr-2 h-4 w-4" />
+            New Message
+          </Button>
+        </div>
+
+        {/* Search */}
+        <div className="mt-4 flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search conversations..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="mt-4 flex gap-2">
+          <Button
+            variant={filter === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilter('all')}
+          >
+            All
+          </Button>
+          <Button
+            variant={filter === 'unread' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilter('unread')}
+          >
+            <Mail className="mr-2 h-3.5 w-3.5" />
+            Unread
+          </Button>
+          <Button
+            variant={filter === 'direct' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilter('direct')}
+          >
+            <User className="mr-2 h-3.5 w-3.5" />
+            Direct
+          </Button>
+          <Button
+            variant={filter === 'groups' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilter('groups')}
+          >
+            <Users2 className="mr-2 h-3.5 w-3.5" />
+            Groups
+          </Button>
+        </div>
+      </div>
+
+      {/* Conversation List */}
+      <div className="flex-1 overflow-auto">
+        {filteredConversations.length === 0 ? (
+          <div className="flex h-full items-center justify-center">
+            <div className="text-center">
+              <MailOpen className="mx-auto h-12 w-12 text-muted-foreground/50" />
+              <h3 className="mt-4 text-lg font-semibold">No conversations found</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {search ? 'Try adjusting your search' : 'Start a new conversation'}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="divide-y">
+            {filteredConversations.map((conv) => (
+              <button
+                key={conv.id}
+                onClick={() => router.push(`/app/inbox/${conv.id}`)}
+                className={cn(
+                  'flex w-full items-start gap-4 px-6 py-4 text-left transition-colors hover:bg-muted/50',
+                  conv.lastMessage.unread && 'bg-muted/30'
+                )}
+              >
+                {/* Avatar */}
+                <div className="relative">
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className={cn(
+                      conv.type === 'group' ? 'bg-primary/10 text-primary' : 'bg-muted'
+                    )}>
+                      {conv.participant.avatar}
+                    </AvatarFallback>
+                  </Avatar>
+                  {conv.type === 'direct' && (
+                    <div
+                      className={cn(
+                        'absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background',
+                        conv.participant.status === 'online' && 'bg-green-500',
+                        conv.participant.status === 'away' && 'bg-yellow-500',
+                        conv.participant.status === 'offline' && 'bg-gray-400'
+                      )}
+                    />
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 overflow-hidden">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <h3 className={cn(
+                        'font-medium',
+                        conv.lastMessage.unread && 'font-semibold'
+                      )}>
+                        {conv.participant.name}
+                      </h3>
+                      {conv.type === 'group' && (
+                        <Badge variant="secondary" className="text-xs">
+                          {conv.participant.memberCount} members
+                        </Badge>
+                      )}
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {conv.lastMessage.timestamp}
+                    </span>
+                  </div>
+                  <p className={cn(
+                    'mt-1 truncate text-sm text-muted-foreground',
+                    conv.lastMessage.unread && 'font-medium text-foreground'
+                  )}>
+                    {conv.lastMessage.content}
+                  </p>
+                </div>
+
+                {/* Unread indicator */}
+                {conv.lastMessage.unread && (
+                  <div className="mt-2 h-2 w-2 rounded-full bg-primary" />
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Coming Soon Notice */}
+      <div className="border-t bg-muted/30 px-6 py-3">
+        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          <Mail className="h-4 w-4" />
+          <span>Internal messaging powered by Matrix (coming soon)</span>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -9,14 +9,16 @@ import { getChannelIcon, getChannelColor, getChannelLabel } from '@/app/lib/util
 
 interface ConversationListProps {
   conversations: Conversation[];
-  loading: boolean;
+  loading?: boolean;
   onConversationClick: (id: string) => void;
+  selectedId?: string;
 }
 
 export function ConversationList({
   conversations,
   loading,
   onConversationClick,
+  selectedId,
 }: ConversationListProps) {
   if (loading) {
     return (
@@ -49,7 +51,9 @@ export function ConversationList({
         <button
           key={conversation.id}
           onClick={() => onConversationClick(conversation.id)}
-          className="w-full px-6 py-4 text-left transition-colors hover:bg-muted/50"
+          className={`w-full px-6 py-4 text-left transition-colors hover:bg-muted/50 ${
+            selectedId === conversation.id ? 'bg-muted border-l-4 border-l-primary' : ''
+          }`}
         >
           <div className="flex items-start gap-4">
             {/* Avatar */}
@@ -70,10 +74,10 @@ export function ConversationList({
                     {conversation.contactName || 'Unknown'}
                   </span>
                   {/* Channel Badge */}
-                  {conversation.channelType && (() => {
-                    const ChannelIcon = getChannelIcon(conversation.channelType);
-                    const channelColor = getChannelColor(conversation.channelType);
-                    const channelLabel = getChannelLabel(conversation.channelType);
+                  {(conversation as any).channelType && (() => {
+                    const ChannelIcon = getChannelIcon((conversation as any).channelType);
+                    const channelColor = getChannelColor((conversation as any).channelType);
+                    const channelLabel = getChannelLabel((conversation as any).channelType);
                     return (
                       <Badge variant="outline" className="h-5 gap-1 px-1.5 text-xs">
                         <ChannelIcon className={`h-3 w-3 ${channelColor}`} />

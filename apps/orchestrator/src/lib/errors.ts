@@ -69,7 +69,7 @@ export function formatErrorResponse(error: unknown) {
       error: {
         code: 'VALIDATION_ERROR',
         message: 'Validation failed',
-        details: error.errors.map((err) => ({
+        details: (error as any).errors.map((err: any) => ({
           path: err.path.join('.'),
           message: err.message,
         })),
@@ -95,7 +95,7 @@ export function errorHandler(err: Error, c: Context) {
   const statusCode = err instanceof AppError ? err.statusCode : 500;
   const response = formatErrorResponse(err);
 
-  return c.json(response, statusCode);
+  return c.json(response, statusCode as any);
 }
 
 // ============================================================================

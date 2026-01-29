@@ -1,10 +1,9 @@
 "use client";
 
 import { SettingsLayout } from "@/app/components/settings-layout";
-import { 
-  MessageSquare, Users, Eye, EyeOff, Clock, Mail, FileText, 
-  UserPlus, UserMinus, Send, Calendar, Edit, Bot, 
-  MessageCircle, AlertCircle, Shield, Zap, UserCheck
+import {
+  MessageSquare, Users, Eye, Clock, Mail, FileText,
+  Calendar, Edit, Bot
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -664,7 +663,7 @@ export default function ConversationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Available Formatting Options</Label>
-                  
+
                   <div className="grid grid-cols-2 gap-2">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm">Bold</Label>
@@ -855,7 +854,7 @@ export default function ConversationsSettingsPage() {
 
                 <div className="space-y-4">
                   <Label>Concierge Functions</Label>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label className="text-sm">Onboarding</Label>

@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useConversationsStore } from '@/app/lib/stores/conversations-store';
 import { getConversation, getMessages, sendMessage } from '@/app/lib/api/conversations';
-import { MessageThread } from '@/app/components/omnichannel/message-thread';
-import { ReplyBox } from '@/app/components/omnichannel/reply-box';
+import { ModernMessageThread } from '@/app/components/chat/modern-message-thread';
+import { ModernComposeBox } from '@/app/components/chat/modern-compose-box';
+import { TypingIndicator } from '@/app/components/chat/typing-indicator';
 import { ConversationSidebar } from '@/app/components/omnichannel/conversation-sidebar';
 import { ConversationActions } from '@/app/components/omnichannel/conversation-actions';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,7 @@ export default function ConversationDetailPage() {
 
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   // Fetch conversation and messages
   useEffect(() => {
@@ -32,11 +34,14 @@ export default function ConversationDetailPage() {
 
         // Fetch conversation details
         const convResult = await getConversation(conversationId);
-        selectConversation(convResult.data);
+        selectConversation(convResult.data as any);
 
         // Fetch messages
         const messagesResult = await getMessages(conversationId);
-        setMessages(conversationId, messagesResult.data);
+        setMessages(conversationId, messagesResult.data.map((m: any) => ({
+          ...m,
+          createdAt: new Date(m.createdAt),
+        })));
       } catch (error) {
         console.error('Failed to fetch conversation:', error);
         toast.error('Failed to load conversation');
@@ -49,14 +54,17 @@ export default function ConversationDetailPage() {
   }, [conversationId]);
 
   // Handle send message
-  const handleSendMessage = async (content: string, isPrivate: boolean) => {
+  const handleSendMessage = async (content: string, isPrivate: boolean = false) => {
     try {
       setSending(true);
       const result = await sendMessage(conversationId, content, isPrivate);
 
       // Add message to store
       const conversationMessages = messages[conversationId] || [];
-      setMessages(conversationId, [...conversationMessages, result.data]);
+      setMessages(conversationId, [...conversationMessages, {
+        ...result.data,
+        createdAt: new Date(result.data.createdAt),
+      }]);
 
       toast.success(isPrivate ? 'Private note added' : 'Message sent');
     } catch (error) {
@@ -65,6 +73,18 @@ export default function ConversationDetailPage() {
     } finally {
       setSending(false);
     }
+  };
+
+  // Handle emoji reaction
+  const handleReaction = (messageId: string, emoji: string) => {
+    // TODO: Implement API call to add reaction
+    toast.success(`Reacted with ${emoji}`);
+  };
+
+  // Handle reply
+  const handleReply = (messageId: string) => {
+    // TODO: Implement reply functionality
+    toast.info('Reply feature coming soon');
   };
 
   if (loading) {
@@ -125,14 +145,30 @@ export default function ConversationDetailPage() {
         </div>
 
         {/* Message Thread */}
-        <div className="flex-1 overflow-auto">
-          <MessageThread messages={conversationMessages} />
+        <div className="flex-1 overflow-auto bg-muted/20">
+          <ModernMessageThread
+            messages={conversationMessages}
+            onReaction={handleReaction}
+            onReply={handleReply}
+          />
+          {/* Typing Indicator */}
+          {isTyping && (
+            <TypingIndicator
+              userName={selectedConversation.contactName || 'Customer'}
+              userInitial={selectedConversation.contactName?.charAt(0)}
+            />
+          )}
         </div>
 
-        {/* Reply Box */}
-        <div className="border-t bg-background p-4">
-          <ReplyBox onSend={handleSendMessage} sending={sending} />
-        </div>
+        {/* Compose Box */}
+        <ModernComposeBox
+          onSend={handleSendMessage}
+          sending={sending}
+          channelType={(selectedConversation as any).channelType || 'web'}
+          placeholder="Type a message..."
+          showPrivateToggle={true}
+          showChannelBadge={true}
+        />
       </div>
 
       {/* Sidebar */}
