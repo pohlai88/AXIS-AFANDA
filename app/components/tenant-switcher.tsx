@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Check, ChevronsUpDown, Building2, Users, User } from "lucide-react";
 import { useTenant } from "@/app/providers/tenant-provider";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,12 +11,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@/app/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/app/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CompactEmptyState } from "@/app/components/common/empty-states";
 

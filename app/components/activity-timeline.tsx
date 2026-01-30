@@ -3,13 +3,15 @@
 import * as React from "react";
 import { formatDistanceToNow } from "date-fns";
 import { CheckSquare, MessageSquare, Users, Activity, ArrowRight } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { Badge } from "@/app/components/ui/badge";
+import { Button } from "@/app/components/ui/button";
+import { ScrollArea } from "@/app/components/ui/scroll-area";
 import { useActivityStore, type ActivityItem } from "@/app/lib/stores/activity-store";
 import Link from "next/link";
 import { NoTimelineState } from "@/app/components/common/empty-states";
+import { APP_PATTERNS, ACTIVITY_TYPES } from "@/app/lib/constants/app-patterns";
+import { cn } from "@/lib/utils";
 
 const activityIcons: Record<ActivityItem["type"], React.ComponentType<{ className?: string }>> = {
   approval: CheckSquare,
@@ -62,15 +64,22 @@ export function ActivityTimeline() {
                 const isLast = index === activities.length - 1;
 
                 return (
-                  <div key={activity.id} className="relative flex gap-4">
+                  <div key={activity.id} data-slot="activity-item" className={APP_PATTERNS.activityTimeline.itemContainer}>
                     {/* Timeline line */}
                     {!isLast && (
-                      <div className="absolute left-4 top-8 h-full w-px bg-border" />
+                      <div data-slot="timeline-line" className="absolute left-4 top-8 h-full w-px bg-border" />
                     )}
 
                     {/* Icon */}
-                    <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted">
-                      <Icon className="h-4 w-4 text-muted-foreground" />
+                    <div
+                      data-slot="activity-icon"
+                      className={cn(
+                        APP_PATTERNS.activityTimeline.iconContainer,
+                        "relative z-10 shrink-0",
+                        ACTIVITY_TYPES[activity.type].bgColor
+                      )}
+                    >
+                      <Icon className={cn("h-4 w-4", ACTIVITY_TYPES[activity.type].color)} />
                     </div>
 
                     {/* Content */}

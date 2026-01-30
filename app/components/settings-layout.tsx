@@ -23,7 +23,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/app/components/ui/breadcrumb";
 import {
   Sidebar,
   SidebarContent,
@@ -33,7 +33,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-} from "@/components/ui/sidebar";
+} from "@/app/components/ui/sidebar";
 
 const settingsNav = [
   { name: "General", icon: Settings, href: "/app/settings" },

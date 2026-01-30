@@ -29,7 +29,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarSeparator,
-} from "@/components/ui/sidebar";
+} from "@/app/components/ui/sidebar";
 import { NavUser } from "@/components/nav-user";
 import { useTenant } from "@/app/providers/tenant-provider";
 import { ThemeToggle } from "@/app/components/theme-toggle";

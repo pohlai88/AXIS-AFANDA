@@ -8,7 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/app/components/ui/sidebar";
 
 interface NavActionsProps extends React.ComponentPropsWithoutRef<typeof SidebarGroup> {
   onSearch?: () => void;

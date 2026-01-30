@@ -136,7 +136,7 @@ export function ModernComposeBox({
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 flex-shrink-0 rounded-full hover:bg-muted"
+              className="h-9 w-9 shrink-0 rounded-full hover:bg-muted"
               disabled={sending}
             >
               <Plus className="h-5 w-5" />
@@ -231,7 +231,7 @@ export function ModernComposeBox({
           onClick={() => handleSubmit()}
           disabled={!content.trim() || sending}
           size="icon"
-          className="h-10 w-10 flex-shrink-0 rounded-full"
+          className="h-10 w-10 shrink-0 rounded-full"
         >
           {sending ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />

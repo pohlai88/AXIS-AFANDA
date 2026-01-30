@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/app/components/ui/skeleton";
+import { Button } from "@/app/components/ui/button";
 import { RefreshCw, AlertCircle } from "lucide-react";
 import { ErrorBoundary } from "@/app/components/error-boundary";
 import type { Module } from "@/app/lib/module-registry";

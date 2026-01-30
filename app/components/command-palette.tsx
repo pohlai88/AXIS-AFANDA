@@ -12,7 +12,7 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command";
+} from "@/app/components/ui/command";
 import { useTenant } from "@/app/providers/tenant-provider";
 import { useTheme } from "@/app/providers/theme-provider";
 import {

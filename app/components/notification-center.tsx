@@ -3,16 +3,16 @@
 import * as React from "react";
 import { Bell } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/app/components/ui/dropdown-menu";
+import { Badge } from "@/app/components/ui/badge";
+import { ScrollArea } from "@/app/components/ui/scroll-area";
 import { useNotificationsStore } from "@/app/lib/stores/notifications-store";
 import Link from "next/link";
 import { NoNotificationsState } from "@/app/components/common/empty-states";

@@ -9,9 +9,9 @@ import {
   useReactTable,
   SortingState,
 } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { Badge } from "@/app/components/ui/badge";
+import { Switch } from "@/app/components/ui/switch";
+import { Label } from "@/app/components/ui/label";
 import {
   Table,
   TableBody,
@@ -19,7 +19,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/components/ui/table";
 import type { Module } from "@/app/lib/module-registry";
 import { EmptyState } from "@/app/components/common/empty-states";
 import {
