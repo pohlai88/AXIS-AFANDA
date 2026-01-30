@@ -14,8 +14,8 @@ import { MagicTodoSheet } from '@/app/components/consultations/magic-todo-sheet'
 import { ConnectionStatusIndicator } from '@/app/components/consultations/connection-status-indicator';
 import { useGlobalMeetingUpdates } from '@/app/hooks/use-meeting-updates';
 import { TimelineSkeletonLoader, StatsBarSkeleton } from '@/app/components/consultations/loading-skeleton';
-import { ShimmerButton } from '@/components/ui/shimmer-button';
-import type { Meeting } from '@/app/components/consultations/types';
+import { useConsultationsStore } from '@/app/lib/stores/consultations-store';
+import type { Meeting } from '@/app/lib/types';
 
 // Extended Meeting type for local use
 interface ExtendedMeeting extends Meeting {
@@ -36,9 +36,9 @@ const generateMockMeetings = (): ExtendedMeeting[] => {
       scheduledEnd: new Date(now + 3900000),
       duration: 60,
       participants: [
-        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
-        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
+        { id: '1', name: 'Sarah Chen', avatar: 'SC', joined: false },
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ', joined: false },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW', joined: false },
       ],
       minutesCompleted: false,
       agendaItems: ['Budget Review', 'Timeline Discussion', 'Resource Planning'],
@@ -54,8 +54,8 @@ const generateMockMeetings = (): ExtendedMeeting[] => {
       duration: 60,
       location: 'Office 3B',
       participants: [
-        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
-        { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW', joined: false },
+        { id: '4', name: 'Alex Rodriguez', avatar: 'AR', joined: false },
       ],
       minutesCompleted: false,
     },
@@ -69,8 +69,8 @@ const generateMockMeetings = (): ExtendedMeeting[] => {
       scheduledEnd: new Date(now - 82800000),
       duration: 60,
       participants: [
-        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
-        { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ', joined: false },
+        { id: '4', name: 'Alex Rodriguez', avatar: 'AR', joined: false },
       ],
       minutesCompleted: false, // Needs minutes!
     },
@@ -84,8 +84,8 @@ const generateMockMeetings = (): ExtendedMeeting[] => {
       scheduledEnd: new Date(now - 169200000),
       duration: 45,
       participants: [
-        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-        { id: '5', name: 'John Doe', avatar: 'JD' },
+        { id: '1', name: 'Sarah Chen', avatar: 'SC', joined: false },
+        { id: '5', name: 'John Doe', avatar: 'JD', joined: false },
       ],
       minutesCompleted: false, // Needs minutes!
     },
@@ -99,9 +99,9 @@ const generateMockMeetings = (): ExtendedMeeting[] => {
       scheduledEnd: new Date(now - 257400000),
       duration: 30,
       participants: [
-        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
-        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
-        { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ', joined: false },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW', joined: false },
+        { id: '4', name: 'Alex Rodriguez', avatar: 'AR', joined: false },
       ],
       minutesCompleted: false, // Needs minutes!
     },
@@ -115,10 +115,10 @@ const generateMockMeetings = (): ExtendedMeeting[] => {
       scheduledEnd: new Date(now + 93600000),
       duration: 120,
       participants: [
-        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
-        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
-        { id: '4', name: 'Alex Rodriguez', avatar: 'AR' },
+        { id: '1', name: 'Sarah Chen', avatar: 'SC', joined: false },
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ', joined: false },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW', joined: false },
+        { id: '4', name: 'Alex Rodriguez', avatar: 'AR', joined: false },
       ],
       minutesCompleted: false,
     },
@@ -133,8 +133,8 @@ const generateMockMeetings = (): ExtendedMeeting[] => {
       duration: 90,
       location: 'Boardroom',
       participants: [
-        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-        { id: '2', name: 'Mike Johnson', avatar: 'MJ' },
+        { id: '1', name: 'Sarah Chen', avatar: 'SC', joined: false },
+        { id: '2', name: 'Mike Johnson', avatar: 'MJ', joined: false },
       ],
       minutesCompleted: true,
     },
@@ -148,9 +148,9 @@ const generateMockMeetings = (): ExtendedMeeting[] => {
       scheduledEnd: new Date(now + 10800000),
       duration: 60,
       participants: [
-        { id: '1', name: 'Sarah Chen', avatar: 'SC' },
-        { id: '3', name: 'Emma Wilson', avatar: 'EW' },
-        { id: '5', name: 'John Doe', avatar: 'JD' },
+        { id: '1', name: 'Sarah Chen', avatar: 'SC', joined: false },
+        { id: '3', name: 'Emma Wilson', avatar: 'EW', joined: false },
+        { id: '5', name: 'John Doe', avatar: 'JD', joined: false },
       ],
       minutesCompleted: true,
       agendaItems: ['Q2 Campaign Planning', 'Budget Allocation', 'Team Expansion'],
@@ -167,7 +167,15 @@ export default function ConsultationsPage() {
   const [showMeetingFlow, setShowMeetingFlow] = useState(false);
   const [showMagicTodo, setShowMagicTodo] = useState(false);
   const [magicTodoMeeting, setMagicTodoMeeting] = useState<ExtendedMeeting | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+
+  // Use Zustand store for state management
+  const { meetings, loading, fetchMeetings, fetchStats } = useConsultationsStore();
+
+  // Fetch meetings on mount
+  useEffect(() => {
+    fetchMeetings().catch(console.error);
+    fetchStats().catch(console.error);
+  }, [fetchMeetings, fetchStats]);
 
   // Real-time updates
   const { isConnected, error } = useGlobalMeetingUpdates({
@@ -175,22 +183,17 @@ export default function ConsultationsPage() {
     showToasts: true,
     onUpdate: (update) => {
       console.log('Global meeting update:', update);
-      // TODO: Refresh meetings list when updates received
-      // This would call an API to fetch updated data
+      // Refresh meetings list when updates received
+      fetchMeetings().catch(console.error);
     },
   });
 
-  // Simulate initial loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
+  // Use store data, fallback to mock for development if empty
+  const meetingsData = meetings.length > 0 ? meetings : mockMeetings;
 
-  const filteredMeetings = mockMeetings.filter((meeting) => {
+  const filteredMeetings = meetingsData.filter((meeting) => {
     const matchesSearch = meeting.title.toLowerCase().includes(search.toLowerCase()) ||
-      meeting.caseId.toLowerCase().includes(search.toLowerCase());
+      (meeting.caseId || '').toLowerCase().includes(search.toLowerCase());
 
     const now = new Date();
     const matchesFilter =
@@ -233,7 +236,7 @@ export default function ConsultationsPage() {
   };
 
   const selectedMeetingData = selectedMeeting
-    ? (mockMeetings.find((m) => m.id === selectedMeeting) ?? null)
+    ? (meetingsData.find((m) => m.id === selectedMeeting) ?? null)
     : null;
 
   const handleCreateTask = (taskData: {
@@ -263,13 +266,16 @@ export default function ConsultationsPage() {
       {/* Header */}
       <div className="border-b bg-background px-6 py-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Consultations & Meetings
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Schedule and manage meetings with automatic minutes and task creation
-            </p>
+          <div className="flex items-center gap-3">
+            <div className="bg-lux-gold-soft flex h-12 w-12 items-center justify-center rounded-xl">
+              <Calendar className="h-6 w-6 text-lux-gold" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight">Consultations</h1>
+              <p className="text-sm text-muted-foreground">
+                Schedule and manage meetings with automatic minutes and task creation
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <ConnectionStatusIndicator
@@ -278,11 +284,11 @@ export default function ConsultationsPage() {
               showLabel={true}
               className="hidden sm:flex"
             />
-            <ShimmerButton onClick={() => setShowMeetingFlow(true)} className="btn-gold-lux">
+            <Button onClick={() => setShowMeetingFlow(true)} className="btn-gold-lux">
               <Plus className="mr-2 h-4 w-4" />
               <span className="hidden sm:inline">New Meeting</span>
               <span className="sm:hidden">New</span>
-            </ShimmerButton>
+            </Button>
           </div>
         </div>
 
@@ -325,12 +331,12 @@ export default function ConsultationsPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-4 sm:p-6">
-        <div className="mx-auto max-w-7xl space-y-6">
+        <div className="mx-auto max-w-[var(--layout-container-max)] space-y-6">
           {/* NEW: Quick Stats Bar */}
-          {isLoading ? (
+          {loading ? (
             <StatsBarSkeleton />
           ) : (
-            <QuickStatsBar meetings={mockMeetings} />
+            <QuickStatsBar meetings={meetingsData} />
           )}
 
           {/* Main Content Grid */}
@@ -355,7 +361,7 @@ export default function ConsultationsPage() {
               )}
 
               {/* NEW: Timeline View */}
-              {isLoading ? (
+              {loading ? (
                 <TimelineSkeletonLoader count={2} />
               ) : upcomingMeetings.length > 0 ? (
                 <TimelineView

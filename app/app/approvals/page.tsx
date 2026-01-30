@@ -2,9 +2,15 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useApprovalsStore } from '@/app/lib/stores/approvals-store';
-import { getApprovals, approveApproval, rejectApproval } from '@/app/lib/api/approvals';
+import {
+  getApprovals,
+  approveApproval,
+  rejectApproval,
+  bulkApproveApprovals,
+  bulkRejectApprovals,
+} from '@/app/lib/api/approvals';
 import { ApprovalFilters, type ApprovalFilters as ApprovalFiltersType } from '@/app/components/approvals/approval-filters';
-import { ApprovalList } from '@/app/components/approvals/approval-list';
+import { ApprovalListWithBulk } from '@/app/components/approvals/approval-list-with-bulk';
 import { ApprovalStatsCards, type ApprovalStats } from '@/app/components/approvals/approval-stats';
 import { ApprovalDetail } from '@/app/components/approvals/approval-detail';
 import { Button } from '@/components/ui/button';
@@ -16,6 +22,8 @@ import {
 } from '@/components/ui/sheet';
 import { RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import { useApprovalUpdates } from '@/app/hooks/use-approval-updates';
+import { ConnectionStatusIndicator } from '@/app/components/common/connection-status-indicator';
 import type { Approval } from '@/app/lib/stores/approvals-store';
 
 export default function ApprovalsPage() {
@@ -33,6 +41,17 @@ export default function ApprovalsPage() {
     rejected: 0,
     urgent: 0,
     totalToday: 0,
+  });
+
+  // Real-time updates via SSE
+  const { isConnected, error } = useApprovalUpdates({
+    enabled: true,
+    showToasts: true,
+    onUpdate: (update) => {
+      console.log('Approval update:', update);
+      // Refresh approvals list when updates received
+      fetchApprovals();
+    },
   });
 
   // Fetch approvals
@@ -102,6 +121,34 @@ export default function ApprovalsPage() {
     setSelectedApproval(approval);
   };
 
+  const handleBulkApprove = async (approvalIds: string[]) => {
+    setProcessing(true);
+    try {
+      await bulkApproveApprovals(approvalIds, 'Bulk approved');
+      toast.success(`Approved ${approvalIds.length} approval(s)`);
+      fetchApprovals();
+    } catch (error) {
+      console.error('Bulk approve failed:', error);
+      toast.error('Bulk approve failed');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleBulkReject = async (approvalIds: string[]) => {
+    setProcessing(true);
+    try {
+      await bulkRejectApprovals(approvalIds, 'Bulk rejected');
+      toast.success(`Rejected ${approvalIds.length} approval(s)`);
+      fetchApprovals();
+    } catch (error) {
+      console.error('Bulk reject failed:', error);
+      toast.error('Bulk reject failed');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   const handleApproveDecision = async (decision: string) => {
     if (!selectedApproval) return;
 
@@ -165,6 +212,12 @@ export default function ApprovalsPage() {
             <Button onClick={() => window.location.href = '/app/approvals/new'}>
               New Request
             </Button>
+            <ConnectionStatusIndicator
+              isConnected={isConnected}
+              error={error}
+              showLabel
+              className="hidden sm:flex"
+            />
             <Button onClick={fetchApprovals} variant="outline" size="sm">
               <RefreshCw className="mr-2 h-4 w-4" />
               Refresh
@@ -175,7 +228,7 @@ export default function ApprovalsPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-6">
-        <div className="mx-auto max-w-7xl space-y-6">
+        <div className="mx-auto max-w-[var(--layout-container-max)] space-y-6">
           {/* Stats */}
           <ApprovalStatsCards stats={stats} loading={loading} />
 
@@ -187,12 +240,14 @@ export default function ApprovalsPage() {
           />
 
           {/* List */}
-          <ApprovalList
+          <ApprovalListWithBulk
             approvals={approvals}
             loading={loading}
             onApprove={handleApprove}
             onReject={handleReject}
             onView={handleView}
+            onBulkApprove={handleBulkApprove}
+            onBulkReject={handleBulkReject}
           />
         </div>
       </div>

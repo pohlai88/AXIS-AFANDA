@@ -8,7 +8,6 @@ import { Video, MapPin, Phone, ExternalLink, Info } from 'lucide-react';
 import { ParticipantsPanel } from './participants-panel';
 import { CollaborativeNotesCard } from './collaborative-notes-card';
 import { AISuggestionsPanel } from './ai-suggestions-panel';
-import { ShimmerButton } from '@/components/ui/shimmer-button';
 
 interface Meeting {
   id: string;
@@ -34,25 +33,25 @@ function getMeetingTypeInfo(type: string) {
       return {
         icon: <Video className="h-5 w-5" />,
         label: 'Video Conference',
-        color: 'bg-blue-500',
+        color: 'bg-primary',
       };
     case 'physical':
       return {
         icon: <MapPin className="h-5 w-5" />,
         label: 'In-Person Meeting',
-        color: 'bg-green-500',
+        color: 'bg-approve-fg',
       };
     case 'phone':
       return {
         icon: <Phone className="h-5 w-5" />,
         label: 'Phone Call',
-        color: 'bg-purple-500',
+        color: 'bg-primary',
       };
     default:
       return {
         icon: <Video className="h-5 w-5" />,
         label: 'Meeting',
-        color: 'bg-gray-500',
+        color: 'bg-muted-foreground',
       };
   }
 }
@@ -77,21 +76,21 @@ export function LiveMeetingRoom({ meeting, onJoinMeeting }: LiveMeetingRoomProps
                   <h3 className="text-lg font-semibold text-white mb-2">
                     Video Conference Room
                   </h3>
-                  <p className="text-sm text-gray-400 mb-6 text-center max-w-md px-4">
+                  <p className="text-sm text-muted-foreground mb-6 text-center max-w-md px-4">
                     Jitsi Meet integration will appear here. Click below to join the meeting.
                   </p>
-                  <ShimmerButton
+                  <Button
                     size="lg"
                     className="btn-gold-lux"
                     onClick={onJoinMeeting}
                   >
                     <Video className="h-5 w-5 mr-2" />
                     Join Video Meeting
-                  </ShimmerButton>
+                  </Button>
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="mt-3 text-gray-400 hover:text-white"
+                    className="mt-3 text-muted-foreground hover:text-foreground"
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Open in new window

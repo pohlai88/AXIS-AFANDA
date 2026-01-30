@@ -1,0 +1,136 @@
+---
+description: Enforce honest verification - no fake reports, no assumptions, test actual behavior
+alwaysApply: true
+---
+
+# Verification & Honesty Standards
+
+## Core Principle
+
+**NEVER claim something works without verifying it actually works.**
+
+---
+
+## Verification Requirements
+
+### ❌ NOT SUFFICIENT
+
+Checking if code exists:
+```tsx
+// ❌ BAD: Assuming this works
+grep "className.*card-glow-lux" components/ui/card.tsx
+// Found! ✅ [CLAIMED: "Card shimmer working!"]
+```
+
+### ✅ REQUIRED
+
+Verify the actual effect renders:
+```tsx
+// ✅ GOOD: Testing visual effect
+1. Check class is applied
+2. Check CSS utility exists in globals.css
+3. Check CSS has required properties (overflow: hidden, position: relative)
+4. Test in browser OR acknowledge "needs visual verification"
+```
+
+---
+
+## Audit Standards
+
+### When Auditing Components
+
+**Required checks**:
+1. ✅ Class is in component file
+2. ✅ CSS utility exists in globals.css
+3. ✅ CSS has ALL required properties for effect to work
+4. ✅ No conflicting styles override it
+5. ⚠️ **STATE UNCERTAINTY** if cannot test in browser
+
+### Report Template
+
+```markdown
+## [Component] Audit
+
+**Classes Applied**: [list]
+**CSS Utilities Found**: [list]
+**Required Properties**: [check each]
+**Potential Conflicts**: [list any]
+**Visual Testing**: ⚠️ NEEDS BROWSER TEST or ✅ VERIFIED
+
+**Status**: 
+- ✅ Code is correct
+- ⚠️ Visual effect needs user confirmation
+```
+
+---
+
+## Honesty Requirements
+
+### ❌ FORBIDDEN Phrases
+
+Never write these without actual verification:
+- "✅ COMPLETE" (unless tested)
+- "All working perfectly!" (unless verified)
+- "Production ready" (unless validated)
+- "Zero issues found" (unless thoroughly checked)
+
+### ✅ REQUIRED Honesty
+
+Be explicit about what's verified vs assumed:
+```markdown
+✅ **Code Applied**: Card has card-glow-lux class
+✅ **CSS Exists**: globals.css has .card-glow-lux utility
+✅ **Structure Valid**: Has overflow:hidden and ::before/::after
+⚠️ **Visual Effect**: Needs browser test to confirm shimmer shows
+```
+
+---
+
+## Testing Protocol
+
+### Level 1: Code Existence ✅
+Check class is in component, CSS utility defined.
+
+### Level 2: Structure Validation ✅
+Verify CSS has ALL required properties for effect.
+
+### Level 3: Conflict Check ✅
+Check nothing overrides the effect.
+
+### Level 4: Visual Verification ⚠️
+**REQUIRES**: Browser test OR user confirmation.
+
+**Never claim Level 4 without actual testing.**
+
+---
+
+## Examples
+
+### ❌ BAD Report (Misleading)
+
+```markdown
+✅ Button shimmer: COMPLETE
+The sheen-lux class is applied and working perfectly!
+```
+**Problem**: Didn't verify effect is visible (it was too subtle).
+
+### ✅ GOOD Report (Honest)
+
+```markdown
+✅ Button shimmer: Applied
+- Code: sheen-lux class is in button.tsx line 8
+- CSS: .sheen-lux utility exists in globals.css
+- Structure: Has overflow:hidden and ::after pseudo-element
+⚠️ Visual: Effect may be subtle (8% opacity) - needs browser test
+```
+**Better**: States what's verified, flags uncertainty.
+
+---
+
+## Summary
+
+1. **Verify, don't assume**
+2. **Test behavior, not just code presence**
+3. **Be explicit about what's uncertain**
+4. **Never claim completion without validation**
+5. **User feedback = truth, not your assumptions**

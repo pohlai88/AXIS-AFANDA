@@ -7,7 +7,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge';
+// Use nodejs runtime for better SSE support in development
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET handler for global meeting updates SSE endpoint
@@ -20,6 +22,9 @@ export async function GET(request: NextRequest): Promise<Response> {
 
     const stream = new ReadableStream({
       async start(controller) {
+        // Send initial SSE comment (helps establish connection)
+        controller.enqueue(encoder.encode(': SSE connection established\n\n'));
+
         // Send initial connection message
         const message = {
           type: 'connected',

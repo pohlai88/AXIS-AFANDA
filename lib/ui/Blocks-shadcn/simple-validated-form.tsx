@@ -124,17 +124,17 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
 
   return (
     <div
-      className={`mx-auto w-full max-w-2xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm ${className}`}
+      className={`mx-auto w-full max-w-2xl rounded-lg border border-border bg-card p-6 shadow-sm ${className}`}
     >
       <div className='mb-6'>
-        <h2 className='mb-2 text-2xl font-bold text-gray-900'>Contact Us</h2>
-        <p className='text-gray-600'>Send us a message and we'll respond as soon as possible.</p>
+        <h2 className='mb-2 text-2xl font-bold text-foreground'>Contact Us</h2>
+        <p className='text-muted-foreground'>Send us a message and we'll respond as soon as possible.</p>
       </div>
 
       <form onSubmit={handleFormSubmit} className='space-y-6'>
         {/* Name Field */}
         <div>
-          <label htmlFor='name' className='mb-2 block text-sm font-medium text-gray-700'>
+          <label htmlFor='name' className='mb-2 block text-sm font-medium text-foreground'>
             Name <span className='text-red-500'>*</span>
           </label>
           <input
@@ -144,9 +144,8 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
             value={data.name}
             onChange={e => updateData('name', e.target.value)}
             onBlur={() => handleBlur('name', data.name)}
-            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              hasError('name') ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background ${hasError('name') ? 'border-destructive' : 'border-input'
+              }`}
             aria-invalid={hasError('name')}
           />
           {hasError('name') && <div className='mt-1 text-sm text-red-600'>{getError('name')}</div>}
@@ -154,7 +153,7 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
 
         {/* Email Field */}
         <div>
-          <label htmlFor='email' className='mb-2 block text-sm font-medium text-gray-700'>
+          <label htmlFor='email' className='mb-2 block text-sm font-medium text-foreground'>
             Email <span className='text-red-500'>*</span>
           </label>
           <input
@@ -164,9 +163,8 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
             value={data.email}
             onChange={e => updateData('email', e.target.value)}
             onBlur={() => handleBlur('email', data.email)}
-            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              hasError('email') ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background ${hasError('email') ? 'border-destructive' : 'border-input'
+              }`}
             aria-invalid={hasError('email')}
           />
           {hasError('email') && (
@@ -176,7 +174,7 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
 
         {/* Phone Field */}
         <div>
-          <label htmlFor='phone' className='mb-2 block text-sm font-medium text-gray-700'>
+          <label htmlFor='phone' className='mb-2 block text-sm font-medium text-foreground'>
             Phone (Optional)
           </label>
           <input
@@ -186,9 +184,8 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
             value={data.phone || ''}
             onChange={e => updateData('phone', e.target.value)}
             onBlur={() => handleBlur('phone', data.phone)}
-            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              hasError('phone') ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background ${hasError('phone') ? 'border-destructive' : 'border-input'
+              }`}
             aria-invalid={hasError('phone')}
           />
           {hasError('phone') && (
@@ -198,7 +195,7 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
 
         {/* Subject Field */}
         <div>
-          <label htmlFor='subject' className='mb-2 block text-sm font-medium text-gray-700'>
+          <label htmlFor='subject' className='mb-2 block text-sm font-medium text-foreground'>
             Subject <span className='text-red-500'>*</span>
           </label>
           <input
@@ -208,9 +205,8 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
             value={data.subject}
             onChange={e => updateData('subject', e.target.value)}
             onBlur={() => handleBlur('subject', data.subject)}
-            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              hasError('subject') ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background ${hasError('subject') ? 'border-destructive' : 'border-input'
+              }`}
             aria-invalid={hasError('subject')}
           />
           {hasError('subject') && (
@@ -220,14 +216,14 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
 
         {/* Priority Field */}
         <div>
-          <label htmlFor='priority' className='mb-2 block text-sm font-medium text-gray-700'>
+          <label htmlFor='priority' className='mb-2 block text-sm font-medium text-foreground'>
             Priority
           </label>
           <select
             id='priority'
             value={data.priority}
             onChange={e => updateData('priority', e.target.value as 'low' | 'medium' | 'high')}
-            className='w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+            className='w-full rounded-md border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background'
           >
             <option value='low'>Low - General inquiry</option>
             <option value='medium'>Medium - Standard request</option>
@@ -237,7 +233,7 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
 
         {/* Message Field */}
         <div>
-          <label htmlFor='message' className='mb-2 block text-sm font-medium text-gray-700'>
+          <label htmlFor='message' className='mb-2 block text-sm font-medium text-foreground'>
             Message <span className='text-red-500'>*</span>
           </label>
           <textarea
@@ -247,9 +243,8 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
             onChange={e => updateData('message', e.target.value)}
             onBlur={() => handleBlur('message', data.message)}
             rows={5}
-            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              hasError('message') ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background ${hasError('message') ? 'border-destructive' : 'border-input'
+              }`}
             aria-invalid={hasError('message')}
           />
           {hasError('message') && (
@@ -261,7 +256,7 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
         <div>
           <label
             htmlFor='preferredContact'
-            className='mb-2 block text-sm font-medium text-gray-700'
+            className='mb-2 block text-sm font-medium text-foreground'
           >
             Preferred Contact Method
           </label>
@@ -269,7 +264,7 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
             id='preferredContact'
             value={data.preferredContact}
             onChange={e => updateData('preferredContact', e.target.value as 'email' | 'phone')}
-            className='w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+            className='w-full rounded-md border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background'
           >
             <option value='email'>Email</option>
             <option value='phone'>Phone</option>
@@ -283,13 +278,13 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
             type='checkbox'
             checked={data.subscribe}
             onChange={e => updateData('subscribe', e.target.checked)}
-            className='mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500'
+            className='mt-1 h-4 w-4 rounded border-input text-primary focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background'
           />
           <div>
-            <label htmlFor='subscribe' className='text-sm font-medium text-gray-700'>
+            <label htmlFor='subscribe' className='text-sm font-medium text-foreground'>
               Subscribe to our newsletter
             </label>
-            <p className='text-sm text-gray-500'>
+            <p className='text-sm text-muted-foreground'>
               Receive updates about our products and services.
             </p>
           </div>
@@ -301,14 +296,14 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
             type='button'
             onClick={resetForm}
             disabled={!isDirty || isSubmitting}
-            className='rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-gray-700 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50'
+            className='rounded-md border border-border bg-muted px-4 py-2 text-foreground hover:bg-muted/80 disabled:cursor-not-allowed disabled:opacity-50'
           >
             Reset
           </button>
           <button
             type='submit'
             disabled={!isValid || !isDirty || isSubmitting}
-            className='min-w-[120px] rounded-md bg-blue-600 px-6 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50'
+            className='min-w-[120px] rounded-md bg-primary px-6 py-2 text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50'
           >
             {isSubmitting ? (
               <div className='flex items-center justify-center gap-2'>
@@ -322,7 +317,7 @@ export function SimpleValidatedForm({ onSubmit, className }: SimpleValidatedForm
         </div>
 
         {/* Form Status */}
-        <div className='text-xs text-gray-500'>
+        <div className='text-xs text-muted-foreground'>
           {isDirty && !isValid && 'Please fix the errors above to submit the form.'}
           {isValid && isDirty && 'Form is ready to submit.'}
           {!isDirty && 'Please fill out the form to get started.'}

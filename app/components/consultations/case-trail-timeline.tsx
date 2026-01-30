@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { NoTimelineState } from '@/app/components/common/empty-states';
 
 interface CaseEvent {
   id: string;
@@ -53,19 +54,19 @@ function getEventIcon(type: string) {
 function getEventColor(type: string) {
   switch (type) {
     case 'meeting':
-      return 'bg-blue-500 text-white';
+      return 'bg-changes-fg text-background';
     case 'note':
-      return 'bg-purple-500 text-white';
+      return 'bg-primary text-primary-foreground';
     case 'task':
-      return 'bg-green-500 text-white';
+      return 'bg-approve-fg text-background';
     case 'approval':
-      return 'bg-amber-500 text-white';
+      return 'bg-status-warn-fg text-background';
     case 'status':
-      return 'bg-orange-500 text-white';
+      return 'bg-status-warn-fg text-background';
     case 'document':
-      return 'bg-cyan-500 text-white';
+      return 'bg-primary text-primary-foreground';
     default:
-      return 'bg-gray-500 text-white';
+      return 'bg-muted-foreground text-background';
   }
 }
 
@@ -185,12 +186,8 @@ export function CaseTrailTimeline({ events }: CaseTrailTimelineProps) {
 
       {events.length === 0 && (
         <Card>
-          <CardContent className="flex flex-col items-center justify-center p-12">
-            <GitBranch className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold">No Case Trail Yet</h3>
-            <p className="text-sm text-muted-foreground text-center mt-2">
-              Events will appear here as the case progresses
-            </p>
+          <CardContent className="p-12">
+            <NoTimelineState />
           </CardContent>
         </Card>
       )}

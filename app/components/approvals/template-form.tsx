@@ -213,7 +213,7 @@ export function TemplateForm({ template, values, onChange, errors = {} }: Templa
                         : current.filter((v) => v !== option);
                       handleFieldChange(field.key, updated);
                     }}
-                    className="h-4 w-4 rounded border-gray-300"
+                    className="h-4 w-4 rounded border-input"
                   />
                   <span className="text-sm">{option}</span>
                 </label>

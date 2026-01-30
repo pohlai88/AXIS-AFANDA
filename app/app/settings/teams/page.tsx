@@ -16,6 +16,11 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { useTeamUpdates } from "@/app/hooks/use-team-updates";
+import { ConnectionStatusIndicator } from "@/app/components/common/connection-status-indicator";
+import { TeamStatsCards, type TeamStats } from "@/app/components/teams/team-stats";
+import { TeamListWithBulk } from "@/app/components/teams/team-list-with-bulk";
+import { toast } from "sonner";
 
 // Mock data - will be replaced with API call
 const mockTeams = [
@@ -26,6 +31,7 @@ const mockTeams = [
     visibility: "private" as const,
     memberCount: 12,
     role: "owner" as const,
+    createdAt: "2 days ago",
   },
   {
     id: "2",
@@ -34,10 +40,41 @@ const mockTeams = [
     visibility: "public" as const,
     memberCount: 8,
     role: "admin" as const,
+    createdAt: "1 week ago",
   },
 ];
 
 export default function TeamsSettingsPage() {
+  // Real-time updates for team membership changes
+  const { isConnected, error } = useTeamUpdates({
+    enabled: true,
+    showToasts: true,
+    onUpdate: (update) => {
+      console.log('Team update:', update);
+      // TODO: Refresh teams list when updates received
+    },
+  });
+
+  // Calculate stats from mock data
+  const stats: TeamStats = {
+    total: mockTeams.length,
+    members: mockTeams.reduce((sum, team) => sum + team.memberCount, 0),
+    public: mockTeams.filter(team => team.visibility === 'public').length,
+    private: mockTeams.filter(team => team.visibility === 'private').length,
+  };
+
+  const handleBulkInvite = (teamIds: string[], memberEmails: string[]) => {
+    toast.success(`Invited ${memberEmails.length} member(s) to ${teamIds.length} team(s)`);
+  };
+
+  const handleBulkRemove = (teamIds: string[], memberIds: string[]) => {
+    toast.success(`Removed ${memberIds.length} member(s) from ${teamIds.length} team(s)`);
+  };
+
+  const handleBulkDelete = (teamIds: string[]) => {
+    toast.success(`Deleted ${teamIds.length} team(s)`);
+  };
+
   return (
     <SettingsLayout title="Teams & Users">
       <div className="layout-stack">
@@ -51,6 +88,19 @@ export default function TeamsSettingsPage() {
               Manage teams, users, avatars, and user display settings. Teams are self-managed; organizations are managed by Keycloak.
             </p>
           </div>
+          <div className="ml-auto">
+            <ConnectionStatusIndicator
+              isConnected={isConnected}
+              error={error}
+              showLabel
+              className="hidden sm:flex"
+            />
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="mt-6">
+          <TeamStatsCards stats={stats} />
         </div>
 
         <Tabs defaultValue="teams" className="mt-8">
@@ -74,73 +124,35 @@ export default function TeamsSettingsPage() {
               <CreateTeamDialog />
             </div>
 
-            <div className="grid gap-4">
-              {mockTeams.length === 0 ? (
-                <Card className="card-glow-lux">
-                  <CardContent className="flex flex-col items-center justify-center py-12">
-                    <Users className="h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No teams yet</h3>
-                    <p className="text-sm text-muted-foreground text-center mb-4">
-                      Create your first team to start collaborating with others.
-                    </p>
-                    <CreateTeamDialog
-                      trigger={
-                        <Button className="btn-gold-lux">
-                          <Plus className="mr-2 h-4 w-4" />
-                          Create Team
-                        </Button>
-                      }
-                    />
-                  </CardContent>
-                </Card>
-              ) : (
-                mockTeams.map((team) => (
-                  <Card key={team.id} className="card-glow-lux">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <CardTitle>{team.name}</CardTitle>
-                            <Badge variant="outline" className="text-xs">
-                              {team.role === "owner" ? "Owner" : "Admin"}
-                            </Badge>
-                            {team.visibility === "private" ? (
-                              <Lock className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <Globe className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </div>
-                          {team.description && (
-                            <CardDescription>{team.description}</CardDescription>
-                          )}
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center justify-between">
-                        <div className="text-sm text-muted-foreground">
-                          {team.memberCount} member{team.memberCount !== 1 ? "s" : ""}
-                        </div>
-                        <div className="flex gap-2">
-                          <Link href={`/app/teams/${team.id}`}>
-                            <Button variant="outline" size="sm">
-                              View Team
-                              <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                          </Link>
-                          {team.role === "owner" && (
-                            <Button variant="outline" size="sm">
-                              <Settings className="mr-2 h-4 w-4" />
-                              Settings
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
+            {mockTeams.length === 0 ? (
+              <Card className="card-glow-lux">
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <Users className="h-12 w-12 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No teams yet</h3>
+                  <p className="text-sm text-muted-foreground text-center mb-4">
+                    Create your first team to start collaborating with others.
+                  </p>
+                  <CreateTeamDialog
+                    trigger={
+                      <Button className="btn-gold-lux">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Create Team
+                      </Button>
+                    }
+                  />
+                </CardContent>
+              </Card>
+            ) : (
+              <TeamListWithBulk
+                teams={mockTeams}
+                onSelectTeam={(team) => {
+                  window.location.href = `/app/teams/${team.id}`;
+                }}
+                onInviteMembers={handleBulkInvite}
+                onRemoveMembers={handleBulkRemove}
+                onDeleteTeams={handleBulkDelete}
+              />
+            )}
 
             <Card>
               <CardHeader>

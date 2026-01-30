@@ -9,6 +9,9 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { SSEClient, createSSEClient, type SSEEvent } from '@/app/lib/sse-client';
 
+// Check if SSE is enabled globally via environment variable
+const sseGloballyEnabled = process.env.NEXT_PUBLIC_SSE_ENABLED !== 'false';
+
 export interface UseSSEOptions {
   enabled?: boolean;
   reconnectDelay?: number;
@@ -48,7 +51,12 @@ export function useSSE<T = unknown>(
   const clientRef = useRef<SSEClient | null>(null);
 
   useEffect(() => {
-    if (!enabled || !url) return;
+    if (!enabled || !url || !sseGloballyEnabled) {
+      if (!sseGloballyEnabled) {
+        console.log('[SSE] Globally disabled via NEXT_PUBLIC_SSE_ENABLED');
+      }
+      return;
+    }
 
     // Create client
     const client = createSSEClient({
@@ -90,7 +98,7 @@ export function useSSE<T = unknown>(
       client.close();
       clientRef.current = null;
     };
-  }, [url, eventType, enabled, reconnectDelay, maxReconnectAttempts, onOpen, onError]);
+  }, [url, eventType, enabled, sseGloballyEnabled, reconnectDelay, maxReconnectAttempts, onOpen, onError]);
 
   return {
     data,

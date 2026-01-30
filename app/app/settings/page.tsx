@@ -1,13 +1,25 @@
 'use client';
 
 import { useState } from 'react';
+import { Settings, Bell, Shield, Palette, Users, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
@@ -15,13 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  User,
-  Bell,
-  Shield,
-  Palette,
-  Save,
-} from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function SettingsPage() {
@@ -40,14 +45,18 @@ export default function SettingsPage() {
       {/* Header */}
       <div className="border-b bg-background px-6 py-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-            <p className="text-sm text-muted-foreground">
-              Manage your account and application preferences
-            </p>
+          <div className="flex items-center gap-3">
+            <div className="bg-lux-gold-soft flex h-12 w-12 items-center justify-center rounded-xl">
+              <Settings className="h-6 w-6 text-lux-gold" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
+              <p className="text-sm text-muted-foreground">
+                Manage your preferences and account settings
+              </p>
+            </div>
           </div>
           <Button onClick={handleSave} disabled={saving}>
-            <Save className="mr-2 h-4 w-4" />
             {saving ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
@@ -55,66 +64,43 @@ export default function SettingsPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-6">
-        <div className="mx-auto max-w-4xl">
-          <Tabs defaultValue="profile" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-8">
-              <TabsTrigger value="profile">
-                <User className="mr-2 h-4 w-4" />
-                Profile
-              </TabsTrigger>
-              <TabsTrigger value="notifications">
-                <Bell className="mr-2 h-4 w-4" />
-                Notifications
-              </TabsTrigger>
-              <TabsTrigger value="appearance">
-                <Palette className="mr-2 h-4 w-4" />
-                Appearance
-              </TabsTrigger>
-              <TabsTrigger value="security">
-                <Shield className="mr-2 h-4 w-4" />
-                Security
-              </TabsTrigger>
+        <div className="mx-auto max-w-[var(--layout-container-narrow)]">
+          <Tabs defaultValue="general" className="space-y-6">
+            <TabsList>
+              <TabsTrigger value="general">General</TabsTrigger>
+              <TabsTrigger value="notifications">Notifications</TabsTrigger>
+              <TabsTrigger value="appearance">Appearance</TabsTrigger>
+              <TabsTrigger value="security">Security</TabsTrigger>
             </TabsList>
 
-            {/* Profile Tab */}
-            <TabsContent value="profile" className="space-y-6">
+            {/* General Settings */}
+            <TabsContent value="general" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Profile Information</CardTitle>
+                  <CardTitle>Profile</CardTitle>
                   <CardDescription>
-                    Update your personal information and profile settings
+                    Update your personal information
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" placeholder="John" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" placeholder="Doe" />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input id="name" placeholder="John Doe" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input id="email" type="email" placeholder="john@example.com" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="role">Role</Label>
-                    <Input id="role" placeholder="Customer Support Agent" />
-                  </div>
-                  <div className="space-y-2">
                     <Label htmlFor="timezone">Timezone</Label>
                     <Select defaultValue="utc">
-                      <SelectTrigger>
-                        <SelectValue />
+                      <SelectTrigger id="timezone">
+                        <SelectValue placeholder="Select timezone" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="utc">UTC</SelectItem>
                         <SelectItem value="est">Eastern Time</SelectItem>
                         <SelectItem value="pst">Pacific Time</SelectItem>
-                        <SelectItem value="cet">Central European Time</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -122,8 +108,8 @@ export default function SettingsPage() {
               </Card>
             </TabsContent>
 
-            {/* Notifications Tab */}
-            <TabsContent value="notifications" className="space-y-6">
+            {/* Notifications Settings */}
+            <TabsContent value="notifications" className="space-y-4">
               <Card>
                 <CardHeader>
                   <CardTitle>Notification Preferences</CardTitle>
@@ -131,85 +117,55 @@ export default function SettingsPage() {
                     Choose what notifications you want to receive
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>New Conversations</Label>
+                      <Label htmlFor="email-notifications">Email Notifications</Label>
                       <p className="text-sm text-muted-foreground">
-                        Get notified when a new conversation is assigned to you
+                        Receive email about your activity
                       </p>
                     </div>
-                    <Switch defaultChecked />
+                    <Switch id="email-notifications" defaultChecked />
                   </div>
                   <Separator />
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>New Messages</Label>
+                      <Label htmlFor="push-notifications">Push Notifications</Label>
                       <p className="text-sm text-muted-foreground">
-                        Get notified when you receive a new message
+                        Receive push notifications on your device
                       </p>
                     </div>
-                    <Switch defaultChecked />
+                    <Switch id="push-notifications" />
                   </div>
                   <Separator />
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Approval Requests</Label>
+                      <Label htmlFor="approval-notifications">Approval Notifications</Label>
                       <p className="text-sm text-muted-foreground">
-                        Get notified when an approval is pending
+                        Get notified when an approval requires your attention
                       </p>
                     </div>
-                    <Switch defaultChecked />
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Escalations</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Get notified when a conversation is escalated
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Email Notifications</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Receive notifications via email
-                      </p>
-                    </div>
-                    <Switch />
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Desktop Notifications</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Show browser notifications
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
+                    <Switch id="approval-notifications" defaultChecked />
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            {/* Appearance Tab */}
-            <TabsContent value="appearance" className="space-y-6">
+            {/* Appearance Settings */}
+            <TabsContent value="appearance" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Appearance Settings</CardTitle>
+                  <CardTitle>Appearance</CardTitle>
                   <CardDescription>
-                    Customize how AXIS-AFENDA looks
+                    Customize the look and feel
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Theme</Label>
+                    <Label htmlFor="theme">Theme</Label>
                     <Select defaultValue="system">
-                      <SelectTrigger>
-                        <SelectValue />
+                      <SelectTrigger id="theme">
+                        <SelectValue placeholder="Select theme" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="light">Light</SelectItem>
@@ -217,96 +173,49 @@ export default function SettingsPage() {
                         <SelectItem value="system">System</SelectItem>
                       </SelectContent>
                     </Select>
-                    <p className="text-sm text-muted-foreground">
-                      Choose your preferred color theme
-                    </p>
-                  </div>
-                  <Separator />
-                  <div className="space-y-2">
-                    <Label>Density</Label>
-                    <Select defaultValue="comfortable">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="compact">Compact</SelectItem>
-                        <SelectItem value="comfortable">Comfortable</SelectItem>
-                        <SelectItem value="spacious">Spacious</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <p className="text-sm text-muted-foreground">
-                      Adjust spacing and sizing
-                    </p>
                   </div>
                   <Separator />
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Sidebar Collapsed</Label>
+                      <Label htmlFor="compact-mode">Compact Mode</Label>
                       <p className="text-sm text-muted-foreground">
-                        Start with sidebar collapsed
+                        Show more content in less space
                       </p>
                     </div>
-                    <Switch />
+                    <Switch id="compact-mode" />
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            {/* Security Tab */}
-            <TabsContent value="security" className="space-y-6">
+            {/* Security Settings */}
+            <TabsContent value="security" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Security Settings</CardTitle>
+                  <CardTitle>Security</CardTitle>
                   <CardDescription>
-                    Manage your account security
+                    Manage your security preferences
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
-                    <h3 className="font-semibold">Change Password</h3>
-                    <div className="space-y-2">
-                      <Label htmlFor="currentPassword">Current Password</Label>
-                      <Input id="currentPassword" type="password" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="newPassword">New Password</Label>
-                      <Input id="newPassword" type="password" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                      <Input id="confirmPassword" type="password" />
-                    </div>
-                    <Button>Update Password</Button>
-                  </div>
-                  <Separator />
+                <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Two-Factor Authentication</Label>
+                      <Label htmlFor="two-factor">Two-Factor Authentication</Label>
                       <p className="text-sm text-muted-foreground">
                         Add an extra layer of security
                       </p>
                     </div>
-                    <Button variant="outline">Enable 2FA</Button>
+                    <Switch id="two-factor" />
                   </div>
                   <Separator />
-                  <div className="space-y-2">
-                    <h3 className="font-semibold">Active Sessions</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Manage your active sessions across devices
-                    </p>
-                    <div className="mt-4 space-y-2">
-                      <div className="flex items-center justify-between rounded-lg border p-3">
-                        <div>
-                          <p className="font-medium">Windows - Chrome</p>
-                          <p className="text-sm text-muted-foreground">
-                            Current session • Last active now
-                          </p>
-                        </div>
-                        <Button variant="ghost" size="sm">
-                          Revoke
-                        </Button>
-                      </div>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="session-timeout">Auto Session Timeout</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Automatically log out after inactivity
+                      </p>
                     </div>
+                    <Switch id="session-timeout" defaultChecked />
                   </div>
                 </CardContent>
               </Card>

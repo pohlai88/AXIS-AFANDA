@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
+import { CompactEmptyState } from '@/app/components/common/empty-states';
 
 export interface Comment {
   id: string;
@@ -173,7 +174,7 @@ export function CommentsSidebar({
               <Textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="min-h-[60px]"
+                className="min-h-16"
                 autoFocus
               />
               <div className="flex gap-2">
@@ -239,7 +240,7 @@ export function CommentsSidebar({
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Write a reply..."
-              className="min-h-[60px]"
+              className="min-h-16"
               autoFocus
             />
             <div className="flex gap-2">
@@ -280,15 +281,11 @@ export function CommentsSidebar({
       {/* Comments List */}
       <ScrollArea className="flex-1 p-4">
         {sortedComments.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-center">
-            <div>
-              <MessageSquare className="mx-auto h-8 w-8 text-muted-foreground/50" />
-              <p className="mt-2 text-sm text-muted-foreground">No comments yet</p>
-              <p className="text-xs text-muted-foreground">
-                Be the first to comment
-              </p>
-            </div>
-          </div>
+          <CompactEmptyState
+            icon={MessageSquare}
+            title="No comments yet"
+            description="Be the first to comment"
+          />
         ) : (
           <div className="space-y-4">
             {sortedComments.map((comment) => renderComment(comment))}
@@ -303,7 +300,7 @@ export function CommentsSidebar({
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
-            className="mb-2 min-h-[80px]"
+            className="mb-2 min-h-20"
             onKeyDown={(e) => {
               if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                 handleSubmit();

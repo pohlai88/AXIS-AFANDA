@@ -175,13 +175,13 @@ export function AvatarVariations() {
 
       <div className='flex gap-4'>
         <Avatar>
-          <div className='h-full w-full bg-gradient-to-br from-blue-500 to-purple-600' />
+          <div className='h-full w-full bg-linear-to-br from-blue-500 to-purple-600' />
         </Avatar>
         <Avatar>
-          <div className='h-full w-full bg-gradient-to-br from-green-500 to-teal-600' />
+          <div className='h-full w-full bg-linear-to-br from-green-500 to-teal-600' />
         </Avatar>
         <Avatar>
-          <div className='h-full w-full bg-gradient-to-br from-red-500 to-orange-600' />
+          <div className='h-full w-full bg-linear-to-br from-red-500 to-orange-600' />
         </Avatar>
       </div>
     </div>
@@ -349,7 +349,7 @@ export function InteractiveVariations() {
           <Slider value={sliderValue} onValueChange={setSliderValue} max={100} step={1} />
           <Slider value={[25, 75]} max={100} step={1} />
           <Slider value={[33]} max={100} step={1} disabled />
-          <Slider value={[50]} max={100} step={1} className='[&_[role=slider]]:bg-green-500' />
+          <Slider value={[50]} max={100} step={1} className='**:[[role=slider]]:bg-green-500' />
         </div>
       </div>
 
@@ -445,7 +445,7 @@ export function CardVariations() {
         </CardContent>
       </Card>
 
-      <Card className='border-none bg-gradient-to-br from-blue-500 to-purple-600 text-white'>
+      <Card className='border-none bg-linear-to-br from-blue-500 to-purple-600 text-white'>
         <CardHeader>
           <CardTitle className='text-white'>Gradient Card</CardTitle>
         </CardHeader>
@@ -473,7 +473,7 @@ export function CardVariations() {
       </Card>
 
       <Card className='overflow-hidden'>
-        <div className='h-24 bg-gradient-to-r from-blue-500 to-purple-600' />
+        <div className='h-24 bg-linear-to-r from-blue-500 to-purple-600' />
         <CardHeader>
           <CardTitle>Card with Image</CardTitle>
         </CardHeader>
@@ -536,9 +536,9 @@ export function LoadingVariations() {
       </div>
 
       <div className='space-y-2'>
-        <div className='h-2 animate-pulse rounded bg-gray-200' />
-        <div className='h-2 w-3/4 animate-pulse rounded bg-gray-200' />
-        <div className='h-2 w-1/2 animate-pulse rounded bg-gray-200' />
+        <div className='h-2 animate-pulse rounded bg-muted' />
+        <div className='h-2 w-3/4 animate-pulse rounded bg-muted' />
+        <div className='h-2 w-1/2 animate-pulse rounded bg-muted' />
       </div>
     </div>
   )

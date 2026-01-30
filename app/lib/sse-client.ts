@@ -27,6 +27,7 @@ export class SSEClient {
   private config: Required<SSEConfig>;
   private reconnectAttempts = 0;
   private reconnectTimer: NodeJS.Timeout | null = null;
+  private connectionTimer: NodeJS.Timeout | null = null;
   private handlers: Map<string, Set<SSEEventHandler>> = new Map();
   private errorHandlers: Set<SSEErrorHandler> = new Set();
   private openHandlers: Set<SSEOpenHandler> = new Set();
@@ -53,14 +54,46 @@ export class SSEClient {
       });
 
       this.eventSource.onopen = () => {
+        console.log('[SSE] Connection established:', this.config.url);
         this.reconnectAttempts = 0;
+
+        // Clear connection timeout
+        if (this.connectionTimer) {
+          clearTimeout(this.connectionTimer);
+          this.connectionTimer = null;
+        }
+
         this.openHandlers.forEach(handler => handler());
       };
 
+      // Set a connection timeout (10 seconds)
+      this.connectionTimer = setTimeout(() => {
+        if (this.eventSource?.readyState === EventSource.CONNECTING) {
+          console.warn('[SSE] Connection timeout - still connecting after 10s:', this.config.url);
+        }
+      }, 10000);
+
       this.eventSource.onerror = (error) => {
-        console.error('[SSE] Connection error:', error);
-        this.handleError(new Error('SSE connection error'));
-        this.handleReconnect();
+        const readyState = this.eventSource?.readyState;
+        const stateNames = ['CONNECTING', 'OPEN', 'CLOSED'];
+        const stateName = stateNames[readyState ?? 2];
+
+        console.error('[SSE] Connection error:', {
+          url: this.config.url,
+          readyState,
+          stateName,
+          error,
+          attempt: this.reconnectAttempts + 1,
+        });
+
+        // Only handle reconnect if connection is closed
+        if (readyState === EventSource.CLOSED) {
+          this.handleError(new Error(`SSE connection closed (${this.config.url})`));
+          this.handleReconnect();
+        } else if (readyState === EventSource.CONNECTING) {
+          // Still trying to connect, don't trigger reconnect yet
+          console.log('[SSE] Still attempting initial connection...');
+        }
       };
 
       this.eventSource.onmessage = (event) => {
@@ -130,6 +163,11 @@ export class SSEClient {
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;
+    }
+
+    if (this.connectionTimer) {
+      clearTimeout(this.connectionTimer);
+      this.connectionTimer = null;
     }
 
     if (this.eventSource) {

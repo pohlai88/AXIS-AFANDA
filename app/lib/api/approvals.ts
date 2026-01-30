@@ -219,6 +219,39 @@ export async function rejectApproval(id: string, decision?: string) {
 }
 
 // ============================================================================
+// Bulk operations
+// ============================================================================
+
+const bulkApprovalsResultSchema = z.object({
+  data: z.array(approvalSchema),
+});
+
+const bulkDeleteResultSchema = z.object({
+  success: z.boolean(),
+  deleted: z.number(),
+});
+
+export async function bulkApproveApprovals(approvalIds: string[], decision?: string) {
+  return apiClient.patch(
+    `/approvals/bulk`,
+    { approvalIds, status: 'approved', decision },
+    bulkApprovalsResultSchema
+  );
+}
+
+export async function bulkRejectApprovals(approvalIds: string[], decision?: string) {
+  return apiClient.patch(
+    `/approvals/bulk`,
+    { approvalIds, status: 'rejected', decision },
+    bulkApprovalsResultSchema
+  );
+}
+
+export async function bulkDeleteApprovals(approvalIds: string[]) {
+  return apiClient.delete(`/approvals/bulk`, bulkDeleteResultSchema, { approvalIds });
+}
+
+// ============================================================================
 // Templates
 // ============================================================================
 

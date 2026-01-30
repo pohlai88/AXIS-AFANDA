@@ -19,9 +19,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
-import { 
-  Filter, 
-  X, 
+import {
+  Filter,
+  X,
   Calendar as CalendarIcon,
   Tag,
   Users,
@@ -131,7 +131,7 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
     const newLabels = selectedLabels.includes(label)
       ? selectedLabels.filter(l => l !== label)
       : [...selectedLabels, label];
-    
+
     setSelectedLabels(newLabels);
     onFiltersChange({
       ...filters,
@@ -174,7 +174,7 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
           {FILTER_PRESETS.map((preset) => {
             const Icon = preset.icon;
             const isActive = JSON.stringify(filters) === JSON.stringify(preset.filters);
-            
+
             return (
               <Button
                 key={preset.id}
@@ -261,25 +261,25 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
             <SelectItem value="all">All priorities</SelectItem>
             <SelectItem value="urgent">
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-3.5 w-3.5 text-red-500" />
+                <AlertCircle className="h-3.5 w-3.5 text-reject-fg" />
                 Urgent
               </div>
             </SelectItem>
             <SelectItem value="high">
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-3.5 w-3.5 text-orange-500" />
+                <AlertCircle className="h-3.5 w-3.5 text-status-warn-fg" />
                 High
               </div>
             </SelectItem>
             <SelectItem value="medium">
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-3.5 w-3.5 text-yellow-500" />
+                <AlertCircle className="h-3.5 w-3.5 text-changes-fg" />
                 Medium
               </div>
             </SelectItem>
             <SelectItem value="low">
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-3.5 w-3.5 text-blue-500" />
+                <AlertCircle className="h-3.5 w-3.5 text-pending-fg" />
                 Low
               </div>
             </SelectItem>
@@ -320,7 +320,7 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
       {/* Special Filters */}
       <div className="space-y-3">
         <Label className="text-xs">Special Filters</Label>
-        
+
         <div className="flex items-center space-x-2">
           <Checkbox
             id="escalation-filter"
@@ -336,7 +336,7 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
             htmlFor="escalation-filter"
             className="flex items-center gap-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
-            <Zap className="h-3.5 w-3.5 text-orange-500" />
+            <Zap className="h-3.5 w-3.5 text-status-warn-fg" />
             Has Escalation
           </label>
         </div>
@@ -356,7 +356,7 @@ export function InboxFilters({ filters, onFiltersChange }: InboxFiltersProps) {
             htmlFor="unread-filter"
             className="flex items-center gap-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
-            <Mail className="h-3.5 w-3.5 text-blue-500" />
+            <Mail className="h-3.5 w-3.5 text-primary" />
             Unread Only
           </label>
         </div>

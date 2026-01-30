@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Approval } from '@/app/lib/stores/approvals-store';
+import { CompactEmptyState } from '@/app/components/common/empty-states';
 
 interface MorphSelectorProps {
   approval: Approval;
@@ -204,9 +205,11 @@ export function MorphSelector({ approval, onMorph, processing = false }: MorphSe
               {/* User list */}
               <div className="max-h-48 space-y-1 overflow-y-auto rounded-lg border p-2">
                 {filteredUsers.length === 0 ? (
-                  <p className="p-2 text-center text-sm text-muted-foreground">
-                    No users found
-                  </p>
+                  <CompactEmptyState
+                    icon={User}
+                    title="No users found"
+                    description="Try adjusting your search"
+                  />
                 ) : (
                   filteredUsers.map((user) => (
                     <button

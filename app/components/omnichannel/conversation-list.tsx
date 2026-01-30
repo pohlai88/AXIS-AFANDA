@@ -6,6 +6,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { MessageSquare, User } from 'lucide-react';
 import type { Conversation } from '@/app/lib/stores/conversations-store';
 import { getChannelIcon, getChannelColor, getChannelLabel, type ChannelType } from '@/app/lib/utils/channel-icons';
+import { NoConversationsState } from '@/app/components/common/empty-states';
 
 /** Extended conversation with omnichannel properties */
 interface OmnichannelConversation extends Conversation {
@@ -37,17 +38,7 @@ export function ConversationList({
   }
 
   if (conversations.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-center">
-          <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground/50" />
-          <h3 className="mt-4 text-lg font-semibold">No conversations</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            No conversations match your filters
-          </p>
-        </div>
-      </div>
-    );
+    return <NoConversationsState />;
   }
 
   return (
@@ -56,9 +47,8 @@ export function ConversationList({
         <button
           key={conversation.id}
           onClick={() => onConversationClick(conversation.id)}
-          className={`w-full px-6 py-4 text-left transition-colors hover:bg-muted/50 ${
-            selectedId === conversation.id ? 'bg-muted border-l-4 border-l-primary' : ''
-          }`}
+          className={`w-full px-6 py-4 text-left transition-colors hover:bg-muted/50 ${selectedId === conversation.id ? 'bg-muted border-l-4 border-l-primary' : ''
+            }`}
         >
           <div className="flex items-start gap-4">
             {/* Avatar */}

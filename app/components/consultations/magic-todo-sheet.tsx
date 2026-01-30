@@ -27,7 +27,6 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import { celebrateWithConfetti } from './confetti-celebration';
-import { ShimmerButton } from '@/components/ui/shimmer-button';
 import type { Meeting } from './types';
 
 interface MagicTodoSheetProps {
@@ -54,28 +53,28 @@ const taskTypes = [
     icon: '📝',
     label: 'Self-Reminder',
     description: 'Personal task for me',
-    color: 'bg-blue-50 border-blue-200 dark:bg-blue-950/20 dark:border-blue-900',
+    color: 'bg-changes-bg border-changes-bd',
   },
   {
     id: 'assigned',
     icon: '👤',
     label: 'Push to Someone',
     description: 'Assign to a person',
-    color: 'bg-purple-50 border-purple-200 dark:bg-purple-950/20 dark:border-purple-900',
+    color: 'bg-primary/10 border-primary/20',
   },
   {
     id: 'department',
     icon: '👥',
     label: 'Push to Department',
     description: 'Team task',
-    color: 'bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-900',
+    color: 'bg-approve-bg border-approve-bd',
   },
   {
     id: 'approval',
     icon: '✅',
     label: 'Link to Approval',
     description: 'Needs approval',
-    color: 'bg-amber-50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-900',
+    color: 'bg-status-warn-bg border-status-warn-bd',
   },
 ];
 
@@ -141,7 +140,7 @@ export function MagicTodoSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-full sm:w-[600px] lg:w-[700px] overflow-y-auto"
+        className="w-full sm:w-[37.5rem] lg:w-[43.75rem] overflow-y-auto"
       >
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
@@ -322,14 +321,14 @@ export function MagicTodoSheet({
           <Button variant="outline" onClick={handleCancel} className="w-full sm:w-auto">
             Cancel
           </Button>
-          <ShimmerButton
+          <Button
             className="btn-gold-lux w-full sm:w-auto"
             onClick={handleSubmit}
             disabled={!selectedType || !title}
           >
             <Zap className="h-4 w-4 mr-2" />
             Create Action & Link
-          </ShimmerButton>
+          </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>

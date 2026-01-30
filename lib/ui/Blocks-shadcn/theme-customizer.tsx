@@ -15,16 +15,17 @@ import * as React from 'react'
 import { useTheme } from './theme-provider'
 
 const themes = [
-  { name: 'Slate', value: 'slate', light: 'bg-slate-50', dark: 'bg-slate-950' },
-  { name: 'Gray', value: 'gray', light: 'bg-gray-50', dark: 'bg-gray-950' },
-  { name: 'Zinc', value: 'zinc', light: 'bg-zinc-50', dark: 'bg-zinc-950' },
-  { name: 'Neutral', value: 'neutral', light: 'bg-neutral-50', dark: 'bg-neutral-950' },
-  { name: 'Stone', value: 'stone', light: 'bg-stone-50', dark: 'bg-stone-950' },
-]
+  { name: 'Background', value: 'background', swatch: 'bg-background' },
+  { name: 'Card', value: 'card', swatch: 'bg-card' },
+  { name: 'Muted', value: 'muted', swatch: 'bg-muted' },
+  { name: 'Primary', value: 'primary', swatch: 'bg-primary' },
+  { name: 'Accent', value: 'accent', swatch: 'bg-accent' },
+] as const
 
 export function ThemeCustomizer() {
   const { theme, setTheme } = useTheme()
-  const [selectedTheme, setSelectedTheme] = React.useState('slate')
+  const [selectedTheme, setSelectedTheme] =
+    React.useState<(typeof themes)[number]['value']>('background')
   const [radius, setRadius] = React.useState(0.5)
 
   return (
@@ -54,29 +55,17 @@ export function ThemeCustomizer() {
         <div className='space-y-2'>
           <Label>Theme Color</Label>
           <div className='grid grid-cols-5 gap-2'>
-            {themes.map(t => (
+            {themes.map((t) => (
               <Button
                 key={t.value}
                 variant={selectedTheme === t.value ? 'default' : 'outline'}
                 size='sm'
                 onClick={() => {
                   setSelectedTheme(t.value)
-                  // Apply theme color by updating CSS variables
-                  const root = document.documentElement
-                  const lightColor = {
-                    slate: '222.2 84% 4.9%',
-                    gray: '220 14.3% 4.1%',
-                    zinc: '240 4.8% 3.9%',
-                    neutral: '0 0% 3.9%',
-                    stone: '60 4.8% 3.9%',
-                  }[t.value]
-                  if (lightColor) {
-                    root.style.setProperty('--background', lightColor)
-                  }
                 }}
                 className='h-8 w-8 p-0'
               >
-                <div className={`h-4 w-4 rounded-full ${theme === 'light' ? t.light : t.dark}`} />
+                <div className={`h-4 w-4 rounded-full ${t.swatch}`} />
               </Button>
             ))}
           </div>

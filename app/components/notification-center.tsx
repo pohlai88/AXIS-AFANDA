@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNotificationsStore } from "@/app/lib/stores/notifications-store";
 import Link from "next/link";
+import { NoNotificationsState } from "@/app/components/common/empty-states";
 
 export function NotificationCenter() {
   const { notifications, unreadCount, markAsRead, markAllAsRead, fetchNotifications } =
@@ -46,19 +47,18 @@ export function NotificationCenter() {
           <DropdownMenuLabel>Notifications</DropdownMenuLabel>
         </div>
         <DropdownMenuSeparator />
-        <ScrollArea className="h-[400px]">
+        <ScrollArea className="h-96">
           <div className="flex flex-col">
             {notifications.length === 0 ? (
-              <div className="py-6 text-center text-sm text-muted-foreground">
-                No notifications
+              <div className="p-4">
+                <NoNotificationsState />
               </div>
             ) : (
               notifications.map((notification) => {
                 const content = (
                   <div
-                    className={`border-b px-4 py-3 transition-colors hover:bg-muted/50 cursor-pointer ${
-                      !notification.read ? "bg-muted/30" : ""
-                    }`}
+                    className={`border-b px-4 py-3 transition-colors hover:bg-muted/50 cursor-pointer ${!notification.read ? "bg-muted/30" : ""
+                      }`}
                     onClick={() => {
                       if (!notification.read) {
                         markAsRead(notification.id);

@@ -223,7 +223,7 @@ export function MeetingFlowDialog({ open, onOpenChange, onComplete }: MeetingFlo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+      <DialogContent className="max-h-screen-90 max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {step === 'agenda' && '📋 Step 1: Meeting Agenda'}

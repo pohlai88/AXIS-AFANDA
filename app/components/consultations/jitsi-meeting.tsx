@@ -45,7 +45,7 @@ export function JitsiMeeting({ roomName, userName = 'Guest', onMeetingEnd }: Jit
       interfaceConfigOverwrite: {
         SHOW_JITSI_WATERMARK: false,
         SHOW_WATERMARK_FOR_GUESTS: false,
-        DEFAULT_BACKGROUND: '#1a1a1a',
+        DEFAULT_BACKGROUND: 'hsl(var(--background))',
         DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
       },
       userInfo: {
@@ -86,7 +86,7 @@ export function JitsiMeeting({ roomName, userName = 'Guest', onMeetingEnd }: Jit
 
   return (
     <Card className="overflow-hidden">
-      <div ref={containerRef} className="h-[600px] w-full" />
+      <div ref={containerRef} className="h-screen-60 w-full" />
     </Card>
   );
 }

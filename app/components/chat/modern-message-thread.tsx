@@ -13,6 +13,7 @@ import {
 import { format, isToday, isYesterday } from 'date-fns';
 import { User, Bot, Check, CheckCheck, Smile, Reply, MoreVertical } from 'lucide-react';
 import type { Message } from '@/app/lib/stores/conversations-store';
+import { NoConversationsState } from '@/app/components/common/empty-states';
 
 /** Reaction on a message */
 interface MessageReaction {
@@ -45,13 +46,7 @@ export function ModernMessageThread({
   if (messages.length === 0) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-            <Smile className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <p className="text-sm text-muted-foreground">No messages yet</p>
-          <p className="text-xs text-muted-foreground">Start the conversation!</p>
-        </div>
+        <NoConversationsState />
       </div>
     );
   }
@@ -125,7 +120,7 @@ export function ModernMessageThread({
                   >
                     {/* Avatar (only for incoming messages, last in group) */}
                     {isIncoming && (
-                      <div className="flex-shrink-0">
+                      <div className="shrink-0">
                         {showAvatar ? (
                           <Avatar className="h-8 w-8">
                             <AvatarFallback className="bg-primary/10 text-xs">
@@ -143,7 +138,7 @@ export function ModernMessageThread({
                     )}
 
                     {/* Message Bubble */}
-                    <div className={`group relative max-w-[70%] ${!isIncoming && 'flex flex-col items-end'}`}>
+                    <div className={`group relative max-w-7/10 ${!isIncoming && 'flex flex-col items-end'}`}>
                       {/* Sender Name (only for first message in group) */}
                       {isIncoming && showAvatar && (
                         <div className="mb-1 flex items-center gap-2 px-3">
@@ -151,7 +146,7 @@ export function ModernMessageThread({
                             {message.senderName || 'Unknown'}
                           </span>
                           {isPrivate && (
-                            <Badge variant="secondary" className="h-4 px-1.5 text-[10px]">
+                            <Badge variant="secondary" className="h-4 px-1.5 text-xs">
                               Private
                             </Badge>
                           )}
@@ -231,7 +226,7 @@ export function ModernMessageThread({
                         {/* Bubble */}
                         <div
                           className={`rounded-2xl px-4 py-2 shadow-sm ${isPrivate
-                            ? 'border border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/50'
+                            ? 'border border-status-warn-bd bg-status-warn-bg'
                             : isIncoming
                               ? 'bg-muted'
                               : 'bg-primary text-primary-foreground'
@@ -263,7 +258,7 @@ export function ModernMessageThread({
 
                           {/* Time & Status */}
                           <div className={`mt-1 flex items-center gap-1 ${isIncoming ? 'justify-start' : 'justify-end'}`}>
-                            <span className={`text-[10px] ${isIncoming ? 'text-muted-foreground' : 'text-primary-foreground/70'}`}>
+                            <span className={`text-xs ${isIncoming ? 'text-muted-foreground' : 'text-primary-foreground/70'}`}>
                               {formatMessageTime(new Date(message.createdAt))}
                             </span>
                             {!isIncoming && (
@@ -272,7 +267,7 @@ export function ModernMessageThread({
                                 {message.status === 'read' ? (
                                   <CheckCheck className="h-3 w-3" />
                                 ) : message.status === 'delivered' ? (
-                                  <CheckCheck className="h-3 w-3 opacity-50" />
+                                  <CheckCheck className="h-3 w-3 shrink-0 text-blue-500" />
                                 ) : (
                                   <Check className="h-3 w-3 opacity-50" />
                                 )}
@@ -290,7 +285,7 @@ export function ModernMessageThread({
                                 className="flex items-center gap-1 rounded-full bg-background px-2 py-0.5 text-xs shadow-sm"
                               >
                                 <span>{reaction.emoji}</span>
-                                <span className="text-[10px] text-muted-foreground">
+                                <span className="text-xs text-muted-foreground">
                                   {reaction.count}
                                 </span>
                               </div>

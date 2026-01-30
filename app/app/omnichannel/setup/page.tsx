@@ -32,8 +32,8 @@ const CHANNELS = [
     id: 'email',
     name: 'Email',
     icon: Mail,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     description: 'Connect your company emails',
     setupTime: '2 min',
     difficulty: 'Easy',
@@ -50,8 +50,8 @@ const CHANNELS = [
     id: 'whatsapp',
     name: 'WhatsApp Business',
     icon: MessageCircle,
-    color: 'text-green-500',
-    bgColor: 'bg-green-500/10',
+    color: 'text-approve-fg',
+    bgColor: 'bg-approve-bg',
     description: 'Connect via Twilio or 360Dialog',
     setupTime: '5 min',
     difficulty: 'Easy',
@@ -66,8 +66,8 @@ const CHANNELS = [
     id: 'facebook',
     name: 'Facebook Messenger',
     icon: Facebook,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-600/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     description: 'Connect your Facebook page',
     setupTime: '3 min',
     difficulty: 'Easy',
@@ -77,8 +77,8 @@ const CHANNELS = [
     id: 'instagram',
     name: 'Instagram DMs',
     icon: Instagram,
-    color: 'text-pink-500',
-    bgColor: 'bg-pink-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     description: 'Connect your Instagram business account',
     setupTime: '3 min',
     difficulty: 'Easy',
@@ -88,8 +88,8 @@ const CHANNELS = [
     id: 'line',
     name: 'LINE',
     icon: MessageSquare,
-    color: 'text-green-400',
-    bgColor: 'bg-green-400/10',
+    color: 'text-approve-fg',
+    bgColor: 'bg-approve-bg',
     description: 'Connect LINE Messaging API',
     setupTime: '5 min',
     difficulty: 'Medium',
@@ -103,8 +103,8 @@ const CHANNELS = [
     id: 'wechat',
     name: 'WeChat',
     icon: MessageCircle,
-    color: 'text-green-600',
-    bgColor: 'bg-green-600/10',
+    color: 'text-approve-fg',
+    bgColor: 'bg-approve-bg',
     description: 'Connect WeChat Official Account',
     setupTime: '10 min',
     difficulty: 'Advanced',
@@ -117,8 +117,8 @@ const CHANNELS = [
     id: 'tiktok',
     name: 'TikTok DMs',
     icon: Music,
-    color: 'text-black dark:text-white',
-    bgColor: 'bg-black/10 dark:bg-white/10',
+    color: 'text-foreground',
+    bgColor: 'bg-muted',
     description: 'Connect TikTok Business Account',
     setupTime: '10 min',
     difficulty: 'Advanced',
@@ -131,8 +131,8 @@ const CHANNELS = [
     id: 'website',
     name: 'Website Chat',
     icon: Globe,
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     description: 'Add chat widget to your website',
     setupTime: '1 min',
     difficulty: 'Easy',
@@ -142,8 +142,8 @@ const CHANNELS = [
     id: 'sms',
     name: 'SMS',
     icon: Phone,
-    color: 'text-orange-500',
-    bgColor: 'bg-orange-500/10',
+    color: 'text-status-warn-fg',
+    bgColor: 'bg-status-warn-bg',
     description: 'Connect SMS via Twilio',
     setupTime: '5 min',
     difficulty: 'Easy',
@@ -219,7 +219,7 @@ export default function OmnichannelSetupPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-6">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-[var(--layout-container-narrow)]">
           {/* Welcome Step */}
           {step === 'welcome' && (
             <div className="space-y-6">
@@ -236,15 +236,15 @@ export default function OmnichannelSetupPage() {
               <Card className="border-2">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Zap className="h-5 w-5 text-yellow-500" />
+                    <Zap className="h-5 w-5 text-primary" />
                     What you&apos;ll get
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-3">
                     <div className="space-y-2">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
-                        <MessageCircle className="h-5 w-5 text-blue-500" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                        <MessageCircle className="h-5 w-5 text-primary" />
                       </div>
                       <h3 className="font-semibold">Unified Inbox</h3>
                       <p className="text-sm text-muted-foreground">
@@ -252,8 +252,8 @@ export default function OmnichannelSetupPage() {
                       </p>
                     </div>
                     <div className="space-y-2">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/10">
-                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-approve-bg">
+                        <CheckCircle2 className="h-5 w-5 text-approve-fg" />
                       </div>
                       <h3 className="font-semibold">No Context Switching</h3>
                       <p className="text-sm text-muted-foreground">
@@ -261,8 +261,8 @@ export default function OmnichannelSetupPage() {
                       </p>
                     </div>
                     <div className="space-y-2">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
-                        <Sparkles className="h-5 w-5 text-purple-500" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                        <Sparkles className="h-5 w-5 text-primary" />
                       </div>
                       <h3 className="font-semibold">Complete History</h3>
                       <p className="text-sm text-muted-foreground">
@@ -327,9 +327,9 @@ export default function OmnichannelSetupPage() {
                             variant="outline"
                             className={cn(
                               'text-xs',
-                              channel.difficulty === 'Easy' && 'border-green-500 text-green-500',
-                              channel.difficulty === 'Medium' && 'border-yellow-500 text-yellow-500',
-                              channel.difficulty === 'Advanced' && 'border-orange-500 text-orange-500'
+                              channel.difficulty === 'Easy' && 'border-approve-bd text-approve-fg',
+                              channel.difficulty === 'Medium' && 'border-changes-bd text-changes-fg',
+                              channel.difficulty === 'Advanced' && 'border-status-warn-bd text-status-warn-fg'
                             )}
                           >
                             {channel.difficulty}
@@ -504,7 +504,7 @@ export default function OmnichannelSetupPage() {
                     const isConfigured = configuredChannels.includes(channelId);
 
                     return (
-                      <Card key={channelId} className={cn(isConfigured && 'border-green-500/50 bg-green-500/5')}>
+                      <Card key={channelId} className={cn(isConfigured && 'border-approve-bd bg-approve-bg')}>
                         <CardContent className="flex items-center justify-between p-4">
                           <div className="flex items-center gap-3">
                             <div className={cn('flex h-10 w-10 items-center justify-center rounded-lg', channel.bgColor)}>
@@ -516,7 +516,7 @@ export default function OmnichannelSetupPage() {
                             </div>
                           </div>
                           {isConfigured ? (
-                            <div className="flex items-center gap-2 text-green-500">
+                            <div className="flex items-center gap-2 text-approve-fg">
                               <CheckCircle2 className="h-5 w-5" />
                               <span className="text-sm font-medium">Connected</span>
                             </div>
@@ -554,8 +554,8 @@ export default function OmnichannelSetupPage() {
           {step === 'complete' && (
             <div className="space-y-6">
               <div className="text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
-                  <CheckCircle2 className="h-8 w-8 text-green-500" />
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-approve-bg">
+                  <CheckCircle2 className="h-8 w-8 text-approve-fg" />
                 </div>
                 <h2 className="text-3xl font-bold">You&apos;re All Set! 🎉</h2>
                 <p className="mt-2 text-lg text-muted-foreground">

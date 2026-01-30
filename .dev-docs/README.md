@@ -5,21 +5,41 @@
 
 ---
 
-## Doc index
+## Active Documentation
 
-| Document | Status | Purpose |
-|----------|--------|---------|
-| **[PROJECT-SPEC.md](./PROJECT-SPEC.md)** | ✅ **Current** | Architecture, stack, improvements, roadmap, conventions |
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | ⚠️ Legacy | Superseded by PROJECT-SPEC § Architecture |
-| [AXIS-AFENDA-PROJECT-REF.md](./AXIS-AFENDA-PROJECT-REF.md) | ⚠️ Legacy | Superseded by PROJECT-SPEC; keep for detailed references only |
-| [DEVELOPMENT_ROADMAP.md](./DEVELOPMENT_ROADMAP.md) | ⚠️ Legacy | Superseded by PROJECT-SPEC § Roadmap |
-| [DESIGN_SYSTEM_INTEGRATION.md](./DESIGN_SYSTEM_INTEGRATION.md) | ⚠️ Legacy | Superseded by PROJECT-SPEC § Design system + AGENTS.md |
-| [DESIGN_SYSTEM_VALIDATION.md](./DESIGN_SYSTEM_VALIDATION.md) | ⚠️ Legacy | Historical validation; CSS now in `app/globals.css` + `app/styles/` |
-| [PROCESS_TRACKING.md](./PROCESS_TRACKING.md) | ⚠️ Legacy | Progress tracking; use PROJECT-SPEC § Roadmap for next steps |
-| [SHADCN_BLOCKS_INTEGRATION.md](./SHADCN_BLOCKS_INTEGRATION.md) | ⚠️ Legacy | Superseded by PROJECT-SPEC § UI + AGENTS.md |
+### Core Specs
 
-**Do not add new features or decisions to legacy docs.** Update PROJECT-SPEC (and AGENTS.md / Cursor rules where relevant) instead.
+| Document                                 | Purpose                                                                   |
+| ---------------------------------------- | ------------------------------------------------------------------------- |
+| **[PROJECT-SPEC.md](./PROJECT-SPEC.md)** | ✅ Canonical spec: architecture, stack, improvements, roadmap, conventions |
+| **[README.md](./README.md)**             | This file: doc index and navigation                                       |
+
+### Feature Specifications
+
+| Document                                                                     | Purpose                                                   |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------- |
+| [APPROVALS-RELATIONSHIPS-UX.md](./APPROVALS-RELATIONSHIPS-UX.md)             | Active feature spec: approvals workflow and relationships |
+| [CONSULTATIONS-REMAINING-FEATURES.md](./CONSULTATIONS-REMAINING-FEATURES.md) | Active development: consultations remaining work          |
+| [TEAM-MANAGEMENT-SPEC.md](./TEAM-MANAGEMENT-SPEC.md)                         | Roadmap item #3: team creation, invites, settings         |
+| [CHATWOOT-INTEGRATION.md](./CHATWOOT-INTEGRATION.md)                         | Roadmap item #6: Chatwoot webhooks and integration        |
+
+### Strategic & Reference
+
+| Document                                                     | Purpose                                   |
+| ------------------------------------------------------------ | ----------------------------------------- |
+| [BRAND-POSITIONING.md](./BRAND-POSITIONING.md)               | Marketing and product positioning         |
+| [INBOX-STRATEGY.md](./INBOX-STRATEGY.md)                     | Strategic decision doc for inbox approach |
+| [AVAILABLE-BLOCKS-SUMMARY.md](./AVAILABLE-BLOCKS-SUMMARY.md) | UI reference: available shadcn blocks     |
+| [BLOCKS-MIX-MATCH-GUIDE.md](./BLOCKS-MIX-MATCH-GUIDE.md)     | UI reference: how to combine blocks       |
 
 ---
 
-*Last updated: 2026-01-28*
+## Archive
+
+Completed work, legacy docs, and superseded material are in [`archive/`](./archive/).
+
+**Do not add new features or decisions to archived docs.** Update PROJECT-SPEC (and AGENTS.md / Cursor rules) instead.
+
+---
+
+*Last updated: 2026-01-29*

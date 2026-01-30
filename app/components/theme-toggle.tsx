@@ -122,7 +122,7 @@ export function ThemeToggle({
       {...props}
     >
       {isDark ? (
-        <Sun className="h-4 w-4 transition-all duration-lux-base group-hover:text-amber-500" />
+        <Sun className="h-4 w-4 transition-all duration-lux-base group-hover:text-primary" />
       ) : (
         <Moon className="h-4 w-4 transition-all duration-lux-base" />
       )}

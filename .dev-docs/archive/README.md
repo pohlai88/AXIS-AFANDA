@@ -1,38 +1,65 @@
-# Archived Documentation
+# Archive — Completed & Legacy Documentation
 
-This directory contains documentation for features that have been temporarily removed or postponed.
+This folder contains completed work, legacy documentation, and superseded materials.
 
-## Keycloak IAM Integration (Archived 2026-01-28)
+## Contents
 
-The Keycloak authentication implementation was removed to unblock development and focus on core features.
+### Architecture & Planning (Legacy)
+- `ARCHITECTURE.md` — Superseded by [PROJECT-SPEC.md](../PROJECT-SPEC.md)
+- `AXIS-AFENDA-PROJECT-REF.md` — Superseded by PROJECT-SPEC
+- `DEVELOPMENT_ROADMAP.md` — Superseded by PROJECT-SPEC § Roadmap
+- `PROCESS_TRACKING.md` — Historical progress tracking
 
-**Reason**: Auth integration was disrupting the build process and delaying progress on Chatwoot integration.
+### Design System (Legacy)
+- `DESIGN_SYSTEM_INTEGRATION.md` — Superseded by PROJECT-SPEC + AGENTS.md
+- `DESIGN_SYSTEM_VALIDATION.md` — Historical validation
+- `SHADCN_BLOCKS_INTEGRATION.md` — Superseded by PROJECT-SPEC § UI
 
-**Status**: Complete implementation exists in these files, ready to be restored when needed:
-- `KEYCLOAK-IAM-SETUP.md` - Complete setup guide
-- `KEYCLOAK-IAM-IMPLEMENTATION.md` - Implementation details
-- `KEYCLOAK-QUICK-START.md` - Quick start guide
-- `KEYCLOAK-AUTH-AUDIT-COMPLETE.md` - Quality audit report
-- `KEYCLOAK-IMPLEMENTATION-COMPLETE.md` - Final summary
-- `KEYCLOAK-FINAL-SUMMARY.md` - Comprehensive summary
+### Keycloak Implementation (Completed)
+- `KEYCLOAK-*.md` — Complete implementation docs
 
-**What was removed**:
-- NextAuth.js and Keycloak dependencies
-- Auth middleware and API routes
-- Auth UI components (signin, error pages)
-- Auth hooks and utilities
-- Keycloak admin client
-- Session management
+### Approvals Feature (Completed)
+- `APPROVALS-IMPLEMENTATION-COMPLETE.md`
+- `APPROVALS-ENHANCED-SPEC.md`
+- `APPROVALS-UI-UX.md`
 
-**What remains**:
-- Mock tenant provider for development
-- Basic tenant switching functionality
-- UI structure intact
+### Consultations Feature (Completed)
+- `CONSULTATIONS-PHASE[1-5]-COMPLETE.md` — Phase completion docs
+- `CONSULTATIONS-PHASE[2-4]-TESTING.md` — Testing guides
+- `CONSULTATIONS-PROJECT-COMPLETE.md` — Final summary
+- `CONSULTATIONS-IMPLEMENTATION*.md` — Implementation guides
+- `CONSULTATIONS-UI-REDESIGN.md` — Design iteration
+- `CONSULTATIONS-MEETING-SYSTEM.md` — Meeting system design
+- `CONSULTATIONS-VISUAL-MOCKUPS.md` — UI mockups
+- `CONSULTATIONS-QUICK-REFERENCE.md` — Reference guide
+- `CONSULTATIONS-TESTING-GUIDE.md` — Testing procedures
+- `CONSULTATIONS-REDESIGN-SUMMARY.md` — Redesign summary
+- `CONSULTATIONS-APPOINTMENTS-PLAN.md` — Appointments planning
 
-**To restore**: 
-1. Reinstall dependencies: `npm install next-auth@beta @auth/core keycloak-js`
-2. Restore files from git history (commit before removal)
-3. Follow setup guide in archived docs
-4. Configure Keycloak instance
+### Other Features (Completed/Superseded)
+- `BUTTON-AUDIT-*.md` — Button standardization work
+- `CREATE-GROUP-FEATURE.md` — Group creation (superseded by team management)
+- `ENHANCED-FILTERS.md`, `FILTER-ENHANCEMENT-SUMMARY.md` — Filter work
+- `TLDRAW-*.md` — tldraw integration details
+- `MAGICTODO-*.md` — MagicTodo integration
+- `LANDING-PAGE.md` — Landing page design
+- `WHATSAPP-SPLIT-VIEW.md` — WhatsApp UI
+- `MODERN-CHAT-UI.md` — Chat UI design
 
-**Priority**: Will be implemented in production phase after core MVP features are complete.
+### Strategy & Analysis (Historical)
+- `DOMAIN-*.md` — Domain analysis and standardization
+- `STANDARDIZATION-SUMMARY.md` — Standardization priorities
+- `INBOX-VS-OMNICHANNEL.md` — Strategic comparison
+- `OMNICHANNEL-STRATEGY.md` — Omnichannel planning
+- `OMNICHANNEL-*.md` — Omnichannel implementation guides
+- `MULTI-TENANT-CHATWOOT.md` — Chatwoot multi-tenancy
+- `LITTLEBIRD-COMPETITIVE-ANALYSIS.md` — Competitive analysis
+- `SHELL-ENHANCEMENTS.md` — Shell improvements
+- `SETUP-OPTION-1.md` — Setup guide
+- `PHASE1-ALIGNMENT.md` — Phase 1 alignment
+
+---
+
+**For active work, see [.dev-docs/README.md](../README.md)**
+
+*Last updated: 2026-01-29*

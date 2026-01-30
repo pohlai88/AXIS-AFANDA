@@ -104,7 +104,7 @@ export default function LineClampDemo() {
         <CardContent className='space-y-4'>
           <p
             className={cn(
-              'text-sm leading-relaxed transition-all duration-300',
+              'text-sm leading-relaxed transition-all duration-(--ax-motion-base)',
               isExpanded ? 'line-clamp-none' : 'line-clamp-3'
             )}
           >

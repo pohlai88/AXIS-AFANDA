@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ModernMessageThread } from '@/app/components/chat/modern-message-thread';
 import { ModernComposeBox } from '@/app/components/chat/modern-compose-box';
 import { TypingIndicator } from '@/app/components/chat/typing-indicator';
@@ -36,6 +36,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useConversationUpdates } from '@/app/hooks/use-conversation-updates';
+import { ConnectionStatusIndicator } from '@/app/components/common/connection-status-indicator';
+import { InboxStatsCards, type InboxStats } from '@/app/components/inbox/inbox-stats';
+import { ConversationListWithBulk } from '@/app/components/inbox/conversation-list-with-bulk';
 
 // Mock data
 const mockConversations = [
@@ -200,6 +204,44 @@ export default function InboxSplitPage() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [conversations, setConversations] = useState(mockConversations);
+  const [stats, setStats] = useState<InboxStats>({
+    unread: 0,
+    direct: 0,
+    groups: 0,
+    today: 0,
+  });
+
+  // Real-time updates via SSE
+  const { isConnected, error } = useConversationUpdates({
+    enabled: true,
+    showToasts: true,
+    onUpdate: (update) => {
+      console.log('Conversation update:', update);
+      // TODO: Refresh conversations list from API when updates received
+      // For now, this will show toast notifications for real-time events
+    },
+  });
+
+  // Calculate stats
+  useEffect(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const unread = conversations.filter(c => c.lastMessage.unread).length;
+    const direct = conversations.filter(c => c.type === 'direct').length;
+    const groups = conversations.filter(c => c.type === 'group').length;
+    const todayCount = conversations.filter(c => {
+      // For mock data, we'll simulate "today" messages
+      return c.lastMessage.timestamp === '2m ago' || c.lastMessage.timestamp === '15m ago';
+    }).length;
+
+    setStats({
+      unread,
+      direct,
+      groups,
+      today: todayCount,
+    });
+  }, [conversations]);
 
   const filteredConversations = conversations.filter((conv) => {
     if (filter === 'unread' && !conv.lastMessage.unread) return false;
@@ -208,6 +250,35 @@ export default function InboxSplitPage() {
     if (search && !conv.participant.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
+
+  const handleBulkMarkRead = (conversationIds: string[]) => {
+    setConversations((prev) =>
+      prev.map((c) =>
+        conversationIds.includes(c.id)
+          ? { ...c, lastMessage: { ...c.lastMessage, unread: false } }
+          : c
+      )
+    );
+    toast.success(`Marked ${conversationIds.length} conversation(s) as read`);
+  };
+
+  const handleBulkArchive = (conversationIds: string[]) => {
+    setConversations((prev) => prev.filter((c) => !conversationIds.includes(c.id)));
+    if (selectedConversation && conversationIds.includes(selectedConversation.id)) {
+      setSelectedConversation(null);
+      setMessages([]);
+    }
+    toast.success(`Archived ${conversationIds.length} conversation(s)`);
+  };
+
+  const handleBulkDelete = (conversationIds: string[]) => {
+    setConversations((prev) => prev.filter((c) => !conversationIds.includes(c.id)));
+    if (selectedConversation && conversationIds.includes(selectedConversation.id)) {
+      setSelectedConversation(null);
+      setMessages([]);
+    }
+    toast.success(`Deleted ${conversationIds.length} conversation(s)`);
+  };
 
   const handleCreateGroup = (group: {
     name: string;
@@ -288,7 +359,7 @@ export default function InboxSplitPage() {
   };
 
   return (
-    <>
+    <div className="flex h-full flex-col">
       {/* Create Group Dialog */}
       <CreateGroupDialog
         open={showCreateGroup}
@@ -296,12 +367,41 @@ export default function InboxSplitPage() {
         onCreateGroup={handleCreateGroup}
       />
 
-      <div className="flex h-full">
+      {/* Header */}
+      <div className="border-b bg-background px-6 py-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="bg-lux-gold-soft flex h-12 w-12 items-center justify-center rounded-xl">
+              <Mail className="h-6 w-6 text-lux-gold" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight">Inbox</h1>
+              <p className="text-sm text-muted-foreground">
+                Internal team communication and direct messages
+              </p>
+            </div>
+          </div>
+          <ConnectionStatusIndicator
+            isConnected={isConnected}
+            error={error}
+            showLabel
+            className="hidden sm:flex"
+          />
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-1 overflow-hidden">
         {/* Left Panel - Conversation List */}
         <div className={cn(
           "flex flex-col border-r bg-background transition-all",
           selectedConversation ? "w-80" : "w-96"
         )}>
+          {/* Stats */}
+          <div className="p-4 border-b">
+            <InboxStatsCards stats={stats} />
+          </div>
+
           {/* Header */}
           <div className="border-b px-4 py-3">
             <div className="mb-3 flex items-center justify-between">
@@ -388,78 +488,14 @@ export default function InboxSplitPage() {
                 </div>
               </div>
             ) : (
-              <div className="divide-y">
-                {filteredConversations.map((conv) => (
-                  <button
-                    key={conv.id}
-                    onClick={() => handleConversationClick(conv.id)}
-                    className={cn(
-                      'flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50',
-                      conv.lastMessage.unread && 'bg-muted/30',
-                      selectedConversation?.id === conv.id && 'bg-muted border-l-4 border-l-primary'
-                    )}
-                  >
-                    {/* Avatar */}
-                    <div className="relative">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback
-                          className={cn(
-                            conv.type === 'group' ? 'bg-primary/10 text-primary' : 'bg-muted'
-                          )}
-                        >
-                          {conv.participant.avatar}
-                        </AvatarFallback>
-                      </Avatar>
-                      {conv.type === 'direct' && (
-                        <div
-                          className={cn(
-                            'absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-background',
-                            conv.participant.status === 'online' && 'bg-green-500',
-                            conv.participant.status === 'away' && 'bg-yellow-500',
-                            conv.participant.status === 'offline' && 'bg-gray-400'
-                          )}
-                        />
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 overflow-hidden">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <h3
-                            className={cn(
-                              'text-sm font-medium',
-                              conv.lastMessage.unread && 'font-semibold'
-                            )}
-                          >
-                            {conv.participant.name}
-                          </h3>
-                          {conv.type === 'group' && (
-                            <Badge variant="secondary" className="h-4 text-[10px]">
-                              {conv.participant.memberCount}
-                            </Badge>
-                          )}
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                          {conv.lastMessage.timestamp}
-                        </span>
-                      </div>
-                      <p
-                        className={cn(
-                          'mt-0.5 truncate text-xs text-muted-foreground',
-                          conv.lastMessage.unread && 'font-medium text-foreground'
-                        )}
-                      >
-                        {conv.lastMessage.content}
-                      </p>
-                    </div>
-
-                    {/* Unread indicator */}
-                    {conv.lastMessage.unread && (
-                      <div className="mt-2 h-2 w-2 rounded-full bg-primary" />
-                    )}
-                  </button>
-                ))}
+              <div className="p-2">
+                <ConversationListWithBulk
+                  conversations={filteredConversations}
+                  onSelectConversation={(conv) => handleConversationClick(conv.id)}
+                  onMarkRead={handleBulkMarkRead}
+                  onArchive={handleBulkArchive}
+                  onDelete={handleBulkDelete}
+                />
               </div>
             )}
           </div>
@@ -481,7 +517,7 @@ export default function InboxSplitPage() {
                         </AvatarFallback>
                       </Avatar>
                       {selectedConversation.type === 'direct' && (
-                        <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-background bg-green-500" />
+                        <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-background bg-approve-fg" />
                       )}
                     </div>
 
@@ -616,7 +652,7 @@ export default function InboxSplitPage() {
                           <div>
                             <p className="text-xs font-medium text-muted-foreground">Status</p>
                             <div className="flex items-center gap-2">
-                              <div className="h-2 w-2 rounded-full bg-green-500" />
+                              <div className="h-2 w-2 rounded-full bg-approve-fg" />
                               <p className="text-sm capitalize">
                                 {selectedConversation.participant.status}
                               </p>
@@ -672,6 +708,6 @@ export default function InboxSplitPage() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
-import { AppSidebar } from "@/components/app-sidebar";
+import { ShellSidebar } from "@/app/components/shell-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { CommandPalette } from "@/app/components/command-palette";
@@ -11,7 +11,6 @@ import { ErrorBoundary } from "@/app/components/error-boundary";
 import { CommandPaletteProvider, useCommandPalette } from "@/app/hooks/use-command-palette";
 import { useActivityStream } from "@/app/hooks/use-activity-stream";
 import { ChatwootWidget } from "@/app/components/chatwoot-widget";
-import { MagicTodoTrigger } from "@/app/components/magic-todo/magic-todo-trigger";
 import { useTenant } from "@/app/providers/tenant-provider";
 import {
   defaultUser,
@@ -95,16 +94,7 @@ function AppLayoutInner({
         }
       >
         {mounted ? (
-          <AppSidebar
-            variant="inset"
-            user={defaultUser}
-            teams={teams}
-            activeTeamId={tenant?.id}
-            onTeamChange={handleTeamChange}
-            navMain={navMain}
-            projects={projects}
-            navSecondary={navSecondary}
-          />
+          <ShellSidebar />
         ) : (
           <SidebarSkeleton />
         )}
@@ -119,7 +109,6 @@ function AppLayoutInner({
       </SidebarProvider>
       <CommandPalette open={open} onOpenChange={setOpen} />
       <ChatwootWidget />
-      <MagicTodoTrigger />
     </>
   );
 }

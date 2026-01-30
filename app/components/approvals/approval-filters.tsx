@@ -95,10 +95,10 @@ const APPROVAL_TYPES = [
 
 // Priority levels
 const PRIORITY_LEVELS = [
-  { value: 'low', label: 'Low', color: 'text-muted-foreground' },
-  { value: 'medium', label: 'Medium', color: 'text-blue-600' },
-  { value: 'high', label: 'High', color: 'text-orange-600' },
-  { value: 'urgent', label: 'Urgent', color: 'text-red-600' },
+  { value: 'low', label: 'Low', color: 'text-pending-fg' },
+  { value: 'medium', label: 'Medium', color: 'text-changes-fg' },
+  { value: 'high', label: 'High', color: 'text-status-warn-fg' },
+  { value: 'urgent', label: 'Urgent', color: 'text-reject-fg' },
 ];
 
 export function ApprovalFilters({ filters, onFiltersChange, onReset }: ApprovalFiltersProps) {

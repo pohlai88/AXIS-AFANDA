@@ -47,8 +47,8 @@ export interface ChannelConfig {
 export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   whatsapp: {
     icon: MessageCircle,
-    color: 'text-green-600',
-    bgColor: 'bg-green-50 dark:bg-green-950',
+    color: 'text-approve-fg',
+    bgColor: 'bg-approve-bg',
     label: 'WhatsApp',
     placeholder: 'Type a message...',
     features: {
@@ -58,8 +58,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   email: {
     icon: Mail,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50 dark:bg-blue-950',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     label: 'Email',
     placeholder: 'Compose your reply...',
     features: {
@@ -69,8 +69,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   facebook: {
     icon: Facebook,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50 dark:bg-blue-950',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     label: 'Facebook',
     placeholder: 'Write a response...',
     features: {
@@ -80,8 +80,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   instagram: {
     icon: Instagram,
-    color: 'text-pink-600',
-    bgColor: 'bg-pink-50 dark:bg-pink-950',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     label: 'Instagram',
     placeholder: 'Write a response...',
     features: {
@@ -91,8 +91,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   tiktok: {
     icon: Music,
-    color: 'text-slate-900 dark:text-slate-100',
-    bgColor: 'bg-slate-50 dark:bg-slate-950',
+    color: 'text-foreground',
+    bgColor: 'bg-muted',
     label: 'TikTok',
     placeholder: 'Write a response...',
     features: {
@@ -102,8 +102,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   line: {
     icon: MessageSquare,
-    color: 'text-green-400',
-    bgColor: 'bg-green-50 dark:bg-green-950',
+    color: 'text-approve-fg',
+    bgColor: 'bg-approve-bg',
     label: 'LINE',
     placeholder: 'Type a message...',
     features: {
@@ -113,8 +113,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   wechat: {
     icon: MessageCircle,
-    color: 'text-green-600',
-    bgColor: 'bg-green-50 dark:bg-green-950',
+    color: 'text-approve-fg',
+    bgColor: 'bg-approve-bg',
     label: 'WeChat',
     placeholder: 'Type a message...',
     features: {
@@ -124,8 +124,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   telegram: {
     icon: Send,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-50 dark:bg-blue-950',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     label: 'Telegram',
     placeholder: 'Type a message...',
     features: {
@@ -135,8 +135,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   twitter: {
     icon: Twitter,
-    color: 'text-sky-500',
-    bgColor: 'bg-sky-50 dark:bg-sky-950',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     label: 'Twitter',
     placeholder: 'Write a response...',
     features: {
@@ -146,8 +146,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   linkedin: {
     icon: Linkedin,
-    color: 'text-blue-700',
-    bgColor: 'bg-blue-50 dark:bg-blue-950',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     label: 'LinkedIn',
     placeholder: 'Write a response...',
     features: {
@@ -157,8 +157,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   youtube: {
     icon: Youtube,
-    color: 'text-red-600',
-    bgColor: 'bg-red-50 dark:bg-red-950',
+    color: 'text-reject-fg',
+    bgColor: 'bg-reject-bg',
     label: 'YouTube',
     placeholder: 'Write a response...',
     features: {
@@ -168,8 +168,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   sms: {
     icon: Phone,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50 dark:bg-purple-950',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     label: 'SMS',
     placeholder: 'Type a message...',
     features: {
@@ -178,8 +178,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   website: {
     icon: Globe,
-    color: 'text-indigo-600',
-    bgColor: 'bg-indigo-50 dark:bg-indigo-950',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     label: 'Website',
     placeholder: 'Type a message...',
     features: {
@@ -189,8 +189,8 @@ export const CHANNEL_CONFIGS: Record<ChannelType, ChannelConfig> = {
   },
   api: {
     icon: MessageSquare,
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-50 dark:bg-gray-950',
+    color: 'text-muted-foreground',
+    bgColor: 'bg-muted',
     label: 'API',
     placeholder: 'Type a message...',
     features: {

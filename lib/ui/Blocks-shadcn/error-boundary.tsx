@@ -92,7 +92,7 @@ function DefaultErrorFallback({
         </CardHeader>
         <CardContent className='space-y-4'>
           {process.env.NODE_ENV === 'development' && error && (
-            <details className='rounded-md bg-gray-100 p-4 text-sm'>
+            <details className='rounded-md bg-muted p-4 text-sm'>
               <summary className='cursor-pointer font-mono font-semibold'>Error Details</summary>
               <pre className='mt-2 whitespace-pre-wrap text-xs'>{error.stack}</pre>
               {errorInfo && (

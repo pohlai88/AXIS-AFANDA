@@ -126,8 +126,15 @@ export class ApiClient {
     );
   }
 
-  async delete<T>(endpoint: string, schema?: z.ZodSchema<T>): Promise<T> {
-    return this.request<T>(endpoint, { method: "DELETE" }, schema);
+  async delete<T>(endpoint: string, schema?: z.ZodSchema<T>, body?: unknown): Promise<T> {
+    return this.request<T>(
+      endpoint,
+      {
+        method: "DELETE",
+        body: body ? JSON.stringify(body) : undefined,
+      },
+      schema
+    );
   }
 }
 

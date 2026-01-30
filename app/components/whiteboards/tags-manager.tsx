@@ -29,26 +29,26 @@ export interface WhiteboardTag {
 
 // Predefined tag colors
 const TAG_COLORS = [
-  { name: 'Gray', value: 'bg-gray-500' },
-  { name: 'Red', value: 'bg-red-500' },
-  { name: 'Orange', value: 'bg-orange-500' },
-  { name: 'Yellow', value: 'bg-yellow-500' },
-  { name: 'Green', value: 'bg-green-500' },
-  { name: 'Blue', value: 'bg-blue-500' },
-  { name: 'Purple', value: 'bg-purple-500' },
-  { name: 'Pink', value: 'bg-pink-500' },
+  { name: 'Gray', value: 'bg-muted-foreground' },
+  { name: 'Red', value: 'bg-reject-fg' },
+  { name: 'Orange', value: 'bg-status-warn-fg' },
+  { name: 'Yellow', value: 'bg-changes-fg' },
+  { name: 'Green', value: 'bg-approve-fg' },
+  { name: 'Blue', value: 'bg-primary' },
+  { name: 'Purple', value: 'bg-primary' },
+  { name: 'Pink', value: 'bg-primary' },
 ];
 
 // Common tag suggestions
 const SUGGESTED_TAGS = [
-  { name: 'Design', color: 'bg-purple-500' },
-  { name: 'Planning', color: 'bg-blue-500' },
-  { name: 'Brainstorm', color: 'bg-yellow-500' },
-  { name: 'Meeting', color: 'bg-green-500' },
-  { name: 'Draft', color: 'bg-gray-500' },
-  { name: 'Review', color: 'bg-orange-500' },
-  { name: 'Approved', color: 'bg-green-500' },
-  { name: 'Urgent', color: 'bg-red-500' },
+  { name: 'Design', color: 'bg-primary' },
+  { name: 'Planning', color: 'bg-primary' },
+  { name: 'Brainstorm', color: 'bg-changes-fg' },
+  { name: 'Meeting', color: 'bg-approve-fg' },
+  { name: 'Draft', color: 'bg-muted-foreground' },
+  { name: 'Review', color: 'bg-status-warn-fg' },
+  { name: 'Approved', color: 'bg-approve-fg' },
+  { name: 'Urgent', color: 'bg-reject-fg' },
 ];
 
 interface TagsManagerProps {
@@ -230,8 +230,8 @@ export function TagsManager({
                           key={color.value}
                           onClick={() => setNewTagColor(color.value)}
                           className={`h-6 w-6 rounded-full ${color.value} ${newTagColor === color.value
-                              ? 'ring-2 ring-primary ring-offset-2'
-                              : ''
+                            ? 'ring-2 ring-primary ring-offset-2'
+                            : ''
                             }`}
                           title={color.name}
                         />

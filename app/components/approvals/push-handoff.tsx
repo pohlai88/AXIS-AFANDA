@@ -35,6 +35,7 @@ import {
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { Approval } from '@/app/lib/stores/approvals-store';
+import { CompactEmptyState } from '@/app/components/common/empty-states';
 
 interface PushHandoffProps {
   approval: Approval;
@@ -102,11 +103,11 @@ export function PushHandoff({ onPush, processing = false }: PushHandoffProps) {
   const getWorkloadColor = (workload: string) => {
     switch (workload) {
       case 'low':
-        return 'text-green-600';
+        return 'text-approve-fg';
       case 'medium':
-        return 'text-yellow-600';
+        return 'text-changes-fg';
       case 'high':
-        return 'text-red-600';
+        return 'text-reject-fg';
       default:
         return 'text-muted-foreground';
     }
@@ -115,13 +116,13 @@ export function PushHandoff({ onPush, processing = false }: PushHandoffProps) {
   const getPriorityColor = (p: string) => {
     switch (p) {
       case 'urgent':
-        return 'bg-red-500/10 text-red-600 border-red-500/20';
+        return 'bg-reject-bg text-reject-fg border-reject-bd';
       case 'high':
-        return 'bg-orange-500/10 text-orange-600 border-orange-500/20';
+        return 'bg-status-warn-bg text-status-warn-fg border-status-warn-bd';
       case 'medium':
-        return 'bg-blue-500/10 text-blue-600 border-blue-500/20';
+        return 'bg-changes-bg text-changes-fg border-changes-bd';
       case 'low':
-        return 'bg-gray-500/10 text-gray-600 border-gray-500/20';
+        return 'bg-pending-bg text-pending-fg border-pending-bd';
       default:
         return '';
     }
@@ -178,9 +179,11 @@ export function PushHandoff({ onPush, processing = false }: PushHandoffProps) {
               {/* User list */}
               <div className="max-h-48 space-y-1 overflow-y-auto rounded-lg border p-2">
                 {filteredUsers.length === 0 ? (
-                  <p className="p-2 text-center text-sm text-muted-foreground">
-                    No users found
-                  </p>
+                  <CompactEmptyState
+                    icon={User}
+                    title="No users found"
+                    description="Try adjusting your search"
+                  />
                 ) : (
                   filteredUsers.map((user) => (
                     <button

@@ -6,8 +6,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { TIMING } from '@/app/lib/constants';
 
-export const runtime = 'edge';
+// Use nodejs runtime for better SSE support in development
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET handler for meeting-specific updates SSE endpoint
@@ -35,6 +38,9 @@ export async function GET(
 
     const stream = new ReadableStream({
       async start(controller) {
+        // Send initial SSE comment (helps establish connection)
+        controller.enqueue(encoder.encode(': SSE connection established\n\n'));
+
         // Send initial connection message
         const message = {
           type: 'connected',
@@ -69,7 +75,7 @@ export async function GET(
             {
               type: 'status_changed',
               data: {
-                newStatus: 'in-progress',
+                newStatus: 'in_progress',
                 previousStatus: 'scheduled',
                 timestamp: new Date().toISOString(),
               },
@@ -86,7 +92,7 @@ export async function GET(
             console.error(`[Meeting ${meetingId} SSE] Error sending update:`, error);
             clearInterval(interval);
           }
-        }, 15000); // Send update every 15 seconds
+        }, TIMING.SSE_HEARTBEAT_MS); // Send update every 15 seconds
 
         // Cleanup on disconnect
         request.signal.addEventListener('abort', () => {

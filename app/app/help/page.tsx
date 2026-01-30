@@ -11,6 +11,7 @@ import {
   FileText,
   Lightbulb,
   ExternalLink,
+  HelpCircle,
 } from 'lucide-react';
 
 const helpTopics = [
@@ -66,11 +67,16 @@ export default function HelpPage() {
       {/* Header */}
       <div className="border-b bg-background px-6 py-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Help & Documentation</h1>
-            <p className="text-sm text-muted-foreground">
-              Get help and learn how to use AXIS-AFENDA
-            </p>
+          <div className="flex items-center gap-3">
+            <div className="bg-lux-gold-soft flex h-12 w-12 items-center justify-center rounded-xl">
+              <HelpCircle className="h-6 w-6 text-lux-gold" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight">Help & Documentation</h1>
+              <p className="text-sm text-muted-foreground">
+                Get help and learn how to use AXIS-AFENDA
+              </p>
+            </div>
           </div>
         </div>
 
@@ -93,7 +99,7 @@ export default function HelpPage() {
           <div className="grid gap-4 md:grid-cols-3">
             <Card className="cursor-pointer transition-shadow hover:shadow-md">
               <CardHeader>
-                <Book className="h-8 w-8 text-blue-500" />
+                <Book className="h-8 w-8 text-primary" />
                 <CardTitle className="text-base">Documentation</CardTitle>
               </CardHeader>
               <CardContent>
@@ -109,7 +115,7 @@ export default function HelpPage() {
 
             <Card className="cursor-pointer transition-shadow hover:shadow-md">
               <CardHeader>
-                <Video className="h-8 w-8 text-green-500" />
+                <Video className="h-8 w-8 text-approve-fg" />
                 <CardTitle className="text-base">Video Tutorials</CardTitle>
               </CardHeader>
               <CardContent>
@@ -125,7 +131,7 @@ export default function HelpPage() {
 
             <Card className="cursor-pointer transition-shadow hover:shadow-md">
               <CardHeader>
-                <MessageSquare className="h-8 w-8 text-purple-500" />
+                <MessageSquare className="h-8 w-8 text-primary" />
                 <CardTitle className="text-base">Contact Support</CardTitle>
               </CardHeader>
               <CardContent>

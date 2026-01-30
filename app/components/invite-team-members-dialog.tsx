@@ -1,6 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Mail, X, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,8 +15,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -23,6 +34,15 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const inviteTeamMembersSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  role: z.enum(["member", "admin"]),
+});
+
+type InviteTeamMembersFormValues = z.infer<typeof inviteTeamMembersSchema>;
 
 interface InviteTeamMembersDialogProps {
   teamId: string;
@@ -38,18 +58,19 @@ export function InviteTeamMembersDialog({
   onSuccess,
 }: InviteTeamMembersDialogProps) {
   const [open, setOpen] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [email, setEmail] = React.useState("");
   const [emails, setEmails] = React.useState<string[]>([]);
-  const [role, setRole] = React.useState<"member" | "admin">("member");
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const form = useForm<InviteTeamMembersFormValues>({
+    resolver: zodResolver(inviteTeamMembersSchema),
+    defaultValues: {
+      email: "",
+      role: "member",
+    },
+  });
 
-  const addEmail = () => {
-    const trimmed = email.trim().toLowerCase();
-    if (!trimmed) return;
-
-    if (!emailRegex.test(trimmed)) {
+  const addEmail = (newEmail: string) => {
+    const trimmed = newEmail.trim().toLowerCase();
+    if (!trimmed || !emailRegex.test(trimmed)) {
       toast.error("Please enter a valid email address");
       return;
     }
@@ -60,7 +81,7 @@ export function InviteTeamMembersDialog({
     }
 
     setEmails([...emails, trimmed]);
-    setEmail("");
+    form.setValue("email", "");
   };
 
   const removeEmail = (emailToRemove: string) => {
@@ -68,28 +89,25 @@ export function InviteTeamMembersDialog({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.key === ",") {
+    if ((e.key === "Enter" || e.key === ",") && form.watch("email")) {
       e.preventDefault();
-      addEmail();
+      addEmail(form.watch("email"));
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (values: InviteTeamMembersFormValues) => {
     if (emails.length === 0) {
       toast.error("Please add at least one email address");
       return;
     }
 
-    setIsLoading(true);
     try {
-      // TODO: Replace with actual API call
       const response = await fetch(`/api/v1/teams/${teamId}/invitations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           emails,
-          role,
+          role: values.role,
         }),
       });
 
@@ -101,13 +119,10 @@ export function InviteTeamMembersDialog({
 
       setOpen(false);
       setEmails([]);
-      setEmail("");
-      setRole("member");
+      form.reset();
       onSuccess?.();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to send invitations");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -121,40 +136,42 @@ export function InviteTeamMembersDialog({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Invite Team Members</DialogTitle>
           <DialogDescription>
             Send invitations to join <strong>{teamName}</strong>. Invitations expire after 7 days.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email Address</Label>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <FormLabel>Email Addresses</FormLabel>
               <div className="flex gap-2">
                 <Input
-                  id="email"
-                  type="email"
                   placeholder="colleague@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={form.watch("email")}
+                  onChange={(e) => form.setValue("email", e.target.value)}
                   onKeyDown={handleKeyDown}
-                  disabled={isLoading}
+                  disabled={form.formState.isSubmitting}
                 />
-                <Button type="button" onClick={addEmail} disabled={isLoading || !email.trim()}>
+                <Button 
+                  type="button" 
+                  onClick={() => addEmail(form.watch("email"))} 
+                  disabled={form.formState.isSubmitting || !form.watch("email").trim()}
+                >
                   Add
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <FormDescription>
                 Press Enter or comma to add. You can add multiple emails.
-              </p>
+              </FormDescription>
             </div>
 
             {emails.length > 0 && (
-              <div className="grid gap-2">
-                <Label>Invitees ({emails.length})</Label>
-                <div className="flex flex-wrap gap-2 p-3 border rounded-md min-h-[60px]">
+              <div className="space-y-2">
+                <FormLabel>Invitees ({emails.length})</FormLabel>
+                <div className="flex flex-wrap gap-2 p-3 border rounded-md min-h-16">
                   {emails.map((emailAddr) => (
                     <Badge key={emailAddr} variant="secondary" className="gap-1 pr-1">
                       <Mail className="h-3 w-3" />
@@ -163,7 +180,7 @@ export function InviteTeamMembersDialog({
                         type="button"
                         onClick={() => removeEmail(emailAddr)}
                         className="ml-1 hover:bg-destructive/20 rounded-full p-0.5"
-                        disabled={isLoading}
+                        disabled={form.formState.isSubmitting}
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -173,31 +190,41 @@ export function InviteTeamMembersDialog({
               </div>
             )}
 
-            <div className="grid gap-2">
-              <Label htmlFor="role">Default Role</Label>
-              <Select value={role} onValueChange={(v) => setRole(v as "member" | "admin")} disabled={isLoading}>
-                <SelectTrigger id="role">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="member">Member</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                New members will be assigned this role. You can change it later.
-              </p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isLoading || emails.length === 0} className="btn-gold-lux">
-              {isLoading ? "Sending..." : `Send ${emails.length > 0 ? `${emails.length} ` : ""}Invitation${emails.length !== 1 ? "s" : ""}`}
-            </Button>
-          </DialogFooter>
-        </form>
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Default Role</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange} disabled={form.formState.isSubmitting}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="member">Member</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    New members will be assigned this role. You can change it later.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={form.formState.isSubmitting}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={form.formState.isSubmitting || emails.length === 0} className="btn-gold-lux">
+                {form.formState.isSubmitting ? "Sending..." : `Send ${emails.length > 0 ? `${emails.length} ` : ""}Invitation${emails.length !== 1 ? "s" : ""}`}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

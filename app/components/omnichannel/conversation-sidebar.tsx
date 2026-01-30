@@ -132,7 +132,7 @@ export function ConversationSidebar({ conversation: conv }: ConversationSidebarP
                     )}
                     {conversation.channelMetadata.email && (
                       <div className="flex items-center gap-2">
-                        <Mail className="h-3.5 w-3.5 text-blue-600" />
+                        <Mail className="h-3.5 w-3.5 text-primary" />
                         <span className="text-muted-foreground">
                           {conversation.channelMetadata.email}
                         </span>
@@ -140,7 +140,7 @@ export function ConversationSidebar({ conversation: conv }: ConversationSidebarP
                     )}
                     {conversation.channelMetadata.phone && (
                       <div className="flex items-center gap-2">
-                        <Phone className="h-3.5 w-3.5 text-purple-600" />
+                        <Phone className="h-3.5 w-3.5 text-primary" />
                         <span className="text-muted-foreground">
                           {conversation.channelMetadata.phone}
                         </span>

@@ -125,7 +125,7 @@ export default function BillingSettingsPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         {method.isDefault && (
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                          <Badge variant="outline" className="bg-approve-bg text-approve-fg border-approve-bd">
                             Default
                           </Badge>
                         )}
@@ -267,10 +267,10 @@ export default function BillingSettingsPage() {
                               variant="outline"
                               className={
                                 invoice.status === "paid"
-                                  ? "bg-green-50 text-green-700 border-green-200"
+                                  ? "bg-approve-bg text-approve-fg border-approve-bd"
                                   : invoice.status === "pending"
-                                    ? "bg-yellow-50 text-yellow-700 border-yellow-200"
-                                    : "bg-red-50 text-red-700 border-red-200"
+                                    ? "bg-status-warn-bg text-status-warn-fg border-status-warn-bd"
+                                    : "bg-reject-bg text-reject-fg border-reject-bd"
                               }
                             >
                               {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
@@ -312,7 +312,7 @@ export default function BillingSettingsPage() {
                           <p className="text-lg font-semibold">{subscription.plan}</p>
                           <p className="text-sm text-muted-foreground">{subscription.price}</p>
                         </div>
-                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                        <Badge variant="outline" className="bg-approve-bg text-approve-fg border-approve-bd">
                           Active
                         </Badge>
                       </div>
@@ -341,7 +341,7 @@ export default function BillingSettingsPage() {
                         <div className="space-y-2">
                           {subscription.features.map((feature, index) => (
                             <div key={index} className="flex items-center gap-2 text-sm">
-                              <div className="h-1.5 w-1.5 rounded-full bg-green-600" />
+                              <div className="h-1.5 w-1.5 rounded-full bg-approve-fg" />
                               <span>{feature}</span>
                             </div>
                           ))}

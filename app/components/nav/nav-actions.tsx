@@ -27,7 +27,7 @@ export function NavActions({ onSearch, ...props }: NavActionsProps) {
             >
               <Search />
               <span>Search</span>
-              <kbd className="ml-auto pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground sm:flex group-data-[collapsible=icon]:hidden">
+              <kbd className="ml-auto pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground sm:flex group-data-[collapsible=icon]:hidden">
                 ⌘K
               </kbd>
             </SidebarMenuButton>

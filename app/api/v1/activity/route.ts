@@ -6,8 +6,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { TIMING, HTTP_STATUS } from '@/app/lib/constants';
 
-export const runtime = 'edge';
+// Use nodejs runtime for better SSE support in development
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET handler for activity stream SSE endpoint
@@ -20,6 +23,9 @@ export async function GET(request: NextRequest): Promise<Response> {
 
     const stream = new ReadableStream({
       async start(controller) {
+        // Send initial SSE comment (helps establish connection)
+        controller.enqueue(encoder.encode(': SSE connection established\n\n'));
+
         // Send initial connection message
         const connectionMessage = {
           type: 'connected',
@@ -33,7 +39,8 @@ export async function GET(request: NextRequest): Promise<Response> {
           encoder.encode(`data: ${JSON.stringify(connectionMessage)}\n\n`)
         );
 
-        // Send heartbeat every 30 seconds to keep connection alive
+        // Send heartbeat every 15 seconds to keep connection alive
+        // This prevents timeouts from Next.js/proxies/browsers
         const heartbeatInterval = setInterval(() => {
           try {
             const heartbeat = {
@@ -49,7 +56,7 @@ export async function GET(request: NextRequest): Promise<Response> {
             console.error('[Activity SSE] Heartbeat error:', error);
             clearInterval(heartbeatInterval);
           }
-        }, 30000);
+        }, TIMING.SSE_HEARTBEAT_MS);
 
         // Cleanup on disconnect
         request.signal.addEventListener('abort', () => {
@@ -71,7 +78,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     console.error('[Activity SSE] Error creating stream:', error);
     return NextResponse.json(
       { error: 'Failed to create activity stream' },
-      { status: 500 }
+      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
     );
   }
 }

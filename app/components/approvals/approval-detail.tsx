@@ -134,8 +134,8 @@ export function ApprovalDetail({
                   <Badge
                     variant="outline"
                     className={cn(
-                      priority === 'urgent' && 'border-red-500 text-red-600',
-                      priority === 'high' && 'border-orange-500 text-orange-600'
+                      priority === 'urgent' && 'border-reject-bd text-reject-fg',
+                      priority === 'high' && 'border-status-warn-bd text-status-warn-fg'
                     )}
                   >
                     {priority === 'urgent' && <AlertTriangle className="mr-1 h-3 w-3" />}
@@ -438,8 +438,8 @@ export function ApprovalDetail({
 
                         {/* Future */}
                         {event.futureState && (
-                          <div className="rounded-lg bg-blue-500/10 p-2">
-                            <p className="text-xs font-medium text-blue-600">Future</p>
+                          <div className="rounded-lg bg-changes-bg p-2">
+                            <p className="text-xs font-medium text-changes-fg">Future</p>
                             <div className="space-y-1 text-xs">
                               {event.futureState.predictedCompletion && (
                                 <p>

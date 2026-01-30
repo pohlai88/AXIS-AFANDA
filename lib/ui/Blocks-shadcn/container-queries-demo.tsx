@@ -239,7 +239,7 @@ export default function ContainerQueriesDemo() {
             className='bg-card overflow-hidden rounded-lg border border-border shadow-lg'
           >
             <div className='@container/article'>
-              <div className='h-32 bg-gradient-to-r from-purple-500 to-pink-500'></div>
+              <div className='h-32 bg-linear-to-r from-purple-500 to-pink-500'></div>
               <div className='p-4'>
                 <div className='@xs/article:space-y-2 @sm/article:space-y-3'>
                   <h3 className='font-bold @xs/article:text-base @md/article:text-lg'>
@@ -474,14 +474,14 @@ export default function ContainerQueriesDemo() {
             <h3 className='text-lg font-semibold'>Container Animations</h3>
             <Container name='animated' className='bg-card rounded-lg border border-border p-6'>
               <div className='@container/animated'>
-                <div className='transition-transform duration-300 @xs/animated:scale-95 @sm/animated:scale-100 @md/animated:scale-105 @lg/animated:scale-110'>
+                <div className='transition-transform duration-(--ax-motion-base) @xs/animated:scale-95 @sm/animated:scale-100 @md/animated:scale-105 @lg/animated:scale-110'>
                   <h4 className='mb-3 font-bold @xs/animated:text-base @md/animated:text-lg'>
                     Animated Content
                   </h4>
                   <p className='text-muted-foreground @xs/animated:text-xs @md/animated:text-sm'>
                     Scale changes based on container size
                   </p>
-                  <div className='mt-3 h-2 rounded-full @xs/animated:bg-gradient-to-r @xs/animated:from-blue-500 @xs/animated:to-purple-500 @md/animated:from-green-500 @md/animated:to-blue-500'></div>
+                  <div className='mt-3 h-2 rounded-full @xs/animated:bg-linear-to-r @xs/animated:from-blue-500 @xs/animated:to-purple-500 @md/animated:from-green-500 @md/animated:to-blue-500'></div>
                 </div>
               </div>
             </Container>

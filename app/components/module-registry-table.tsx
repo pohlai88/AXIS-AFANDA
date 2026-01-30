@@ -21,6 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Module } from "@/app/lib/module-registry";
+import { EmptyState } from "@/app/components/common/empty-states";
 import {
   LayoutDashboard,
   Inbox,
@@ -126,9 +127,9 @@ export function ModuleRegistryTable({ data }: { data: Module[] }) {
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                 </TableHead>
               ))}
             </TableRow>
@@ -147,8 +148,12 @@ export function ModuleRegistryTable({ data }: { data: Module[] }) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No modules found.
+              <TableCell colSpan={columns.length} className="p-8">
+                <EmptyState
+                  icon={LayoutDashboard}
+                  title="No modules found"
+                  description="No modules are available in the registry."
+                />
               </TableCell>
             </TableRow>
           )}

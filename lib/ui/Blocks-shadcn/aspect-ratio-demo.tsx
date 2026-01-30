@@ -154,7 +154,7 @@ export default function AspectRatioDemo() {
                   <img
                     src={`https://via.placeholder.com/400x400/${color}/FFFFFF?text=Image+${i + 1}`}
                     alt={`Gallery image ${i + 1}`}
-                    className='h-full w-full rounded-lg border-2 border-border object-cover transition-transform duration-200 group-hover:scale-105'
+                    className='h-full w-full rounded-lg border-2 border-border object-cover transition-transform duration-(--ax-motion-fast) group-hover:scale-105'
                   />
                 </AspectRatio>
                 <p className='mt-1 text-center text-xs text-muted-foreground'>Image {i + 1}</p>
@@ -295,7 +295,7 @@ export default function AspectRatioDemo() {
           <div className='space-y-2'>
             <h3 className='text-lg font-semibold'>Gradient Background</h3>
             <AspectRatio ratio={16 / 9}>
-              <div className='flex h-full w-full items-center justify-center rounded-lg border-2 border-border bg-gradient-to-br from-blue-500 to-purple-600'>
+              <div className='flex h-full w-full items-center justify-center rounded-lg border-2 border-border bg-linear-to-br from-blue-500 to-purple-600'>
                 <div className='text-center text-white'>
                   <h4 className='mb-2 text-xl font-bold'>Gradient Content</h4>
                   <p>Beautiful gradient background</p>

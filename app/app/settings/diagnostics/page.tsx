@@ -223,60 +223,60 @@ export default function DiagnosticsSettingsPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-approve-fg" />
                       <Label>Database Connection</Label>
                     </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    <Badge variant="outline" className="bg-approve-bg text-approve-fg border-approve-bd">
                       Healthy
                     </Badge>
                   </div>
 
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-approve-fg" />
                       <Label>Redis Connection</Label>
                     </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    <Badge variant="outline" className="bg-approve-bg text-approve-fg border-approve-bd">
                       Healthy
                     </Badge>
                   </div>
 
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-approve-fg" />
                       <Label>Keycloak Integration</Label>
                     </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    <Badge variant="outline" className="bg-approve-bg text-approve-fg border-approve-bd">
                       Connected
                     </Badge>
                   </div>
 
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-approve-fg" />
                       <Label>Orchestrator API</Label>
                     </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    <Badge variant="outline" className="bg-approve-bg text-approve-fg border-approve-bd">
                       Online
                     </Badge>
                   </div>
 
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                      <AlertTriangle className="h-5 w-5 text-status-warn-fg" />
                       <Label>Jitsi Server</Label>
                     </div>
-                    <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                    <Badge variant="outline" className="bg-status-warn-bg text-status-warn-fg border-status-warn-bd">
                       Warning
                     </Badge>
                   </div>
 
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-approve-fg" />
                       <Label>Chatwoot Integration</Label>
                     </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    <Badge variant="outline" className="bg-approve-bg text-approve-fg border-approve-bd">
                       Connected
                     </Badge>
                   </div>
@@ -743,7 +743,7 @@ export default function DiagnosticsSettingsPage() {
                       <Label className="font-medium">Database Status</Label>
                       <p className="text-xs text-muted-foreground">PostgreSQL 16.2</p>
                     </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    <Badge variant="outline" className="bg-approve-bg text-approve-fg border-approve-bd">
                       Connected
                     </Badge>
                   </div>
@@ -761,7 +761,7 @@ export default function DiagnosticsSettingsPage() {
                       <Label className="font-medium">Pending Migrations</Label>
                       <p className="text-xs text-muted-foreground">0 pending</p>
                     </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    <Badge variant="outline" className="bg-approve-bg text-approve-fg border-approve-bd">
                       Up to date
                     </Badge>
                   </div>
@@ -854,7 +854,7 @@ export default function DiagnosticsSettingsPage() {
                         <Badge variant="outline">12/100</Badge>
                       </div>
                       <div className="h-2 bg-muted rounded-full overflow-hidden">
-                        <div className="h-full bg-green-600" style={{ width: '12%' }} />
+                        <div className="h-full bg-approve-fg" style={{ width: '12%' }} />
                       </div>
                     </div>
 
@@ -864,7 +864,7 @@ export default function DiagnosticsSettingsPage() {
                         <Badge variant="outline">2.4 GB</Badge>
                       </div>
                       <div className="h-2 bg-muted rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-600" style={{ width: '48%' }} />
+                        <div className="h-full bg-primary" style={{ width: '48%' }} />
                       </div>
                     </div>
                   </div>
@@ -898,7 +898,7 @@ export default function DiagnosticsSettingsPage() {
                       <Badge variant="outline">45%</Badge>
                     </div>
                     <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-blue-600" style={{ width: '45%' }} />
+                      <div className="h-full bg-primary" style={{ width: '45%' }} />
                     </div>
                   </div>
 
@@ -908,7 +908,7 @@ export default function DiagnosticsSettingsPage() {
                       <Badge variant="outline">62%</Badge>
                     </div>
                     <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-green-600" style={{ width: '62%' }} />
+                      <div className="h-full bg-approve-fg" style={{ width: '62%' }} />
                     </div>
                   </div>
 
@@ -918,7 +918,7 @@ export default function DiagnosticsSettingsPage() {
                       <Badge variant="outline">38%</Badge>
                     </div>
                     <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-yellow-600" style={{ width: '38%' }} />
+                      <div className="h-full bg-status-warn-fg" style={{ width: '38%' }} />
                     </div>
                   </div>
 
@@ -928,7 +928,7 @@ export default function DiagnosticsSettingsPage() {
                       <Badge variant="outline">1.2 MB/s</Badge>
                     </div>
                     <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-purple-600" style={{ width: '30%' }} />
+                      <div className="h-full bg-primary" style={{ width: '30%' }} />
                     </div>
                   </div>
                 </div>

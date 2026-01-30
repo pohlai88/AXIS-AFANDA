@@ -26,6 +26,7 @@ import {
 import { format, formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { Approval } from '@/app/lib/stores/approvals-store';
+import { NoApprovalsState } from '@/app/components/common/empty-states';
 
 interface ApprovalListProps {
   approvals: Approval[];
@@ -71,12 +72,12 @@ const TYPE_LABELS: Record<string, string> = {
   access_request: 'Access Request',
 };
 
-// Priority config
+// Priority config - uses semantic tokens from design system
 const PRIORITY_CONFIG = {
-  low: { label: 'Low', className: 'text-muted-foreground', icon: undefined },
-  medium: { label: 'Medium', className: 'text-blue-600', icon: undefined },
-  high: { label: 'High', className: 'text-orange-600', icon: undefined },
-  urgent: { label: 'Urgent', className: 'text-red-600', icon: AlertTriangle },
+  low: { label: 'Low', className: 'text-pending-fg', icon: undefined },
+  medium: { label: 'Medium', className: 'text-changes-fg', icon: undefined },
+  high: { label: 'High', className: 'text-status-warn-fg', icon: undefined },
+  urgent: { label: 'Urgent', className: 'text-reject-fg', icon: AlertTriangle },
 };
 
 export function ApprovalList({
@@ -98,17 +99,7 @@ export function ApprovalList({
   }
 
   if (approvals.length === 0) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-center">
-          <Clock className="mx-auto h-12 w-12 text-muted-foreground/50" />
-          <h3 className="mt-4 text-lg font-semibold">No approvals</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            No approval requests match your filters
-          </p>
-        </div>
-      </div>
-    );
+    return <NoApprovalsState />;
   }
 
   return (
@@ -126,7 +117,7 @@ export function ApprovalList({
             {priority && ['high', 'urgent'].includes(priority) && (
               <div className={cn(
                 'absolute left-0 top-0 h-full w-1',
-                priority === 'urgent' ? 'bg-red-500' : 'bg-orange-500'
+                priority === 'urgent' ? 'bg-destructive' : 'bg-status-warn-fg'
               )} />
             )}
 

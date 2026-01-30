@@ -1,0 +1,187 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  /* Custom radius values */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Color mappings for shadcn compatibility */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Luxury theme colors */
+  --color-luxury: var(--yellow-500);
+  --color-luxury-foreground: var(--yellow-900);
+  --color-luxury-accent: var(--orange-500);
+
+  /* Approval status colors */
+  --color-approve-bg: var(--approve-bg);
+  --color-approve-fg: var(--approve-fg);
+  --color-approve-bd: var(--approve-bd);
+  --color-reject-bg: var(--reject-bg);
+  --color-reject-fg: var(--reject-fg);
+  --color-reject-bd: var(--reject-bd);
+  --color-status-warn-bg: var(--status-warn-bg);
+  --color-status-warn-fg: var(--status-warn-fg);
+  --color-changes-bg: var(--changes-bg);
+  --color-changes-fg: var(--changes-fg);
+}
+
+/* Custom variants */
+@custom-variant dark (&:is(.dark *));
+@custom-variant luxury (&:where(.luxury *));
+
+/* Light theme */
+:root {
+  --radius: 0.625rem;
+
+  /* Core colors using OKLCH */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.97 0.01 17);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+
+  /* Luxury theme colors */
+  --yellow-50: oklch(0.985 0.014 95);
+  --yellow-500: oklch(0.825 0.189 85);
+  --yellow-900: oklch(0.275 0.075 85);
+  --orange-500: oklch(0.705 0.185 45);
+
+  /* Approval status colors */
+  --approve-bg: oklch(0.945 0.085 145);
+  --approve-fg: oklch(0.205 0.085 145);
+  --approve-bd: oklch(0.825 0.085 145);
+  --reject-bg: oklch(0.945 0.085 15);
+  --reject-fg: oklch(0.205 0.085 15);
+  --reject-bd: oklch(0.825 0.085 15);
+  --status-warn-bg: oklch(0.965 0.085 65);
+  --status-warn-fg: oklch(0.255 0.085 65);
+  --changes-bg: oklch(0.945 0.085 245);
+  --changes-fg: oklch(0.205 0.085 245);
+}
+
+/* Dark theme */
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.269 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.371 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.58 0.22 27);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+
+  /* Dark luxury colors */
+  --yellow-50: oklch(0.985 0.014 95);
+  --yellow-500: oklch(0.825 0.189 85);
+  --yellow-900: oklch(0.275 0.075 85);
+  --orange-500: oklch(0.705 0.185 45);
+}
+
+/* Base styles */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+
+  /* Improved focus styles */
+  :focus-visible {
+    @apply focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px];
+  }
+}
+
+/* Luxury utilities */
+@utility btn-gold-lux {
+  @apply bg-linear-to-r from-yellow-500 to-yellow-400 text-yellow-900 hover:from-yellow-600 hover:to-yellow-500;
+  @apply shadow-md shadow-yellow-500/25 hover:shadow-lg hover:shadow-yellow-500/30;
+  @apply font-semibold;
+}
+
+@utility card-glow-lux {
+  @apply relative overflow-hidden rounded-xl;
+  &::before {
+    @apply content-[''] absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-yellow-500/20 to-transparent;
+  }
+  &:hover {
+    @apply shadow-lg shadow-yellow-500/5 transition-shadow;
+  }
+}
+
+@utility text-hero-lux {
+  @apply text-4xl font-bold tracking-tight bg-linear-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent;
+}
+
+@utility text-hero-sub-lux {
+  @apply text-xl text-muted-foreground;
+}
+
+/* Component-specific styles */
+@layer components {
+  /* Data slot styles for better component targeting */
+  [data-slot="button"] {
+    @apply transition-all duration-200;
+  }
+
+  [data-slot="card"] {
+    @apply transition-all duration-200;
+  }
+
+  [data-slot="empty-state"] {
+    @apply animate-in fade-in-0 duration-300;
+  }
+}

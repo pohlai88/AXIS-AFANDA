@@ -169,7 +169,7 @@ export default function ApprovalDetailPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-6">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-[var(--layout-container-narrow)]">
           <ApprovalDetail
             approval={approval}
             onApprove={approval.status === 'submitted' ? handleApprove : undefined}

@@ -150,7 +150,7 @@ export function CreateGroupDialog({
     setSelectedMembers([]);
     setStep('details');
     onOpenChange(false);
-    
+
     toast.success(`Group "${groupName}" created successfully!`);
   };
 
@@ -274,7 +274,7 @@ export function CreateGroupDialog({
             </div>
 
             {/* Member List */}
-            <ScrollArea className="h-[300px] rounded-lg border">
+            <ScrollArea className="h-80 rounded-lg border">
               <div className="divide-y">
                 {filteredMembers.length === 0 ? (
                   <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">
@@ -302,17 +302,16 @@ export function CreateGroupDialog({
                             </AvatarFallback>
                           </Avatar>
                           <div
-                            className={`absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-background ${
-                              member.status === 'online'
-                                ? 'bg-green-500'
-                                : 'bg-yellow-500'
-                            }`}
+                            className={`absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-background ${member.status === 'online'
+                                ? 'bg-approve-fg'
+                                : 'bg-status-warn-fg'
+                              }`}
                           />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <p className="text-sm font-medium">{member.name}</p>
-                            <Badge variant="outline" className="h-4 text-[10px]">
+                            <Badge variant="outline" className="h-4 text-xs">
                               {member.department}
                             </Badge>
                           </div>

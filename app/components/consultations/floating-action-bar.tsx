@@ -37,8 +37,8 @@ export function FloatingActionBar({
   if (!meeting) return null;
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom duration-300">
-      <Card className="bg-lux-surface/95 backdrop-blur-lg shadow-lux-strong border-lux min-w-[400px] max-w-[600px]">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom duration-[var(--ax-motion-base)]">
+      <Card className="bg-lux-surface/95 backdrop-blur-lg shadow-lux-strong border-lux min-w-96 max-w-[37.5rem]">
         <CardContent className="p-4 flex items-center gap-4">
           {/* Meeting Icon */}
           <Avatar className="h-10 w-10 shrink-0">

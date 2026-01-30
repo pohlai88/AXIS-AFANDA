@@ -19,14 +19,21 @@ import {
   MessageCircle,
   PanelRightClose,
   PanelRightOpen,
+  Users2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useConversationUpdates } from '@/app/hooks/use-conversation-updates';
+import { ConnectionStatusIndicator } from '@/app/components/common/connection-status-indicator';
+import { OmnichannelStatsCards, type OmnichannelStats } from '@/app/components/omnichannel/omnichannel-stats';
+import { OmnichannelConversationListWithBulk } from '@/app/components/omnichannel/conversation-list-with-bulk';
+import { bulkDeleteConversations, bulkUpdateConversations } from '@/app/lib/api/conversations';
 
 export default function OmnichannelSplitPage() {
   const {
     conversations,
     setConversations,
+    updateConversation,
     selectedConversation,
     selectConversation,
     messages,
@@ -41,6 +48,37 @@ export default function OmnichannelSplitPage() {
   const [isTyping] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [stats, setStats] = useState<OmnichannelStats>({
+    open: 0,
+    assigned: 0,
+    urgent: 0,
+    avgResponseTime: 15, // Mock average response time in minutes
+  });
+
+  // Real-time updates via SSE
+  const { isConnected, error } = useConversationUpdates({
+    enabled: true,
+    showToasts: true,
+    onUpdate: (update) => {
+      console.log('Omnichannel conversation update:', update);
+      // Refresh conversations list when updates received
+      fetchConversations();
+    },
+  });
+
+  // Calculate stats
+  useEffect(() => {
+    const open = conversations.filter(c => c.status === 'open').length;
+    const assigned = conversations.filter(c => c.assigneeId).length;
+    const urgent = conversations.filter(c => c.priority === 'urgent').length;
+
+    setStats({
+      open,
+      assigned,
+      urgent,
+      avgResponseTime: 15, // Mock value - would be calculated from actual response times
+    });
+  }, [conversations]);
 
   // Fetch conversations
   const fetchConversations = useCallback(async () => {
@@ -191,192 +229,332 @@ export default function OmnichannelSplitPage() {
   // Empty state
   const showEmptyState = !loading && conversations.length === 0 && !search;
 
+  const bulkConversations = conversations.map((c) => {
+    const channelType = (c as unknown as Record<string, unknown> | null)?.channelType as string | undefined;
+    const channel = channelType?.includes('email')
+      ? 'email'
+      : channelType?.includes('phone')
+        ? 'phone'
+        : channelType?.includes('facebook') || channelType?.includes('instagram') || channelType?.includes('twitter')
+          ? 'social'
+          : 'chat';
+
+    const status = c.status === 'pending'
+      ? 'pending'
+      : c.status === 'resolved' || c.status === 'closed'
+        ? 'closed'
+        : 'open';
+
+    const priority = (c.priority === 'urgent' || c.priority === 'high' || c.priority === 'medium' || c.priority === 'low')
+      ? c.priority
+      : 'medium';
+
+    return {
+      id: c.id,
+      customer: {
+        name: c.contactName || 'Unknown',
+        email: c.contactEmail,
+      },
+      channel,
+      status,
+      priority,
+      assigneeId: c.assigneeId ? String(c.assigneeId) : undefined,
+      assigneeName: c.assigneeName,
+      lastMessage: {
+        content: c.contactEmail ? `Conversation with ${c.contactEmail}` : 'Conversation updated',
+        timestamp: c.lastMessageAt ? new Date(c.lastMessageAt).toLocaleString() : 'Just now',
+      },
+      tags: c.labels,
+      unreadCount: c.unreadCount,
+    };
+  });
+
+  const handleBulkAssign = (conversationIds: string[], assigneeId: string) => {
+    const assigneeName =
+      assigneeId === 'user-1'
+        ? 'John Doe'
+        : assigneeId === 'user-2'
+          ? 'Jane Smith'
+          : assigneeId === 'unassigned'
+            ? undefined
+            : `User ${assigneeId}`;
+
+    bulkUpdateConversations(conversationIds, {
+      assigneeId: assigneeId === 'unassigned' ? null : Number(assigneeId) || null,
+      assigneeName: assigneeName ?? null,
+    })
+      .then(() => {
+        toast.success(`Assigned ${conversationIds.length} conversation(s)`);
+        fetchConversations();
+      })
+      .catch((error) => {
+        console.error('Bulk assign failed:', error);
+        toast.error('Bulk assign failed');
+      });
+  };
+
+  const handleBulkAddTags = (conversationIds: string[], tags: string[]) => {
+    bulkUpdateConversations(conversationIds, {
+      labelsOp: { op: 'add', labels: tags },
+    })
+      .then(() => {
+        toast.success(`Tagged ${conversationIds.length} conversation(s)`);
+        fetchConversations();
+      })
+      .catch((error) => {
+        console.error('Bulk tag failed:', error);
+        toast.error('Bulk tag failed');
+      });
+  };
+
+  const handleBulkArchive = (conversationIds: string[]) => {
+    bulkUpdateConversations(conversationIds, { status: 'resolved' })
+      .then(() => {
+        toast.success(`Archived ${conversationIds.length} conversation(s)`);
+        fetchConversations();
+      })
+      .catch((error) => {
+        console.error('Bulk archive failed:', error);
+        toast.error('Bulk archive failed');
+      });
+  };
+
+  const handleBulkDelete = (conversationIds: string[]) => {
+    bulkDeleteConversations(conversationIds)
+      .then(() => {
+        if (selectedConversation && conversationIds.includes(selectedConversation.id)) {
+          selectConversation(null);
+        }
+        toast.success(`Deleted ${conversationIds.length} conversation(s)`);
+        fetchConversations();
+      })
+      .catch((error) => {
+        console.error('Bulk delete failed:', error);
+        toast.error('Bulk delete failed');
+      });
+  };
+
   return (
-    <div className="flex h-full">
-      {/* Left Panel - Conversation List */}
-      <div className={cn(
-        "flex flex-col border-r bg-background transition-all",
-        selectedConversation ? "w-80" : "w-96"
-      )}>
-        {/* Header */}
-        <div className="border-b px-4 py-3">
-          <div className="mb-3">
-            <h1 className="text-lg font-semibold">Omnichannel</h1>
-            <p className="text-xs text-muted-foreground">
-              {conversations.length} conversations
-            </p>
-          </div>
-
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search conversations..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-9 pl-9"
-            />
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="border-b px-4 py-2">
-          <InboxFilters filters={filters} onFiltersChange={setFilters} />
-        </div>
-
-        {/* Conversation List */}
-        <div className="flex-1 overflow-auto">
-          {loading ? (
-            <div className="flex h-full items-center justify-center">
-              <div className="text-center">
-                <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-                <p className="mt-2 text-sm text-muted-foreground">Loading...</p>
-              </div>
+    <div className="flex h-full flex-col">
+      {/* Header */}
+      <div className="border-b bg-background px-6 py-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="bg-lux-gold-soft flex h-12 w-12 items-center justify-center rounded-xl">
+              <Users2 className="h-6 w-6 text-lux-gold" />
             </div>
-          ) : showEmptyState ? (
-            <div className="flex h-full items-center justify-center p-6">
-              <div className="text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                  <MessageCircle className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="font-semibold">No conversations yet</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Connect your channels to start
-                </p>
-                <Button className="mt-4" size="sm" onClick={() => window.location.href = '/app/omnichannel/setup'}>
-                  Setup Channels
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <ConversationList
-              conversations={conversations}
-              onConversationClick={handleConversationClick}
-              selectedId={selectedConversation?.id}
-            />
-          )}
-        </div>
-
-        {/* Refresh Button */}
-        <div className="border-t p-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full"
-            onClick={fetchConversations}
-            disabled={loading}
-          >
-            <RefreshCw className={cn("mr-2 h-4 w-4", loading && "animate-spin")} />
-            Refresh
-          </Button>
-        </div>
-      </div>
-
-      {/* Right Panel - Conversation Detail */}
-      <div className="flex flex-1 flex-col">
-        {selectedConversation ? (
-          <>
-            {/* Chat Header */}
-            <div className="border-b bg-background px-4 py-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {/* Avatar */}
-                  <Avatar className="h-9 w-9">
-                    <AvatarFallback className="bg-primary/10 text-sm">
-                      {selectedConversation.contactName?.charAt(0).toUpperCase() || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-
-                  {/* Info */}
-                  <div>
-                    <h2 className="text-sm font-semibold">
-                      {selectedConversation.contactName || 'Unknown'}
-                    </h2>
-                    <p className="text-xs text-muted-foreground">
-                      {selectedConversation.contactEmail}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-1">
-                  <ConversationActions conversation={selectedConversation} />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => setShowSidebar(!showSidebar)}
-                  >
-                    {showSidebar ? (
-                      <PanelRightClose className="h-4 w-4" />
-                    ) : (
-                      <PanelRightOpen className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Message Thread */}
-            <div className="flex flex-1 overflow-hidden">
-              <div className="flex-1 overflow-auto bg-muted/20">
-                {loadingMessages ? (
-                  <div className="flex h-full items-center justify-center">
-                    <div className="text-center">
-                      <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-                      <p className="mt-2 text-sm text-muted-foreground">Loading messages...</p>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <ModernMessageThread
-                      messages={conversationMessages}
-                      onReaction={handleReaction}
-                      onReply={handleReply}
-                    />
-                    {/* Typing Indicator */}
-                    {isTyping && (
-                      <TypingIndicator
-                        userName={selectedConversation.contactName || 'Customer'}
-                        userInitial={selectedConversation.contactName?.charAt(0)}
-                      />
-                    )}
-                  </>
-                )}
-              </div>
-
-              {/* Sidebar */}
-              {showSidebar && (
-                <div className="w-80 border-l bg-background">
-                  <ConversationSidebar conversation={selectedConversation} />
-                </div>
-              )}
-            </div>
-
-            {/* Compose Box */}
-            <ModernComposeBox
-              onSend={handleSendMessage}
-              sending={sending}
-              channelType={(selectedConversation as unknown as Record<string, unknown> | null)?.channelType as string || 'web'}
-              placeholder="Type a message..."
-              showPrivateToggle={true}
-              showChannelBadge={true}
-            />
-          </>
-        ) : (
-          /* No Conversation Selected */
-          <div className="flex h-full items-center justify-center bg-muted/10">
-            <div className="text-center">
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-                <MessageCircle className="h-10 w-10 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold">Select a conversation</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Choose a conversation from the list to start chatting
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight">Omnichannel</h1>
+              <p className="text-sm text-muted-foreground">
+                Customer conversations across all channels
               </p>
             </div>
           </div>
-        )}
+          <ConnectionStatusIndicator
+            isConnected={isConnected}
+            error={error}
+            showLabel
+            className="hidden sm:flex"
+          />
+        </div>
+
+        {/* Stats */}
+        <div className="mt-4">
+          <OmnichannelStatsCards stats={stats} loading={loading} />
+        </div>
+      </div>
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Panel - Conversation List */}
+        <div className={cn(
+          "flex flex-col border-r bg-background transition-all",
+          selectedConversation ? "w-80" : "w-96"
+        )}>
+          {/* Header */}
+          <div className="border-b px-4 py-3">
+            <div className="mb-3">
+              <h1 className="text-lg font-semibold">Omnichannel</h1>
+              <p className="text-xs text-muted-foreground">
+                {conversations.length} conversations
+              </p>
+            </div>
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search conversations..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="h-9 pl-9"
+              />
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div className="border-b px-4 py-2">
+            <InboxFilters filters={filters} onFiltersChange={setFilters} />
+          </div>
+
+          {/* Conversation List */}
+          <div className="flex-1 overflow-auto">
+            {loading ? (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center">
+                  <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                  <p className="mt-2 text-sm text-muted-foreground">Loading...</p>
+                </div>
+              </div>
+            ) : showEmptyState ? (
+              <div className="flex h-full items-center justify-center p-6">
+                <div className="text-center">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+                    <MessageCircle className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                  <h3 className="font-semibold">No conversations yet</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Connect your channels to start
+                  </p>
+                  <Button className="mt-4" size="sm" onClick={() => window.location.href = '/app/omnichannel/setup'}>
+                    Setup Channels
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="p-2">
+                <OmnichannelConversationListWithBulk
+                  conversations={bulkConversations}
+                  onSelectConversation={(conv) => handleConversationClick(conv.id)}
+                  onAssign={handleBulkAssign}
+                  onAddTags={handleBulkAddTags}
+                  onArchive={handleBulkArchive}
+                  onDelete={handleBulkDelete}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Refresh Button */}
+          <div className="border-t p-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full"
+              onClick={fetchConversations}
+              disabled={loading}
+            >
+              <RefreshCw className={cn("mr-2 h-4 w-4", loading && "animate-spin")} />
+              Refresh
+            </Button>
+          </div>
+        </div>
+
+        {/* Right Panel - Conversation Detail */}
+        <div className="flex flex-1 flex-col">
+          {selectedConversation ? (
+            <>
+              {/* Chat Header */}
+              <div className="border-b bg-background px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {/* Avatar */}
+                    <Avatar className="h-9 w-9">
+                      <AvatarFallback className="bg-primary/10 text-sm">
+                        {selectedConversation.contactName?.charAt(0).toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    {/* Info */}
+                    <div>
+                      <h2 className="text-sm font-semibold">
+                        {selectedConversation.contactName || 'Unknown'}
+                      </h2>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedConversation.contactEmail}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-1">
+                    <ConversationActions conversation={selectedConversation} />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setShowSidebar(!showSidebar)}
+                    >
+                      {showSidebar ? (
+                        <PanelRightClose className="h-4 w-4" />
+                      ) : (
+                        <PanelRightOpen className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Message Thread */}
+              <div className="flex flex-1 overflow-hidden">
+                <div className="flex-1 overflow-auto bg-muted/20">
+                  {loadingMessages ? (
+                    <div className="flex h-full items-center justify-center">
+                      <div className="text-center">
+                        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                        <p className="mt-2 text-sm text-muted-foreground">Loading messages...</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <ModernMessageThread
+                        messages={conversationMessages}
+                        onReaction={handleReaction}
+                        onReply={handleReply}
+                      />
+                      {/* Typing Indicator */}
+                      {isTyping && (
+                        <TypingIndicator
+                          userName={selectedConversation.contactName || 'Customer'}
+                          userInitial={selectedConversation.contactName?.charAt(0)}
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {/* Sidebar */}
+                {showSidebar && (
+                  <div className="w-80 border-l bg-background">
+                    <ConversationSidebar conversation={selectedConversation} />
+                  </div>
+                )}
+              </div>
+
+              {/* Compose Box */}
+              <ModernComposeBox
+                onSend={handleSendMessage}
+                sending={sending}
+                channelType={(selectedConversation as unknown as Record<string, unknown> | null)?.channelType as string || 'web'}
+                placeholder="Type a message..."
+                showPrivateToggle={true}
+                showChannelBadge={true}
+              />
+            </>
+          ) : (
+            /* No Conversation Selected */
+            <div className="flex h-full items-center justify-center bg-muted/10">
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+                  <MessageCircle className="h-10 w-10 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold">Select a conversation</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Choose a conversation from the list to start chatting
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

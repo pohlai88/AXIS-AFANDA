@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageSquare, User } from 'lucide-react';
 import type { Conversation } from '@/app/lib/stores/conversations-store';
+import { NoConversationsState } from '@/app/components/common/empty-states';
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -29,17 +30,7 @@ export function ConversationList({
   }
 
   if (conversations.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-center">
-          <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground/50" />
-          <h3 className="mt-4 text-lg font-semibold">No conversations</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            No conversations match your filters
-          </p>
-        </div>
-      </div>
-    );
+    return <NoConversationsState />;
   }
 
   return (

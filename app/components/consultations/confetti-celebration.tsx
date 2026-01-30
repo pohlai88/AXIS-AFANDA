@@ -41,7 +41,12 @@ export function celebrateWithConfetti(options?: {
       particleCount: options?.particleCount || 100,
       spread: options?.spread || 70,
       origin: options?.origin || { y: 0.6 },
-      colors: options?.colors || ['#D4AF37', '#FFD700', '#FFA500', '#FFFFFF'],
+      colors: options?.colors || [
+        'hsl(var(--primary))',
+        'hsl(var(--primary) / 0.9)',
+        'hsl(var(--primary) / 0.75)',
+        'hsl(var(--background))',
+      ],
       ticks: 200,
       gravity: 1,
       scalar: 1.2,
@@ -54,7 +59,11 @@ export function celebrateWithConfetti(options?: {
 }
 
 function createCSSConfetti() {
-  const colors = ['#D4AF37', '#FFD700', '#FFA500'];
+  const colors = [
+    'hsl(var(--primary))',
+    'hsl(var(--primary) / 0.9)',
+    'hsl(var(--primary) / 0.75)',
+  ];
   const particleCount = 30;
 
   for (let i = 0; i < particleCount; i++) {

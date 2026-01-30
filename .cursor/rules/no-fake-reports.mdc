@@ -1,0 +1,100 @@
+---
+description: Never write fake completion reports - verify actual functionality before claiming success
+alwaysApply: true
+---
+
+# No Fake Reports - Honesty Protocol
+
+## Golden Rule
+
+**If you cannot verify it works, do NOT claim it works.**
+
+---
+
+## Forbidden Patterns
+
+### ❌ NEVER Write Without Verification
+
+```markdown
+❌ "✅ COMPLETE - All working perfectly!"
+❌ "✅ Shimmer effect applied and visible"
+❌ "✅ Zero issues found"
+❌ "✅ Production ready"
+❌ "Mission accomplished!"
+```
+
+**These require ACTUAL testing, not code inspection.**
+
+---
+
+## Required Patterns
+
+### ✅ ALWAYS Be Explicit About Verification Level
+
+```markdown
+✅ Code Applied: Card has card-glow-lux class
+✅ CSS Exists: globals.css defines .card-glow-lux
+✅ Structure Valid: Has all required properties
+⚠️ Visual Effect: NEEDS BROWSER TEST to confirm visibility
+```
+
+---
+
+## Verification Levels
+
+### Level 1: Code Exists ✅
+Can verify: Class is in component file.
+
+### Level 2: CSS Defined ✅
+Can verify: Utility exists in globals.css.
+
+### Level 3: Structure Valid ✅
+Can verify: CSS has required properties (overflow, position, pseudo-elements).
+
+### Level 4: Effect Visible ⚠️
+**CANNOT verify without browser** - must state this clearly.
+
+---
+
+## Report Template
+
+```markdown
+## [Feature] Status Report
+
+### What I Verified ✅
+- [x] Code changes applied
+- [x] CSS utilities defined
+- [x] Structure requirements met
+- [x] No syntax errors
+
+### What Needs Verification ⚠️
+- [ ] Visual effect shows in browser
+- [ ] Animation timing is appropriate
+- [ ] Effect works in dark mode
+- [ ] No performance issues
+
+### Honest Assessment
+**Code Status**: ✅ Correct structure
+**Functional Status**: ⚠️ Needs user testing
+**Recommendation**: Test in browser at http://localhost:3000
+```
+
+---
+
+## User Feedback = Truth
+
+When user says:
+- "It's not showing" → BELIEVE THEM
+- "Effect is too subtle" → BELIEVE THEM
+- "Something is wrong" → INVESTIGATE, don't defend
+
+**User's perception = reality**. If they can't see it, it's not working.
+
+---
+
+## Summary
+
+1. ✅ Verify code structure thoroughly
+2. ⚠️ Flag visual effects as needing browser test
+3. ❌ Never claim "complete" without proof
+4. 🎯 User feedback overrides your analysis

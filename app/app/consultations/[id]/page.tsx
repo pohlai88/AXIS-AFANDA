@@ -30,7 +30,7 @@ import { CaseTrailTimeline } from '@/app/components/consultations/case-trail-tim
 import { ConnectionStatusIndicator } from '@/app/components/consultations/connection-status-indicator';
 import { useMeetingUpdates } from '@/app/hooks/use-meeting-updates';
 import { DetailPageSkeleton } from '@/app/components/consultations/loading-skeleton';
-import { ShimmerButton } from '@/components/ui/shimmer-button';
+import { useConsultationsStore } from '@/app/lib/stores/consultations-store';
 
 // Mock meeting data (enhanced with joined status)
 type MeetingStatus = 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
@@ -115,6 +115,24 @@ export default function MeetingDetailPage() {
   const [activeTab, setActiveTab] = useState('room');
   const [isLoading, setIsLoading] = useState(true);
 
+  // Use Zustand store for state management
+  const {
+    selectedMeeting,
+    fetchMeeting,
+    startMeeting,
+    completeMeeting,
+  } = useConsultationsStore();
+
+  // Fetch meeting on mount
+  useEffect(() => {
+    fetchMeeting(meetingId).then(() => {
+      setIsLoading(false);
+    }).catch((error) => {
+      console.error('Failed to load meeting:', error);
+      setIsLoading(false);
+    });
+  }, [meetingId, fetchMeeting]);
+
   // Real-time updates for this specific meeting
   const { isConnected, error } = useMeetingUpdates(meetingId, {
     enabled: true,
@@ -122,7 +140,10 @@ export default function MeetingDetailPage() {
     onUpdate: (update) => {
       console.log('Meeting update:', update);
 
-      // Update meeting state based on update type
+      // Refresh meeting data from store
+      fetchMeeting(meetingId).catch(console.error);
+
+      // Update local UI state based on update type
       switch (update.type) {
         case 'participant_joined':
           setMeeting((prev) => ({
@@ -386,10 +407,10 @@ export default function MeetingDetailPage() {
                   <p className="mt-2 text-center text-sm text-muted-foreground max-w-md">
                     Complete the meeting minutes to create actions and update the case trail
                   </p>
-                  <ShimmerButton className="mt-6 btn-gold-lux">
+                  <Button className="mt-6 btn-gold-lux">
                     <FileText className="h-4 w-4 mr-2" />
                     Complete Minutes
-                  </ShimmerButton>
+                  </Button>
                 </CardContent>
               </Card>
             )}
@@ -508,12 +529,12 @@ export default function MeetingDetailPage() {
             </div>
           </div>
           {meeting.type === 'video' &&
-            (meeting.status === 'scheduled' || meeting.status === 'in-progress' || meeting.status === 'completed' || meeting.status === 'cancelled') && 
+            (meeting.status === 'scheduled' || meeting.status === 'in-progress' || meeting.status === 'completed' || meeting.status === 'cancelled') &&
             (meeting.status === 'scheduled' || meeting.status === 'in-progress') && (
-              <ShimmerButton size="lg" className="btn-gold-lux shrink-0 hidden sm:flex">
+              <Button size="lg" className="btn-gold-lux shrink-0 hidden sm:flex">
                 <Play className="mr-2 h-5 w-5" />
                 Join Meeting
-              </ShimmerButton>
+              </Button>
             )}
         </div>
       </div>

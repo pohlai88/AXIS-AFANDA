@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import type { Whiteboard } from './whiteboard-card';
+import { NoWhiteboardsState } from '@/app/components/common/empty-states';
 
 interface WhiteboardsTableProps {
   whiteboards: Whiteboard[];
@@ -165,8 +166,8 @@ export function WhiteboardsTable({
           <TableBody>
             {sortedWhiteboards.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
-                  No whiteboards found
+                <TableCell colSpan={7} className="p-8">
+                  <NoWhiteboardsState />
                 </TableCell>
               </TableRow>
             ) : (

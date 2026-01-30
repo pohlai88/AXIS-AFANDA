@@ -113,7 +113,7 @@ export function ConversationActions({ conversation }: ConversationActionsProps) 
           {/* Escalate */}
           <DropdownMenuItem
             onClick={() => setEscalateDialogOpen(true)}
-            className="text-amber-600 focus:text-amber-600"
+            className="text-status-warn-fg focus:text-status-warn-fg"
           >
             <AlertTriangle className="mr-2 h-4 w-4" />
             Escalate to CEO

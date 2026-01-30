@@ -98,8 +98,8 @@ export default function Home() {
             </p>
             <div className="layout-grid-3">
               <div className="card-glow-lux bg-lux-surface rounded-xl border border-lux p-6 shadow-lux layout-stack">
-                <div className="bg-red-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
-                  <Smartphone className="h-5 w-5 text-red-500" />
+                <div className="bg-reject-bg flex h-10 w-10 items-center justify-center rounded-lg">
+                  <Smartphone className="h-5 w-5 text-reject-fg" />
                 </div>
                 <h3 className="font-semibold text-foreground">Multi-Hundred App Chaos</h3>
                 <p className="text-sm text-muted-foreground">
@@ -112,8 +112,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="card-glow-lux bg-lux-surface rounded-xl border border-lux p-6 shadow-lux layout-stack">
-                <div className="bg-orange-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
-                  <AlertCircle className="h-5 w-5 text-orange-500" />
+                <div className="bg-status-warn-bg flex h-10 w-10 items-center justify-center rounded-lg">
+                  <AlertCircle className="h-5 w-5 text-status-warn-fg" />
                 </div>
                 <h3 className="font-semibold text-foreground">Social Media Invasion</h3>
                 <p className="text-sm text-muted-foreground">
@@ -126,8 +126,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="card-glow-lux bg-lux-surface rounded-xl border border-lux p-6 shadow-lux layout-stack">
-                <div className="bg-amber-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
-                  <Lock className="h-5 w-5 text-amber-500" />
+                <div className="bg-status-warn-bg flex h-10 w-10 items-center justify-center rounded-lg">
+                  <Lock className="h-5 w-5 text-status-warn-fg" />
                 </div>
                 <h3 className="font-semibold text-foreground">Nothing Belongs to Ourselves</h3>
                 <p className="text-sm text-muted-foreground">

@@ -194,7 +194,7 @@ export function ModernComposeBox({
             onChange={(e) => setContent(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={isPrivate ? 'Write a private note...' : placeholder}
-            className={`w-full resize-none rounded-2xl border bg-muted/50 px-4 py-2.5 pr-10 text-sm outline-none transition-colors focus:bg-background focus:ring-2 focus:ring-primary/20 ${isPrivate ? 'border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/50' : ''
+            className={`w-full resize-none rounded-2xl border bg-muted/50 px-4 py-2.5 pr-10 text-sm outline-none transition-colors focus:bg-background focus:ring-2 focus:ring-primary/20 ${isPrivate ? 'border-status-warn-bd bg-status-warn-bg' : ''
               }`}
             rows={1}
             disabled={sending}
@@ -243,10 +243,10 @@ export function ModernComposeBox({
 
       {/* Hint */}
       <div className="px-4 pb-2">
-        <p className="text-[10px] text-muted-foreground">
-          Press <kbd className="rounded border px-1 text-[10px]">Enter</kbd> to send,{' '}
-          <kbd className="rounded border px-1 text-[10px]">Shift</kbd> +{' '}
-          <kbd className="rounded border px-1 text-[10px]">Enter</kbd> for new line
+        <p className="text-xs text-muted-foreground">
+          Press <kbd className="rounded border px-1 text-xs">Enter</kbd> to send,{' '}
+          <kbd className="rounded border px-1 text-xs">Shift</kbd> +{' '}
+          <kbd className="rounded border px-1 text-xs">Enter</kbd> for new line
         </p>
       </div>
     </div>

@@ -37,11 +37,11 @@ export default function Component() {
             { name: "Desktop", value: 186, fill: "hsl(var(--chart-1))" },
             { name: "Mobile", value: 80, fill: "hsl(var(--chart-2))" },
           ]}
-          className="w-[8rem]"
+          className="w-32"
         />
       </div>
       <div className="items-end">
-        <div className="absolute left-[122px] top-[0px] z-10 text-sm font-medium">
+        <div className="absolute left-[122px] top-0 z-10 text-sm font-medium">
           Name
         </div>
         <svg
@@ -72,20 +72,20 @@ export default function Component() {
             { name: "Firefox", value: 1000, fill: "hsl(var(--chart-4))" },
           ]}
           indicator="dashed"
-          className="w-[8rem]"
+          className="w-32"
         />
       </div>
-      <div className="!hidden md:!flex">
+      <div className="hidden! md:flex!">
         <TooltipDemo
           label="Page Views"
           payload={[
             { name: "Desktop", value: 12486, fill: "hsl(var(--chart-3))" },
           ]}
-          className="w-[9rem]"
+          className="w-36"
           indicator="line"
         />
       </div>
-      <div className="!items-start !justify-start">
+      <div className="items-start! justify-start!">
         <div className="absolute left-[50px] top-[60px] z-10 text-sm font-medium">
           Indicator
         </div>
@@ -96,7 +96,7 @@ export default function Component() {
             { name: "Chrome", value: 1286, fill: "hsl(var(--chart-1))" },
           ]}
           indicator="dot"
-          className="w-[8rem]"
+          className="w-32"
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -106,14 +106,14 @@ export default function Component() {
           viewBox="0 0 75 175"
           className="absolute left-[30px] top-[38px] z-10 rotate-[-40deg]"
         >
-          <g clip-path="url(#abc)">
+          <g clip-path="url(#clip)">
             <path
               fill="currentColor"
               d="M20.187 175c-4.439-2.109-7.186-2.531-8.032-4.008-3.17-5.484-6.763-10.968-8.454-17.084-5.073-16.242-4.439-32.694-1.057-49.146 5.707-28.053 18.388-52.942 34.24-76.565 1.692-2.531 3.171-5.063 4.862-7.805 0-.21-.211-.632-.634-1.265-4.65 1.265-9.511 2.53-14.161 3.585-2.537.422-5.496.422-8.032-.421-1.48-.422-3.593-2.742-3.593-4.219 0-1.898 1.48-4.218 2.747-5.906 1.057-1.054 2.96-1.265 4.65-1.687C35.406 7.315 48.088 3.729 60.98.776c10.99-2.53 14.584 1.055 13.95 11.812-.634 11.18-.846 22.358-1.268 33.326-.212 3.375-.846 6.96-1.268 10.757-8.878-4.007-8.878-4.007-12.048-38.177C47.03 33.259 38.153 49.289 29.91 65.741 21.667 82.193 16.17 99.49 13.212 117.84c-2.959 18.984.634 36.912 6.975 57.161Z"
             />
           </g>
           <defs>
-            <clipPath id="abc">
+            <clipPath id="clip">
               <path fill="currentColor" d="M0 0h75v175H0z" />
             </clipPath>
           </defs>
@@ -156,7 +156,7 @@ function TooltipDemo({
   return (
     <div
       className={cn(
-        "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl transition-all ease-in-out hover:-translate-y-0.5",
+        "grid min-w-32 items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl transition-all ease-in-out hover:-translate-y-0.5",
         className
       )}
     >

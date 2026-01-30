@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useActivityStore, type ActivityItem } from "@/app/lib/stores/activity-store";
 import Link from "next/link";
+import { NoTimelineState } from "@/app/components/common/empty-states";
 
 const activityIcons: Record<ActivityItem["type"], React.ComponentType<{ className?: string }>> = {
   approval: CheckSquare,
@@ -49,10 +50,10 @@ export function ActivityTimeline() {
         </div>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[600px]">
+        <ScrollArea className="h-screen-60">
           {activities.length === 0 ? (
-            <div className="py-12 text-center text-sm text-muted-foreground">
-              No activity yet. Activity will appear here as you use the system.
+            <div className="py-12">
+              <NoTimelineState />
             </div>
           ) : (
             <div className="space-y-4">
@@ -66,7 +67,7 @@ export function ActivityTimeline() {
                     {!isLast && (
                       <div className="absolute left-4 top-8 h-full w-px bg-border" />
                     )}
-                    
+
                     {/* Icon */}
                     <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted">
                       <Icon className="h-4 w-4 text-muted-foreground" />

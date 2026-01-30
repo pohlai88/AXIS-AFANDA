@@ -13,7 +13,6 @@ import {
   FileCheck,
   Sparkles,
 } from 'lucide-react';
-import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -49,22 +48,22 @@ function getProximityStyle(scheduledStart: Date) {
 
   if (minutesUntil <= 5 && minutesUntil > 0) {
     return {
-      badge: 'bg-[hsl(var(--danger))] text-[hsl(var(--danger-foreground))]',
-      accent: 'bg-[hsl(var(--danger))]',
+      badge: 'bg-danger text-destructive-foreground',
+      accent: 'bg-danger',
       shouldPulse: true,
     };
   }
   if (minutesUntil <= 30 && minutesUntil > 0) {
     return {
-      badge: 'bg-[hsl(var(--warn))] text-[hsl(var(--warn-foreground))]',
-      accent: 'bg-[hsl(var(--warn))]',
+      badge: 'bg-warn text-white',
+      accent: 'bg-warn',
       shouldPulse: false,
     };
   }
   if (minutesUntil <= 120 && minutesUntil > 0) {
     return {
-      badge: 'bg-[hsl(var(--info))] text-white',
-      accent: 'bg-[hsl(var(--info))]',
+      badge: 'bg-info text-white',
+      accent: 'bg-info',
       shouldPulse: false,
     };
   }
@@ -98,7 +97,7 @@ export function TimelineMeetingCard({
         {/* Top accent bar */}
         <div
           className={cn(
-            'h-1 w-full transition-all duration-500',
+            'h-1 w-full transition-all duration-[var(--ax-motion-slow)]',
             proximityStyle.accent
           )}
         />
@@ -108,7 +107,7 @@ export function TimelineMeetingCard({
             {/* Time Badge */}
             <div
               className={cn(
-                'flex flex-col items-center justify-center rounded-lg px-3 py-2 min-w-[80px]',
+                'flex flex-col items-center justify-center rounded-lg px-3 py-2 min-w-20',
                 proximityStyle.badge
               )}
             >
@@ -127,7 +126,7 @@ export function TimelineMeetingCard({
                 </Badge>
                 <Badge variant="secondary">{meeting.caseId}</Badge>
                 {meeting.minutesCompleted && (
-                  <Badge variant="default" className="gap-1 bg-[hsl(var(--success))] text-white hover:bg-[hsl(var(--success))]/90">
+                  <Badge variant="default" className="gap-1 bg-success text-white hover:bg-success/90">
                     <CheckCircle2 className="h-3 w-3" />
                     Complete
                   </Badge>
@@ -177,7 +176,7 @@ export function TimelineMeetingCard({
             {/* Action Buttons */}
             <div className="flex flex-col gap-2">
               {minutesUntil <= 5 && minutesUntil > 0 && (
-                <ShimmerButton
+                <Button
                   size="sm"
                   className="btn-gold-lux animate-pulse-glow"
                   onClick={(e) => {
@@ -187,7 +186,7 @@ export function TimelineMeetingCard({
                 >
                   <Zap className="h-4 w-4 mr-1" />
                   Join Now
-                </ShimmerButton>
+                </Button>
               )}
               {minutesUntil > 5 && meeting.status === 'scheduled' && (
                 <Button size="sm" variant="outline">
@@ -198,7 +197,7 @@ export function TimelineMeetingCard({
                 <Button
                   size="sm"
                   variant="default"
-                  className="bg-[hsl(var(--danger))] hover:bg-[hsl(var(--danger))]/90 text-white"
+                  className="bg-danger hover:bg-danger/90 text-white"
                   onClick={(e) => {
                     e.stopPropagation();
                     onCompleteMinutes?.();
@@ -227,9 +226,9 @@ export function TimelineMeetingCard({
 
           {/* Proximity Alert */}
           {minutesUntil <= 15 && minutesUntil > 0 && (
-            <Alert className="mt-3 bg-[hsl(var(--warn))]/10 border-[hsl(var(--warn))]">
-              <Clock className="h-4 w-4 text-[hsl(var(--warn))]" />
-              <AlertDescription className="text-[hsl(var(--warn-foreground))]">
+            <Alert className="mt-3 bg-warn/10 border-warn">
+              <Clock className="h-4 w-4 text-warn" />
+              <AlertDescription className="text-warn-foreground">
                 Starting in {minutesUntil} minute{minutesUntil !== 1 ? 's' : ''}
               </AlertDescription>
             </Alert>

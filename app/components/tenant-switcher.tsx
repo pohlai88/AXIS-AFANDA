@@ -18,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { CompactEmptyState } from "@/app/components/common/empty-states";
 
 const tenantTypeIcons = {
   individual: User,
@@ -49,11 +50,17 @@ export function TenantSwitcher() {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+      <PopoverContent className="w-52 p-0" align="start">
         <Command>
           <CommandInput placeholder="Search tenant..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No tenant found.</CommandEmpty>
+            <CommandEmpty>
+              <CompactEmptyState
+                icon={Building2}
+                title="No tenant found"
+                description="Try adjusting your search"
+              />
+            </CommandEmpty>
             <CommandGroup>
               {tenants.map((t) => {
                 const TenantIcon = tenantTypeIcons[t.type];

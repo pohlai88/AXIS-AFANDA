@@ -101,7 +101,7 @@ export default function HeroiconsDemo() {
               <span className='text-sm font-medium'>Users</span>
             </div>
             <div className='flex items-center gap-2 rounded-lg border p-3'>
-              <CogIcon className='size-5 text-gray-500' />
+              <CogIcon className='size-5 text-muted-foreground' />
               <span className='text-sm font-medium'>Settings</span>
             </div>
           </div>
@@ -151,35 +151,35 @@ export default function HeroiconsDemo() {
         <CardContent className='space-y-4'>
           <div className='grid gap-4 md:grid-cols-2'>
             <div className='relative'>
-              <MailIcon className='absolute left-3 top-3 size-4 text-gray-400' />
+              <MailIcon className='absolute left-3 top-3 size-4 text-muted-foreground' />
               <input
                 type='email'
                 placeholder='Email address'
-                className='w-full rounded-md border py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full rounded-md border py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background'
               />
             </div>
             <div className='relative'>
-              <PhoneIcon className='absolute left-3 top-3 size-4 text-gray-400' />
+              <PhoneIcon className='absolute left-3 top-3 size-4 text-muted-foreground' />
               <input
                 type='tel'
                 placeholder='Phone number'
-                className='w-full rounded-md border py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full rounded-md border py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background'
               />
             </div>
             <div className='relative'>
-              <GlobeIcon className='absolute left-3 top-3 size-4 text-gray-400' />
+              <GlobeIcon className='absolute left-3 top-3 size-4 text-muted-foreground' />
               <input
                 type='url'
                 placeholder='Website'
-                className='w-full rounded-md border py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full rounded-md border py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background'
               />
             </div>
             <div className='relative'>
-              <SearchIcon className='absolute left-3 top-3 size-4 text-gray-400' />
+              <SearchIcon className='absolute left-3 top-3 size-4 text-muted-foreground' />
               <input
                 type='search'
                 placeholder='Search...'
-                className='w-full rounded-md border py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full rounded-md border py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-ring ring-lux focus:ring-offset-2 focus:ring-offset-background'
               />
             </div>
           </div>
@@ -276,7 +276,7 @@ export default function HeroiconsDemo() {
                   <StarIcon
                     className={cn(
                       'size-5 transition-colors',
-                      star <= rating ? 'fill-current text-yellow-500' : 'text-gray-300'
+                      star <= rating ? 'fill-current text-yellow-500' : 'text-muted-foreground/40'
                     )}
                   />
                 </button>
@@ -344,7 +344,7 @@ export default function HeroiconsDemo() {
               <span className='text-sm font-medium'>Video</span>
             </div>
             <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
-              <FileIcon className='size-8 text-gray-500' />
+              <FileIcon className='size-8 text-muted-foreground' />
               <span className='text-sm font-medium'>Document</span>
             </div>
             <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
@@ -366,7 +366,7 @@ export default function HeroiconsDemo() {
         <CardContent>
           <ul className='space-y-2 text-sm text-muted-foreground'>
             <li>• Use size-* utilities for consistent icon sizing (size-4, size-5, size-6)</li>
-            <li>• Apply color utilities for theme consistency (text-gray-500, text-blue-500)</li>
+            <li>• Apply semantic utilities for theme consistency (text-muted-foreground, text-primary)</li>
             <li>• Combine with spacing utilities for proper layout (mr-2, ml-2, gap-2)</li>
             <li>• Use solid icons for emphasis and outline icons for subtlety</li>
             <li>• Implement interactive states with hover and focus utilities</li>

@@ -36,11 +36,45 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { useWhiteboardsStore } from '@/app/lib/stores/whiteboards-store';
+import { useWhiteboardUpdates } from '@/app/hooks/use-whiteboard-updates';
+import { ConnectionStatus } from '@/app/components/common/connection-status';
 
 export default function WhiteboardDetailPage() {
   const params = useParams();
   const router = useRouter();
   const whiteboardId = params.id as string;
+
+  // Use Zustand store for state management
+  const {
+    selectedWhiteboard,
+    fetchWhiteboard,
+    updateWhiteboard,
+  } = useWhiteboardsStore();
+
+  // Real-time collaboration via SSE
+  const { isConnected } = useWhiteboardUpdates(whiteboardId, {
+    enabled: true,
+    showToasts: false, // Don't spam toasts during editing
+    onUpdate: (update) => {
+      console.log('Whiteboard update:', update);
+      // Handle real-time collaboration events
+      if (update.type === 'collaborator_joined') {
+        toast.info(`${update.data.userName} joined the whiteboard`, { icon: '👋' });
+      } else if (update.type === 'collaborator_left') {
+        toast.info(`${update.data.userName} left the whiteboard`, { icon: '👋' });
+      }
+      // Refresh whiteboard data for snapshots and other updates
+      if (update.type === 'snapshot_created' || update.type === 'snapshot_restored') {
+        fetchWhiteboard(whiteboardId).catch(console.error);
+      }
+    },
+  });
+
+  // Fetch whiteboard on mount
+  useEffect(() => {
+    fetchWhiteboard(whiteboardId).catch(console.error);
+  }, [whiteboardId, fetchWhiteboard]);
 
   // Initialize whiteboard name from mock data (avoids setState in effect)
   const [whiteboardName, setWhiteboardName] = useState(() => {
@@ -62,12 +96,12 @@ export default function WhiteboardDetailPage() {
 
   // Tags state
   const [selectedTags, setSelectedTags] = useState<WhiteboardTag[]>([
-    { id: 'tag-1', name: 'Design', color: 'bg-purple-500' },
+    { id: 'tag-1', name: 'Design', color: 'bg-primary' },
   ]);
   const [availableTags, setAvailableTags] = useState<WhiteboardTag[]>([
-    { id: 'tag-1', name: 'Design', color: 'bg-purple-500' },
-    { id: 'tag-2', name: 'Planning', color: 'bg-blue-500' },
-    { id: 'tag-3', name: 'Draft', color: 'bg-gray-500' },
+    { id: 'tag-1', name: 'Design', color: 'bg-primary' },
+    { id: 'tag-2', name: 'Planning', color: 'bg-primary' },
+    { id: 'tag-3', name: 'Draft', color: 'bg-muted-foreground' },
   ]);
 
   // Comments state - use static timestamps for mock data
@@ -105,10 +139,15 @@ export default function WhiteboardDetailPage() {
     { id: '2', name: 'Jane Smith', initials: 'JS' },
   ];
 
-  const handleSaveName = () => {
+  const handleSaveName = async () => {
     setIsEditingName(false);
-    toast.success('Whiteboard name updated');
-    // In production, save to API
+    try {
+      await updateWhiteboard(whiteboardId, { name: whiteboardName });
+      toast.success('Whiteboard name updated');
+    } catch (error) {
+      console.error('Failed to update whiteboard name:', error);
+      toast.error('Failed to update name');
+    }
   };
 
   const handleExport = (format: 'png' | 'svg' | 'pdf') => {
@@ -261,6 +300,9 @@ export default function WhiteboardDetailPage() {
               Saving...
             </span>
           )}
+
+          {/* Connection Status */}
+          <ConnectionStatus isConnected={isConnected} />
 
           {/* Tags */}
           <TagsManager

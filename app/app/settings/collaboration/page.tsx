@@ -684,8 +684,8 @@ export default function CollaborationSettingsPage() {
                   </div>
                 </div>
 
-                <div className="p-4 bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-900 rounded-lg">
-                  <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                <div className="p-4 bg-status-warn-bg border border-status-warn-bd rounded-lg">
+                  <p className="text-sm text-status-warn-fg">
                     <strong>Note:</strong> Embedded co-browsing has limitations with HTML tainted canvas and restricted resources.
                     Use SecureFlow Manager for production deployments.
                   </p>

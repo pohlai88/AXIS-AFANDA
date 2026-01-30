@@ -22,6 +22,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { NoFilteredResultsState } from '@/app/components/common/empty-states';
 import type { ApprovalTemplate } from '@/app/lib/stores/approvals-store';
 
 interface TemplateSelectorProps {
@@ -48,13 +49,13 @@ const TYPE_LABELS = {
   INC: 'Incident',
 };
 
-// Template type colors
+// Template type colors - using semantic design tokens
 const TYPE_COLORS = {
-  REQ: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-  APR: 'bg-green-500/10 text-green-600 border-green-500/20',
-  CON: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
-  FYI: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
-  INC: 'bg-red-500/10 text-red-600 border-red-500/20',
+  REQ: 'bg-changes-bg text-changes-fg border-changes-bd',
+  APR: 'bg-approve-bg text-approve-fg border-approve-bd',
+  CON: 'bg-primary/10 text-primary border-primary/20',
+  FYI: 'bg-status-warn-bg text-status-warn-fg border-status-warn-bd',
+  INC: 'bg-reject-bg text-reject-fg border-reject-bd',
 };
 
 export function TemplateSelector({ templates, onSelect, loading }: TemplateSelectorProps) {
@@ -164,15 +165,13 @@ export function TemplateSelector({ templates, onSelect, loading }: TemplateSelec
 
       {/* Templates */}
       {filteredTemplates.length === 0 ? (
-        <div className="flex h-64 items-center justify-center">
-          <div className="text-center">
-            <FileText className="mx-auto h-12 w-12 text-muted-foreground/50" />
-            <h3 className="mt-4 text-lg font-semibold">No templates found</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Try adjusting your filters
-            </p>
-          </div>
-        </div>
+        <NoFilteredResultsState
+          onClear={() => {
+            setSearchQuery('');
+            setSelectedType('all');
+            setSelectedCategory('all');
+          }}
+        />
       ) : (
         <div className="space-y-6">
           {Object.entries(groupedTemplates).map(([category, categoryTemplates]) => (

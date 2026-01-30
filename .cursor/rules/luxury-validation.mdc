@@ -1,0 +1,116 @@
+---
+description: Validate luxury utilities are properly configured with all required CSS properties
+globs: components/ui/*.tsx
+alwaysApply: false
+---
+
+# Luxury Utility Validation Protocol
+
+When working with luxury utilities, ALWAYS verify the complete chain.
+
+---
+
+## Validation Checklist
+
+### For Each Luxury Utility
+
+**Required checks** (ALL must pass):
+
+```markdown
+1. ✅ Class applied in component
+2. ✅ CSS utility defined in globals.css
+3. ✅ Has ALL required properties for effect
+4. ✅ No conflicting styles
+5. ⚠️ Visual effect needs browser verification
+```
+
+---
+
+## Luxury Utilities & Required Properties
+
+### `card-glow-lux` (Gold top-edge shimmer)
+
+**Required in CSS**:
+- ✅ `position: relative`
+- ✅ `overflow: hidden` (critical for ::before/::after)
+- ✅ `::before` pseudo-element (gold line)
+- ✅ `::after` pseudo-element (radial glow)
+
+**Required in Component**:
+- ✅ Class `card-glow-lux`
+- ✅ `data-interactive="true"` (for cursor)
+
+---
+
+### `sheen-lux` (Shimmer slide effect)
+
+**Required in CSS**:
+- ✅ `position: relative`
+- ✅ `overflow: hidden` (critical)
+- ✅ `::after` with gradient
+- ✅ `transform: translateX()` animation
+
+**Visibility Check**:
+- ⚠️ Opacity high enough? (min 15%)
+- ⚠️ Coverage wide enough? (min 30% gradient width)
+- ⚠️ Animation slow enough? (min 400ms)
+
+---
+
+### `btn-hover-lux` (Lift effect)
+
+**Required in CSS**:
+- ✅ `transition: transform`
+- ✅ `will-change: transform`
+- ✅ `:hover { transform: translateY(-1px) }`
+
+---
+
+### `shadow-lux` / `shadow-lux-strong`
+
+**Required in CSS**:
+- ✅ `box-shadow` with border line
+- ✅ Uses `--ax-shadow-hsl` token
+- ✅ Different opacity for light/dark mode
+
+---
+
+## Common Issues
+
+### Issue: Effect Not Showing
+
+**Check**:
+1. CSS utility has `overflow: hidden`? (Required for pseudo-elements)
+2. Opacity high enough? (8% is too subtle)
+3. Parent element doesn't override with `overflow: visible`?
+4. Gradient coverage sufficient?
+
+### Issue: Conflicting Classes
+
+**Check**:
+```tsx
+// ❌ BAD: Later class overrides luxury
+<Card className="card-glow-lux overflow-visible">
+
+// ✅ GOOD: No conflicts
+<Card className="card-glow-lux">
+```
+
+---
+
+## Validation Example
+
+```markdown
+## Card Component Validation
+
+**Applied**: `card-glow-lux` ✅
+**CSS Defined**: `.card-glow-lux` in globals.css ✅
+**Has position: relative**: ✅
+**Has overflow: hidden**: ✅
+**Has ::before**: ✅ (gold line)
+**Has ::after**: ✅ (radial glow)
+**No conflicts**: ✅
+
+**Status**: Code structure correct ✅
+**Visual Test**: ⚠️ Needs browser verification
+```

@@ -68,7 +68,7 @@ export function ReplyBox({ onSend, sending, channelType }: ReplyBoxProps) {
         rows={3}
         className={
           isPrivate
-            ? 'border-amber-200 bg-amber-50 focus-visible:ring-amber-500 dark:border-amber-900 dark:bg-amber-950'
+            ? 'border-status-warn-bd bg-status-warn-bg focus-visible:ring-status-warn-fg'
             : ''
         }
         disabled={sending}

@@ -104,10 +104,10 @@ export function ShellSidebar({
       },
       {
         title: "Tasks",
-        url: null,
+        url: "/app/tasks",
         icon: Sparkles,
         badge: "7",
-        action: "magic-todo",
+        isActive: pathname.startsWith("/app/tasks"),
       },
     ],
     [pathname]

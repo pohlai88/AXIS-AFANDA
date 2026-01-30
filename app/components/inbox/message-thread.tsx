@@ -47,7 +47,7 @@ export function MessageThread({ messages }: MessageThreadProps) {
               )}
 
               {/* Message Content */}
-              <div className={`max-w-[70%] space-y-1 ${!isIncoming && 'flex flex-col items-end'}`}>
+              <div className={`max-w-7/10 space-y-1 ${!isIncoming && 'flex flex-col items-end'}`}>
                 {/* Sender Name */}
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-medium">
@@ -63,10 +63,10 @@ export function MessageThread({ messages }: MessageThreadProps) {
                 {/* Message Bubble */}
                 <Card
                   className={`p-3 ${isPrivate
-                      ? 'border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950'
-                      : isIncoming
-                        ? 'bg-muted'
-                        : 'bg-primary text-primary-foreground'
+                    ? 'border-status-warn-bd bg-status-warn-bg'
+                    : isIncoming
+                      ? 'bg-muted'
+                      : 'bg-primary text-primary-foreground'
                     }`}
                 >
                   <p className="whitespace-pre-wrap text-sm">{message.content}</p>

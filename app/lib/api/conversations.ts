@@ -139,6 +139,47 @@ export async function updateConversation(
   );
 }
 
+// ============================================================================
+// Bulk operations
+// ============================================================================
+
+const bulkConversationsResultSchema = z.object({
+  data: z.array(conversationSchema),
+});
+
+const bulkDeleteResultSchema = z.object({
+  success: z.boolean(),
+  deleted: z.number(),
+});
+
+export async function bulkUpdateConversations(
+  conversationIds: string[],
+  updates: {
+    status?: 'open' | 'resolved' | 'pending' | 'snoozed';
+    priority?: 'low' | 'medium' | 'high' | 'urgent';
+    assigneeId?: number | null;
+    assigneeName?: string | null;
+    teamId?: number | null;
+    teamName?: string | null;
+    labels?: string[] | null;
+    unreadCount?: number;
+    labelsOp?: {
+      op: 'add' | 'remove' | 'set';
+      labels: string[];
+    };
+  }
+) {
+  return apiClient.patch(
+    `/conversations/bulk`,
+    { conversationIds, updates, labelsOp: updates.labelsOp },
+    bulkConversationsResultSchema
+  );
+}
+
+export async function bulkDeleteConversations(conversationIds: string[]) {
+  return apiClient.delete(`/conversations/bulk`, bulkDeleteResultSchema, { conversationIds });
+}
+
 export async function escalateConversation(conversationId: string) {
   return apiClient.post(
     `/conversations/${conversationId}/escalate`,

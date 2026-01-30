@@ -213,7 +213,7 @@ export function ValidatedContactForm({ onSubmit, className }: ValidatedContactFo
           {hasError('subscribe') && <p className='text-sm text-red-500'>{getError('subscribe')}</p>}
 
           {/* Form Status */}
-          <div className='text-sm text-gray-600'>
+          <div className='text-sm text-muted-foreground'>
             {isDirty && !isValid && 'Please fix the errors above to submit the form.'}
             {isValid && isDirty && 'Form is ready to submit.'}
             {!isDirty && 'Please fill out the form to get started.'}
